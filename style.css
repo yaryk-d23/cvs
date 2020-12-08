@@ -1,0 +1,19 @@
+.app-container {
+  width: 95%;
+}
+/* pagination */
+.pagination li a {
+  color: #444;
+}
+.pagination .active a {
+  background: #de0000;
+  border-color: #de0000;
+  color: #fff;
+}
+.pagination .active a:hover {
+  background: #de0000;
+  border-color: #de0000;
+}
+.pagination .disabled a {
+  background: #d9d9d9;
+}

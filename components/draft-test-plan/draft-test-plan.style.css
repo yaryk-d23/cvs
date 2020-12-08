@@ -1,0 +1,134 @@
+.draft-test-plan .form-header h2 {
+  color: #de0000;
+  margin: 1em 0;
+}
+.draft-test-plan h4 {
+  font-weight: 600;
+}
+.draft-test-plan .form-body .controlLabel {
+  font-weight: 700;
+  margin: 0.5em 0;
+}
+.draft-test-plan .form-body .control {
+  margin: 0 0 1em;
+}
+.draft-test-plan .form-body .uploadBtn {
+  color: #fff;
+  font-weight: 700;
+  background-color: #ff9d00;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.draft-test-plan .form-body .uploadBtn:hover {
+  background-color: #ffcf83;
+}
+.draft-test-plan .form-body .uploadBtn:focus {
+  outline: none;
+}
+.draft-test-plan .form-body .uploadFileContainer {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid #818181;
+  border-radius: 3px;
+}
+.draft-test-plan .form-body .uploadFileContainer .fileNameContainer {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.draft-test-plan .form-body .uploadFileContainer .fileNameContainer .fileName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 10px;
+}
+.draft-test-plan .form-body .filesContainer {
+  width: 50%;
+  margin: 1em 0;
+}
+.draft-test-plan .form-body .filesContainer .file {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.excercise-timeline .table {
+  border-collapse: separate;
+  border-spacing: 0 15px;
+}
+.excercise-timeline .table th {
+  vertical-align: middle;
+  border-top: none;
+}
+.excercise-timeline .table td {
+  vertical-align: middle;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  color: #818181;
+}
+.excercise-timeline .table td:first-child {
+  border-left: 1px solid #ddd;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  color: inherit;
+  font-weight: 600;
+}
+.excercise-timeline .table td:last-child {
+  border-right: 1px solid #ddd;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  width: 60px;
+  color: inherit;
+}
+.add-timeline-row {
+  font-style: italic;
+  cursor: pointer;
+}
+.approval-status {
+  margin-top: 2em;
+}
+.approval-status-header,
+.approval-status-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.approval-status-info > div {
+  margin-right: 1em;
+}
+.approval-status-info .approved {
+  color: #2eca79;
+}
+.approval-status-info .cancelled {
+  color: #02b2f1;
+}
+.approval-status-info .rejected {
+  color: #de0000;
+}
+.approval-status .table th,
+.approval-status .table td {
+  padding: 8px 2em;
+}
+.approval-status .status-container {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 4px 5px 6px;
+  border-radius: 100%;
+  color: #fff;
+  font-size: 10px;
+}
+.approval-status .status-container.approved-icon {
+  background: #2eca79;
+}
+.approval-status .status-container.cancelled-icon {
+  background: #02b2f1;
+}
+.approval-status .status-container.rejected-icon {
+  background: #de0000;
+}

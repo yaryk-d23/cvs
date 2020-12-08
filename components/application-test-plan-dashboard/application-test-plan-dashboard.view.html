@@ -1,0 +1,96 @@
+<div class="applicationTestPlanDashboard">
+  <div class="header">
+    <div class="headerTitle">
+      <h3 class="sectionHeader">Application Test Plans</h3>
+      <a class="btn startNewProcessBtn" href="#/process-form"
+        >Start New Process</a
+      >
+    </div>
+    <div class="controlsBar">
+      <div class="statusInfo">
+        <div class="status">
+          <span class="statusIndicator approvedStatus"></span>
+          Completed
+        </div>
+        <div class="status">
+          <span class="statusIndicator inProgressStatus"></span>
+          In Progress
+        </div>
+        <div class="status">
+          <span class="statusIndicator notStartedStatus"></span>
+          Late
+        </div>
+      </div>
+      <date-range
+        on-range-change="ctrl.onDateRangeChange(startDate, endDate)"
+        start-date="ctrl.filterStartDate"
+        end-date="ctrl.filterEndDate"
+      />
+    </div>
+  </div>
+  <div>
+    <table class="table">
+      <tr>
+        <th></th>
+        <th>Application</th>
+        <th>Plan Owner</th>
+        <th>Due Date</th>
+        <th>Draft Test Plan Received</th>
+        <th>Draft Test Plan Manager Approval</th>
+        <th>Tests Results Received</th>
+        <th>Tests Results Approved</th>
+      </tr>
+      <tr ng-repeat="item in ctrl.filteredItems">
+        <td>
+          <a href="#/process-form/{{item.Id}}"
+            ><i class="glyphicon glyphicon-edit editIcon"></i
+          ></a>
+        </td>
+        <td>{{item.Title}}</td>
+        <td>{{item.Application.PlanOwner.Title}}</td>
+        <td>{{item.Modified | date: 'MM/dd/yyyy'}}</td>
+        <td>
+          <div
+            class="text-center"
+            ng-bind-html="ctrl.getDraftTestPlanReceivedIndicator(item)"
+          ></div>
+        </td>
+        <td>
+          <div
+            class="text-center"
+            ng-bind-html="ctrl.getDraftTestPlanManagerApprovalIndicator(item)"
+          ></div>
+        </td>
+        <td>
+          <div
+            class="text-center"
+            ng-bind-html="ctrl.getTestsResultsReceivedIndicator(item)"
+          ></div>
+        </td>
+        <td>
+          <div
+            class="text-center"
+            ng-bind-html="ctrl.getTestsResultsApprovedIndicator(item)"
+          ></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="footer">
+    <div></div>
+    <div>
+      <ul
+        uib-pagination
+        total-items="ctrl.filteredItems.length"
+        ng-model="ctrl.pageNumber"
+        max-size="5"
+        items-per-page="ctrl.itemsPerPage"
+        class="pagination-sm"
+        boundary-link-numbers="true"
+        previous-text="<"
+        next-text=">"
+        ng-change="ctrl.filterData()"
+      ></ul>
+    </div>
+  </div>
+</div>

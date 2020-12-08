@@ -1,0 +1,28 @@
+.dateRange {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.dateRange .startDate {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.dateRange .startDate > div {
+  margin-right: 1em;
+}
+.dateRange .startDate .form-control,
+.dateRange .endDate .form-control {
+  width: 150px;
+}
+.dateRange .endDate {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.dateRange .endDate > div {
+  margin-right: 1em;
+}

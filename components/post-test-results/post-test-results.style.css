@@ -1,0 +1,94 @@
+.post-tests-results .form-body .uploadBtn {
+  color: #fff;
+  font-weight: 700;
+  background-color: #ff9d00;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.post-tests-results h4 {
+  font-weight: 600;
+}
+.post-tests-results .form-body .uploadBtn:hover {
+  background-color: #ffcf83;
+}
+.post-tests-results .form-body .uploadBtn:focus {
+  outline: none;
+}
+.post-tests-results .form-body .uploadFileContainer {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid #818181;
+  border-radius: 3px;
+}
+.post-tests-results .form-body .uploadFileContainer .fileNameContainer {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.post-tests-results
+  .form-body
+  .uploadFileContainer
+  .fileNameContainer
+  .fileName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 10px;
+}
+.post-tests-results .form-body .filesContainer {
+  width: 50%;
+  margin: 1em 0;
+}
+.post-tests-results .form-body .filesContainer .file {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.approval-status {
+  margin-top: 2em;
+}
+.approval-status-header,
+.approval-status-info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.approval-status-info > div {
+  margin-right: 1em;
+}
+.approval-status-info .approved {
+  color: #2eca79;
+}
+.approval-status-info .cancelled {
+  color: #02b2f1;
+}
+.approval-status-info .rejected {
+  color: #de0000;
+}
+.approval-status .table th,
+.approval-status .table td {
+  padding: 8px 2em;
+}
+.approval-status .status-container {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 4px 5px 6px;
+  border-radius: 100%;
+  color: #fff;
+  font-size: 10px;
+}
+.approval-status .status-container.approved-icon {
+  background: #2eca79;
+}
+.approval-status .status-container.cancelled-icon {
+  background: #02b2f1;
+}
+.approval-status .status-container.rejected-icon {
+  background: #de0000;
+}

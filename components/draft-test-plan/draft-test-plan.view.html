@@ -1,0 +1,145 @@
+<div class="draft-test-plan">
+  <div class="form-header">
+    <h2>Draft Test Plan</h2>
+  </div>
+  <div class="form-body">
+    <div>
+      <div class="uploadFileContainer">
+        <input
+          style="display: none"
+          type="file"
+          name="attachment"
+          id="attachment-file"
+          ng-change="ctrl.onFileChange()"
+          ng-model="ctrl.draftFiles"
+        />
+        <div class="fileNameContainer">
+          <i class="glyphicon glyphicon-paperclip" style="font-size: 22px"></i>
+          <div class="fileName">
+            {{ctrl.draftFiles && ctrl.draftFiles.length ?
+            ctrl.draftFiles[0].name : ''}}
+          </div>
+        </div>
+        <button
+          type="button"
+          class="uploadBtn"
+          ng-click="ctrl.onClickUploadButton()"
+        >
+          Upload
+        </button>
+      </div>
+      <div class="filesContainer">
+        <div
+          class="file"
+          ng-repeat="file in ctrl.draftFiles"
+          ng-if="ctrl.draftFiles && ctrl.draftFiles.length"
+        >
+          <a>{{file.name}}</a>
+          <div>
+            <span>{{this.formatBytes(file.size)}}</span>
+            <i
+              class="glyphicon glyphicon-remove"
+              ng-click="ctrl.resetFileInput()"
+              style="font-size: 10px; cursor: pointer; margin-left: 10px"
+            ></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="excercise-timeline">
+      <h4>Excercise timeline</h4>
+      <div>
+        <table class="table">
+          <tr>
+            <th></th>
+            <th>Excercise</th>
+            <th>Description</th>
+            <th>End Date</th>
+            <th>RFC</th>
+            <th>Evidence</th>
+            <th>Resources <i class="glyphicon glyphicon-paperclip"></i></th>
+            <th></th>
+          </tr>
+          <tr ng-repeat="item in ctrl.excerciseTimelineItems track by $index">
+            <td class="text-center">{{$index+1}}</td>
+            <td>{{item.Excercise}}</td>
+            <td>{{item.Description}}</td>
+            <td>{{item.EndDate | date: 'MM/dd/yyyy'}}</td>
+            <td>{{item.RFC}}</td>
+            <td>{{item.Evidence}}</td>
+            <td>
+              <div>
+                <a
+                  ng-if="item.ResourcesLink"
+                  ng-href="{{item.ResourcesLink}}"
+                  target="_blank"
+                  >Link</a
+                >
+              </div>
+              <div>
+                <a
+                  ng-if="item.ResourcesFile"
+                  ng-href="{{item.ResourcesFile.url}}"
+                  target="_blank"
+                  >{{item.ResourcesFile.name}}</a
+                >
+              </div>
+            </td>
+            <td>
+              <i class="glyphicon glyphicon-pencil"></i>
+              <i class="glyphicon glyphicon-trash"></i>
+            </td>
+          </tr>
+        </table>
+        <div class="text-right">
+          <span class="add-timeline-row" ng-click="ctrl.openTimelineModal()"
+            >Add row <i class="glyphicon glyphicon-plus"></i
+          ></span>
+        </div>
+      </div>
+    </div>
+    <div class="approval-status">
+      <div class="approval-status-header">
+        <h4>Approval Status</h4>
+        <div class="approval-status-info">
+          <div class="approved">
+            <div class="status-container approved-icon">
+              <i class="glyphicon glyphicon-ok"></i>
+            </div>
+            Approved
+          </div>
+          <div class="cancelled">
+            <div class="status-container cancelled-icon">
+              <i class="glyphicon glyphicon-remove"></i>
+            </div>
+            Cancelled
+          </div>
+          <div class="rejected">
+            <div class="status-container rejected-icon">
+              <i class="glyphicon glyphicon-ban-circle"></i>
+            </div>
+            Rejected
+          </div>
+        </div>
+      </div>
+      <div>
+        <table class="table">
+          <tr>
+            <th>Role</th>
+            <th>Name</th>
+            <th>Date</th>
+            <th>Approval</th>
+          </tr>
+          <tr ng-repeat="item in ctrl.approvalStatusItems track by $index">
+            <td>{{item.Role}}</td>
+            <td>{{item.Name}}</td>
+            <td>{{item.Date | date: 'MM/dd/yyyy'}}</td>
+            <td>
+              <div ng-bind-html="ctrl.getApprovalStatus(item)"></div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,72 @@
+.applicationTestPlanDashboard .table th {
+  padding: 5px 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+.applicationTestPlanDashboard .table td {
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+.applicationTestPlanDashboard .header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.applicationTestPlanDashboard .header .headerTitle {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.applicationTestPlanDashboard .header .sectionHeader {
+  margin-left: 10px;
+  margin: 1em 0 1em 10px;
+  color: #de0000;
+}
+.applicationTestPlanDashboard .header .controlsBar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.applicationTestPlanDashboard .header .controlsBar .statusInfo {
+  margin-right: 2em;
+}
+.applicationTestPlanDashboard .footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2em 0 1em;
+}
+.applicationTestPlanDashboard .status {
+  display: inline-block;
+  margin-right: 1em;
+}
+.applicationTestPlanDashboard .statusIndicator {
+  display: inline-block;
+  vertical-align: middle;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+}
+.applicationTestPlanDashboard .statusIndicator.approvedStatus {
+  background-color: #2eca79;
+}
+.applicationTestPlanDashboard .statusIndicator.inProgressStatus {
+  background-color: #ff9d00;
+}
+.applicationTestPlanDashboard .statusIndicator.notStartedStatus {
+  background-color: #de0000;
+}
+.applicationTestPlanDashboard .editIcon {
+  color: green;
+  cursor: pointer;
+}
+.applicationTestPlanDashboard .startNewProcessBtn {
+  color: #fff;
+  font-weight: 500;
+  background-color: #ff9d00;
+  margin-left: 2em;
+}
