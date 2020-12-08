@@ -4,6 +4,7 @@
 }
 .draft-test-plan h4 {
   font-weight: 600;
+  margin: 10px 0;
 }
 .draft-test-plan .form-body .controlLabel {
   font-weight: 700;
@@ -118,10 +119,15 @@
 .approval-status .status-container {
   display: inline-block;
   vertical-align: middle;
-  padding: 4px 5px 6px;
   border-radius: 100%;
   color: #fff;
   font-size: 10px;
+  width: 18px;
+  height: 18px;
+  text-align: center;
+}
+.approval-status .status-container i {
+  vertical-align: middle;
 }
 .approval-status .status-container.approved-icon {
   background: #2eca79;

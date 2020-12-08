@@ -1,5 +1,9 @@
-.app-container {
+/* .app-container {
   width: 95%;
+} */
+.app-container button,
+.btn {
+  min-width: 0;
 }
 /* pagination */
 .pagination li a {
