@@ -3,110 +3,101 @@
     <h2>New Process Form</h2>
   </div>
   <div class="form-body">
-    <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-6">
-        <div class="form-group">
-          <label for="Application" class="control-label required"
-            >Application</label
-          >
-          <ui-select
-            name="Application"
-            ng-model="ctrl.item.Application"
-            theme="bootstrap"
-            close-on-select="true"
-            ng-class="{'ng-untouched': (!ctrl.form.Application.$touched)}"
-            required
-            fix-focus-on-touch
-          >
-            <ui-select-match placeholder="Select...">
-              {{$select.selected.Title}}
-            </ui-select-match>
-            <ui-select-choices repeat="app as app in ctrl.allApplications">
-              <div ng-bind-html="app.Title | highlight: $select.search"></div>
-            </ui-select-choices>
-          </ui-select>
+    <ng-form name="ctrl.form">
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+          <div class="form-group">
+            <label for="Application" class="control-label required"
+              >Application</label
+            >
+            <ui-select
+              ng-disabled="ctrl.routeParams.id"
+              name="Application"
+              ng-model="ctrl.item.Application"
+              theme="bootstrap"
+              close-on-select="true"
+              ng-class="{'ng-untouched': (!ctrl.form.Application.$touched)}"
+              required
+              fix-focus-on-touch
+            >
+              <ui-select-match placeholder="Select...">
+                {{$select.selected.Title}}
+              </ui-select-match>
+              <ui-select-choices repeat="app as app in ctrl.allApplications">
+                <div ng-bind-html="app.Title | highlight: $select.search"></div>
+              </ui-select-choices>
+            </ui-select>
+            <span
+              class="error-msg"
+              ng-show="ctrl.form.Application.$touched && ctrl.form.Application.$invalid"
+              >Application is required.</span
+            >
+          </div>
         </div>
-      </div>
-      <div class="col-sm-12 col-md-12 col-lg-6">
-        <div class="form-group">
-          <label for="AppOwner" class="control-label">App Owner</label>
-          <input
-            type="text"
-            class="form-control"
-            name="AppOwner"
-            ng-model="ctrl.item.Application.PlanOwner.Title"
-            readonly
-          />
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12 col-md-12 col-lg-6">
-        <div class="form-group">
-          <label for="TestStartDate" class="control-label"
-            >Test Start Date</label
-          >
-          <p class="input-group">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+          <div class="form-group">
+            <label for="AppOwner" class="control-label">Test Plan Owner</label>
             <input
               type="text"
-              name="TestStartDate"
-              id="TestStartDate"
               class="form-control"
-              uib-datepicker-popup="{{'MM/dd/yyyy'}}"
-              ng-model="ctrl.item.TestStartDate"
-              is-open="TestStartDateOpened"
-              datepicker-options="ctrl.dateOptions"
-              close-text="Close"
-              show-button-bar="false"
-              ng-click="TestStartDateOpened=true"
-              readonly
+              name="AppOwner"
+              ng-model="ctrl.item.Application.TestPlanOwner.Title"
+              ng-disabled="true"
             />
-            <span class="input-group-btn">
-              <button
-                type="button"
-                class="btn btn-default"
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12 col-md-12 col-lg-6">
+          <div class="form-group">
+            <label for="TestStartDate" class="control-label required"
+              >Test Start Date</label
+            >
+            <p class="input-group">
+              <input
+                ng-disabled="ctrl.routeParams.id"
+                type="text"
+                name="TestStartDate"
+                id="TestStartDate"
+                class="form-control"
+                uib-datepicker-popup="{{'MM/dd/yyyy'}}"
+                ng-model="ctrl.item.DueDate"
+                is-open="TestStartDateOpened"
+                datepicker-options="ctrl.dateOptions"
+                close-text="Close"
+                show-button-bar="false"
                 ng-click="TestStartDateOpened=true"
-                style="padding: 6px 12px"
-              >
-                <i class="glyphicon glyphicon-calendar"></i>
-              </button>
-            </span>
-          </p>
+                readonly
+                required
+              />
+              <span class="input-group-btn">
+                <button
+                  ng-disabled="ctrl.routeParams.id"
+                  type="button"
+                  class="btn btn-default"
+                  ng-click="TestStartDateOpened=true"
+                  style="padding: 6px 12px"
+                >
+                  <i class="glyphicon glyphicon-calendar"></i>
+                </button>
+              </span>
+            </p>
+            <span
+              class="error-msg"
+              ng-show="ctrl.form.TestStartDate.$touched && ctrl.form.TestStartDate.$invalid"
+              >Test Start Date is required.</span
+            >
+          </div>
         </div>
       </div>
-      <div class="col-sm-12 col-md-12 col-lg-6">
-        <div class="form-group">
-          <label for="TestExtendDate" class="control-label"
-            >Test Extend Date</label
-          >
-          <p class="input-group">
-            <input
-              type="text"
-              name="TestExtendDate"
-              id="TestExtendDate"
-              class="form-control"
-              uib-datepicker-popup="{{'MM/dd/yyyy'}}"
-              ng-model="ctrl.item.TestExtendDate"
-              is-open="TestExtendDateOpened"
-              datepicker-options="ctrl.dateOptions"
-              close-text="Close"
-              show-button-bar="false"
-              ng-click="TestExtendDateOpened=true"
-              readonly
-            />
-            <span class="input-group-btn">
-              <button
-                type="button"
-                class="btn btn-default"
-                ng-click="TestExtendDateOpened=true"
-                style="padding: 6px 12px"
-              >
-                <i class="glyphicon glyphicon-calendar"></i>
-              </button>
-            </span>
-          </p>
-        </div>
-      </div>
+    </ng-form>
+    <div class="text-center form-footer" ng-if="!ctrl.routeParams.id">
+      <button type="button" class="closeBtn" ng-click="ctrl.close()">
+        Close
+      </button>
+      <button type="button" class="submitBtn" ng-click="ctrl.submit()">
+        Submit
+      </button>
     </div>
   </div>
 </div>

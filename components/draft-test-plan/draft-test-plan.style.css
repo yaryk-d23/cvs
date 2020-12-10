@@ -14,6 +14,7 @@
   margin: 0 0 1em;
 }
 .draft-test-plan .form-body .uploadBtn {
+  width: 80px;
   color: #fff;
   font-weight: 700;
   background-color: #ff9d00;
@@ -102,6 +103,10 @@
 }
 .approval-status-info > div {
   margin-right: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
 }
 .approval-status-info .approved {
   color: #2eca79;
@@ -116,25 +121,7 @@
 .approval-status .table td {
   padding: 8px 2em;
 }
-.approval-status .status-container {
-  display: inline-block;
-  vertical-align: middle;
-  border-radius: 100%;
-  color: #fff;
-  font-size: 10px;
-  width: 18px;
-  height: 18px;
-  text-align: center;
-}
-.approval-status .status-container i {
-  vertical-align: middle;
-}
-.approval-status .status-container.approved-icon {
-  background: #2eca79;
-}
-.approval-status .status-container.cancelled-icon {
-  background: #02b2f1;
-}
-.approval-status .status-container.rejected-icon {
-  background: #de0000;
+.status-icon {
+  width: 26px;
+  margin-right: 5px;
 }

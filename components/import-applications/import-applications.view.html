@@ -1,0 +1,75 @@
+<div class="import-applications">
+  <div class="form-header">
+    <h2>Import Applications</h2>
+  </div>
+  <div class="form-body">
+    <div class="upload-file">
+      <div class="uploadFileContainer">
+        <input
+          style="display: none"
+          type="file"
+          name="attachment"
+          id="import-file"
+          ng-change="ctrl.onFileChange()"
+          ng-model="ctrl.importFile"
+        />
+        <div class="fileNameContainer">
+          <i
+            class="glyphicon glyphicon-paperclip"
+            style="font-size: 22px; margin-left: 2px"
+          ></i>
+          <div class="fileName">
+            {{ctrl.importFile ? ctrl.importFile.name : ''}}
+          </div>
+        </div>
+        <button
+          type="button"
+          class="uploadBtn"
+          ng-click="ctrl.onClickUploadButton()"
+        >
+          Upload
+        </button>
+      </div>
+      <div class="clear-file">
+        <i
+          class="glyphicon glyphicon-remove"
+          ng-click="ctrl.resetFileInput()"
+        ></i>
+      </div>
+    </div>
+    <div class="import-data">
+      <div class="import-data-header">
+        <h4>Imported data</h4>
+        <button
+          type="button"
+          class="btn importBtn"
+          ng-click="ctrl.uploadData()"
+        >
+          Import
+        </button>
+      </div>
+      <table class="table">
+        <tr>
+          <th>Application</th>
+          <th>Tier</th>
+          <th>Test Plan Owner</th>
+          <th>Business Unit</th>
+          <th>Approving Manager</th>
+          <th>Approving Director</th>
+        </tr>
+        <tr ng-repeat="item in ctrl.importData">
+          <td>{{item.Application}}</td>
+          <td>{{item.Tier}}</td>
+          <td>
+            {{item.TestPlanOwner && item.TestPlanOwner.Title ?
+            (item.TestPlanOwner.Title +'('+item['Plan Owner']+')') : item['Plan
+            Owner']}}
+          </td>
+          <td>{{item['Business Unit']}}</td>
+          <td></td>
+          <td></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</div>

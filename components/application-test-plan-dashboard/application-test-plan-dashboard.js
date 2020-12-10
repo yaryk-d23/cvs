@@ -98,9 +98,11 @@
         };
 
         ctrl.filterData = () => {
+            $Preload.show();
             let items = this.filterItemsByDateRange(ctrl.items);
             items = this.getItemRange(items);
             ctrl.filteredItems = items;
+            $Preload.hide();
         };
 
         ctrl.filterItemsByDateRange = (

@@ -5,6 +5,7 @@
     <div ng-view></div>
  </div>
 <script>
+
   window["SITE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/"; 
   window["APP_FOLDER"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/SiteAssets/DRProcessAutomationSolution/";   
   window["APP_PAGE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/SitePages/DRProcessAutomation.aspx"; 
@@ -21,6 +22,7 @@
       "modules/bootstrap/js/bootstrap.min.js",
       "modules/bootstrap/js/ui-bootstrap-tpls-2.5.0.min.js",
       "modules/ui-select/select.js",
+      "modules/xlsx.full.min.js",
       
     ];
 var scripts = [
@@ -37,6 +39,7 @@ var scripts = [
       "components/draft-test-plan/draft-test-plan.js",
       "components/post-test-results/post-test-results.js",
       "components/timeline-modal/timeline-modal.js",
+      "components/import-applications/import-applications.js",
 
       "common/date-range/date-range.js",
     ];
@@ -51,6 +54,7 @@ var scripts = [
       "components/draft-test-plan/draft-test-plan.style.css",
       "components/post-test-results/post-test-results.style.css",
       "components/timeline-modal/timeline-modal.style.css",
+      "components/import-applications/import-applications.style.css",
     ];
 
   for (var i = 0; i < styles.length; i++) {
@@ -59,7 +63,7 @@ var scripts = [
         window["APP_FOLDER"] +
         styles[i] +
         "?rnd=" +
-        new Date().getTime() * new Date().getTime() +
+        new Date().getTime() +
         '">'
     );
   }
@@ -79,7 +83,7 @@ var scripts = [
         window["APP_FOLDER"] +
         scripts[i] +
         "?rnd=" +
-        new Date().getTime() * new Date().getTime() +
+        new Date().getTime() +
         '"><\/script>'
     );
   }

@@ -1,6 +1,6 @@
 <div class="draft-test-plan">
   <div class="form-header">
-    <h2>Draft Test Plan</h2>
+    <h2>Test Plan</h2>
   </div>
   <div class="form-body">
     <div>
@@ -11,13 +11,15 @@
           name="attachment"
           id="attachment-file"
           ng-change="ctrl.onFileChange()"
-          ng-model="ctrl.draftFiles"
+          ng-model="ctrl.draftFile"
         />
         <div class="fileNameContainer">
-          <i class="glyphicon glyphicon-paperclip" style="font-size: 22px"></i>
+          <i
+            class="glyphicon glyphicon-paperclip"
+            style="font-size: 22px; margin-left: 2px"
+          ></i>
           <div class="fileName">
-            {{ctrl.draftFiles && ctrl.draftFiles.length ?
-            ctrl.draftFiles[0].name : ''}}
+            {{ctrl.draftFile && ctrl.draftFile.name ? ctrl.draftFile.name : ''}}
           </div>
         </div>
         <button
@@ -29,14 +31,10 @@
         </button>
       </div>
       <div class="filesContainer">
-        <div
-          class="file"
-          ng-repeat="file in ctrl.draftFiles"
-          ng-if="ctrl.draftFiles && ctrl.draftFiles.length"
-        >
-          <a>{{file.name}}</a>
+        <div class="file" ng-if="ctrl.draftFile && ctrl.draftFile.name">
+          <a>{{ctrl.draftFile.name}}</a>
           <div>
-            <span>{{this.formatBytes(file.size)}}</span>
+            <span>{{this.formatBytes(ctrl.draftFile.size)}}</span>
             <i
               class="glyphicon glyphicon-remove"
               ng-click="ctrl.resetFileInput()"
@@ -52,21 +50,22 @@
         <table class="table">
           <tr>
             <th></th>
-            <th>Excercise</th>
-            <th>Description</th>
-            <th>End Date</th>
-            <th>RFC</th>
-            <th>Evidence</th>
-            <th>Resources <i class="glyphicon glyphicon-paperclip"></i></th>
-            <th></th>
+            <th style="width: 20%">Excercise</th>
+            <th style="width: 40%">Description</th>
+            <th>Due Date</th>
+            <th style="width: 20%">
+              Additional Attachments
+              <i class="glyphicon glyphicon-paperclip"></i>
+            </th>
+            <th ng-if="ctrl.item.Stage === 1"></th>
           </tr>
           <tr ng-repeat="item in ctrl.excerciseTimelineItems track by $index">
             <td class="text-center">{{$index+1}}</td>
-            <td>{{item.Excercise}}</td>
-            <td>{{item.Description}}</td>
-            <td>{{item.EndDate | date: 'MM/dd/yyyy'}}</td>
-            <td>{{item.RFC}}</td>
-            <td>{{item.Evidence}}</td>
+            <td>{{item.Title}}</td>
+            <td>
+              <div ng-bind-html="ctrl.textToHtml(item.Description)"></div>
+            </td>
+            <td>{{item.DueDate | date: 'MM/dd/yyyy'}}</td>
             <td>
               <div>
                 <a
@@ -85,39 +84,33 @@
                 >
               </div>
             </td>
-            <td>
+            <td ng-if="ctrl.item.Stage === 1">
               <i class="glyphicon glyphicon-pencil"></i>
               <i class="glyphicon glyphicon-trash"></i>
             </td>
           </tr>
         </table>
-        <div class="text-right">
+        <div class="text-right" ng-if="ctrl.item.Stage === 1">
           <span class="add-timeline-row" ng-click="ctrl.openTimelineModal()"
             >Add row <i class="glyphicon glyphicon-plus"></i
           ></span>
         </div>
       </div>
     </div>
-    <div class="approval-status">
+    <div class="approval-status" ng-if="ctrl.item.Stage === 2">
       <div class="approval-status-header">
         <h4>Approval Status</h4>
         <div class="approval-status-info">
           <div class="approved">
-            <div class="status-container approved-icon">
-              <i class="glyphicon glyphicon-ok"></i>
-            </div>
+            <div ng-bind-html="ctrl.getApprovalStatus('Approved')"></div>
             Approved
           </div>
           <div class="cancelled">
-            <div class="status-container cancelled-icon">
-              <i class="glyphicon glyphicon-remove"></i>
-            </div>
+            <div ng-bind-html="ctrl.getApprovalStatus('Cancelled')"></div>
             Cancelled
           </div>
           <div class="rejected">
-            <div class="status-container rejected-icon">
-              <i class="glyphicon glyphicon-ban-circle"></i>
-            </div>
+            <div ng-bind-html="ctrl.getApprovalStatus('Rejected')"></div>
             Rejected
           </div>
         </div>
@@ -135,11 +128,27 @@
             <td>{{item.Name}}</td>
             <td>{{item.Date | date: 'MM/dd/yyyy'}}</td>
             <td>
-              <div ng-bind-html="ctrl.getApprovalStatus(item)"></div>
+              <div ng-bind-html="ctrl.getApprovalStatus(item.Status)"></div>
             </td>
           </tr>
         </table>
       </div>
+    </div>
+    <div class="text-center">
+      <p class="error-msg" ng-show="ctrl.errors.draftFile">
+        {{ctrl.errors.draftFile}}
+      </p>
+      <p class="error-msg" ng-show="ctrl.errors.excerciseTimelineItems">
+        {{ctrl.errors.excerciseTimelineItems}}
+      </p>
+    </div>
+    <div class="text-center form-footer" ng-if="ctrl.item.Stage === 1">
+      <button type="button" class="closeBtn" ng-click="ctrl.close()">
+        Close
+      </button>
+      <button type="button" class="submitBtn" ng-click="ctrl.submit()">
+        Submit
+      </button>
     </div>
   </div>
 </div>

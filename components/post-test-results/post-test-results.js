@@ -28,11 +28,6 @@
             Name: "Alex Pashkevych",
             Date: null,
             Approval: null
-        }, {
-            Role: "EDR Approval",
-            Name: "Alex Pashkevych",
-            Date: null,
-            Approval: null
         },];
 
         ctrl.formatBytes = (a, b = 2) => {
@@ -69,14 +64,14 @@
             ctrl.postFiles = null;
         };
 
-        ctrl.getApprovalStatus = function (item) {
-            switch (item.Status) {
+        ctrl.getApprovalStatus = function (status) {
+            switch (status) {
                 case "Approved":
-                    return '<div class="approved"><div class="status-container approved-icon"><i class="glyphicon glyphicon-ok"></i></div></div>';
+                    return '<img class="status-icon" src="' + window["APP_FOLDER"] + 'assets/approved.png" />';
                 case "Cancelled":
-                    return '<div class="cancelled"><div class="status-container cancelled-icon"><i class="glyphicon glyphicon-ok"></i></div></div>';
+                    return '<img class="status-icon" src="' + window["APP_FOLDER"] + 'assets/cancelled.png" />';
                 case "Rejected":
-                    return '<div class="rejected"><div class="status-container rejected-icon"><i class="glyphicon glyphicon-ok"></i></div></div>';
+                    return '<img class="status-icon" src="' + window["APP_FOLDER"] + 'assets/rejected.png" />';
                 default:
                     return null;
             }

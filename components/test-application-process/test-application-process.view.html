@@ -1,13 +1,9 @@
 <div class="section">
   <process-info all-applications="ctrl.allApplications" item="ctrl.item" />
 </div>
-<div class="section" ng-if="ctrl.item.Application">
+<div class="section" ng-if="ctrl.item.Application.Status ==='In progress'">
   <draft-test-plan item="ctrl.item" />
 </div>
-<div class="section" ng-if="ctrl.item.Application">
+<div class="section" ng-if="ctrl.item.TestITDirector ==='Approved'">
   <post-test-results item="ctrl.item"></post-test-results>
-</div>
-<div class="text-center">
-  <button type="button" class="closeBtn">Close</button>
-  <button type="button" class="submitBtn">Submit</button>
 </div>

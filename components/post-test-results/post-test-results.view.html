@@ -29,7 +29,10 @@
           ng-model="ctrl.postFiles"
         />
         <div class="fileNameContainer">
-          <i class="glyphicon glyphicon-paperclip" style="font-size: 22px"></i>
+          <i
+            class="glyphicon glyphicon-paperclip"
+            style="font-size: 22px; margin-left: 2px"
+          ></i>
           <div class="fileName">
             {{ctrl.postFiles && ctrl.postFiles.length ? ctrl.postFiles[0].name :
             ''}}
@@ -66,21 +69,15 @@
         <h4>Approval Status</h4>
         <div class="approval-status-info">
           <div class="approved">
-            <div class="status-container approved-icon">
-              <i class="glyphicon glyphicon-ok"></i>
-            </div>
+            <div ng-bind-html="ctrl.getApprovalStatus('Approved')"></div>
             Approved
           </div>
           <div class="cancelled">
-            <div class="status-container cancelled-icon">
-              <i class="glyphicon glyphicon-remove"></i>
-            </div>
+            <div ng-bind-html="ctrl.getApprovalStatus('Cancelled')"></div>
             Cancelled
           </div>
           <div class="rejected">
-            <div class="status-container rejected-icon">
-              <i class="glyphicon glyphicon-ban-circle"></i>
-            </div>
+            <div ng-bind-html="ctrl.getApprovalStatus('Rejected')"></div>
             Rejected
           </div>
         </div>

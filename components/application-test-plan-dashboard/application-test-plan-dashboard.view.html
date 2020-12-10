@@ -33,12 +33,12 @@
       <tr>
         <th></th>
         <th>Application</th>
-        <th>Plan Owner</th>
+        <th>Test Plan Owner</th>
         <th>Due Date</th>
-        <th>Draft Test Plan Received</th>
-        <th>Draft Test Plan Manager Approval</th>
-        <th>Tests Results Received</th>
-        <th>Tests Results Approved</th>
+        <th>Draft Plan Received</th>
+        <th>Test Plan Approved</th>
+        <th>Draft Results Received</th>
+        <th>Results Approved</th>
       </tr>
       <tr ng-repeat="item in ctrl.filteredItems">
         <td>
@@ -47,7 +47,7 @@
           ></a>
         </td>
         <td>{{item.Title}}</td>
-        <td>{{item.Application.PlanOwner.Title}}</td>
+        <td>{{item.Application.TestPlanOwner.Title}}</td>
         <td>{{item.Modified | date: 'MM/dd/yyyy'}}</td>
         <td>
           <div

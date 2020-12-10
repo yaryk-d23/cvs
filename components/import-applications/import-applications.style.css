@@ -1,0 +1,65 @@
+.import-applications .form-body .uploadBtn {
+  width: 80px;
+  color: #fff;
+  font-weight: 700;
+  background-color: #ff9d00;
+  padding: 0.5em 1em;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.import-applications .form-body .uploadBtn:hover {
+  background-color: #ffcf83;
+}
+.import-applications .form-body .uploadBtn:focus {
+  outline: none;
+}
+.import-applications .form-body .uploadFileContainer {
+  width: 300px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid #818181;
+  border-radius: 3px;
+}
+.import-applications .form-body .uploadFileContainer .fileNameContainer {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+.import-applications
+  .form-body
+  .uploadFileContainer
+  .fileNameContainer
+  .fileName {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 10px;
+}
+.import-data {
+  margin-top: 2em;
+}
+.import-data .import-data-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: start;
+  align-items: center;
+}
+.import-data .importBtn {
+  color: #fff;
+  background-color: #2eca79;
+  margin-left: 1em;
+}
+.import-applications .upload-file {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+.import-applications .clear-file {
+  margin-left: 1em;
+}
+.import-applications .clear-file i {
+  cursor: pointer;
+}

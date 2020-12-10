@@ -14,18 +14,38 @@
         var ctrl = this;
         ctrl.allApplications = [];
         ctrl.item = {};
-        ctrl.api = $ApiService;
 
-        async function loadData() {
-            ctrl.allApplications = await ctrl.api.getDRApplicationItems();
-            if ($routeParams.id) {
-                setTimeout(function () {
-                    $scope.$apply(function () {
-                        ctrl.item.Application = ctrl.allApplications[0];
+        ctrl.loadData = function () {
+            $ApiService.getDRApplicationItems().then(function (res) {
+                if ($routeParams.id) {
+                    $ApiService.getApplicationTestPlanItemById($routeParams.id).then(function (item) {
+                        setTimeout(function () {
+                            $scope.$apply(function () {
+                                ctrl.allApplications = res;
+                                ctrl.item = item;
+                                ctrl.item.DueDate = new Date(ctrl.item.DueDate);
+                                ctrl.item.Application = ctrl.allApplications.filter(function (x) {
+                                    return x.Id === item.ApplicationId;
+                                })[0];
+                                $Preload.hide();
+                            });
+                        }, 0);
+                    }, function (error) {
+                        alert("Invalid Application Test Plan item ID");
                     });
-                }, 0);
-            }
+                }
+                else {
+                    setTimeout(function () {
+                        $scope.$apply(function () {
+                            ctrl.allApplications = res.filter(function (x) {
+                                return x.Status === "Late";
+                            });
+                            $Preload.hide();
+                        });
+                    }, 0);
+                }
+            });
         }
-        loadData();
+        ctrl.loadData();
     }
 })();

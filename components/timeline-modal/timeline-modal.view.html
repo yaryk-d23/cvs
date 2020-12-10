@@ -14,7 +14,7 @@
           class="form-control"
           name="Excercise"
           id="Excercise"
-          ng-model="ctrl.item.Excercise"
+          ng-model="ctrl.item.Title"
           required
         />
         <span
@@ -42,7 +42,7 @@
         >
       </div>
       <div class="form-group">
-        <label for="EndDate" class="control-label required">End Date</label>
+        <label for="EndDate" class="control-label required">Due Date</label>
         <p class="input-group">
           <input
             type="text"
@@ -50,7 +50,7 @@
             id="EndDate"
             class="form-control"
             uib-datepicker-popup="{{'MM/dd/yyyy'}}"
-            ng-model="ctrl.item.EndDate"
+            ng-model="ctrl.item.DueDate"
             is-open="EndDateOpened"
             datepicker-options="ctrl.dateOptions"
             close-text="Close"
@@ -75,41 +75,10 @@
           >EndDate is required.</span
         >
       </div>
-      <div class="form-group">
-        <label for="RFC" class="control-label required">RFC</label>
-        <input
-          type="text"
-          class="form-control"
-          name="RFC"
-          id="RFC"
-          ng-model="ctrl.item.RFC"
-          required
-        />
-        <span
-          class="error-msg"
-          ng-show="ctrl.form.RFC.$touched && ctrl.form.RFC.$invalid"
-          >RFC is required.</span
-        >
-      </div>
-      <div class="form-group">
-        <label for="Evidence" class="control-label required">Evidence</label>
-        <input
-          type="text"
-          class="form-control"
-          name="Evidence"
-          id="Evidence"
-          ng-model="ctrl.item.Evidence"
-          required
-        />
-        <span
-          class="error-msg"
-          ng-show="ctrl.form.Evidence.$touched && ctrl.form.Evidence.$invalid"
-          >Evidence is required.</span
-        >
-      </div>
+
       <div class="form-group">
         <label for="ResourcesLink" class="control-label required"
-          >Resources (enter link or attach a file)</label
+          >Additional Attachments (enter link or attach a file)</label
         >
         <input
           type="text"
