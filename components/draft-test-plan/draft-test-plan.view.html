@@ -11,7 +11,7 @@
           name="attachment"
           id="attachment-file"
           ng-change="ctrl.onFileChange()"
-          ng-model="ctrl.draftFile"
+          ng-model="ctrl.item.TestPlanAttachment"
         />
         <div class="fileNameContainer">
           <i
@@ -19,23 +19,37 @@
             style="font-size: 22px; margin-left: 2px"
           ></i>
           <div class="fileName">
-            {{ctrl.draftFile && ctrl.draftFile.name ? ctrl.draftFile.name : ''}}
+            {{ctrl.item.TestPlanAttachment ? (ctrl.item.TestPlanAttachment.name
+            || ctrl.item.TestPlanAttachment.Name) : ''}}
           </div>
         </div>
         <button
           type="button"
           class="uploadBtn"
           ng-click="ctrl.onClickUploadButton()"
+          ng-disabled="ctrl.item.TestPlanAttachment.Name"
         >
           Upload
         </button>
       </div>
       <div class="filesContainer">
-        <div class="file" ng-if="ctrl.draftFile && ctrl.draftFile.name">
-          <a>{{ctrl.draftFile.name}}</a>
+        <div
+          class="file"
+          ng-if="ctrl.item.TestPlanAttachment && (ctrl.item.TestPlanAttachment.name || ctrl.item.TestPlanAttachment.Name)"
+        >
+          <a
+            target="_blank"
+            ng-href="{{ctrl.item.TestPlanAttachment.Name ? (ctrl.item.TestPlanAttachment.LinkingUrl || ctrl.item.TestPlanAttachment.ServerRelativeUrl) : ''}}"
+            >{{(ctrl.item.TestPlanAttachment.name ||
+            ctrl.item.TestPlanAttachment.Name)}}</a
+          >
           <div>
-            <span>{{this.formatBytes(ctrl.draftFile.size)}}</span>
+            <span
+              >{{this.formatBytes(ctrl.item.TestPlanAttachment.size ||
+              ctrl.item.TestPlanAttachment.Length)}}</span
+            >
             <i
+              ng-if="(ctrl.item.TestPlanAttachment.name || ctrl.item.TestPlanAttachment.Name) && ctrl.item.Stage === 1"
               class="glyphicon glyphicon-remove"
               ng-click="ctrl.resetFileInput()"
               style="font-size: 10px; cursor: pointer; margin-left: 10px"
@@ -49,55 +63,30 @@
       <div>
         <table class="table">
           <tr>
-            <th></th>
-            <th style="width: 20%">Excercise</th>
-            <th style="width: 40%">Description</th>
-            <th>Due Date</th>
-            <th style="width: 20%">
-              Additional Attachments
-              <i class="glyphicon glyphicon-paperclip"></i>
-            </th>
-            <th ng-if="ctrl.item.Stage === 1"></th>
+            <th style="width: 5%"></th>
+            <th style="width: 25%">Excercise Tasks</th>
+            <th style="width: 10%">Owner(s)</th>
+            <th style="width: 40%">Task Description</th>
+            <th style="width: 20%">Due Date</th>
           </tr>
           <tr ng-repeat="item in ctrl.excerciseTimelineItems track by $index">
             <td class="text-center">{{$index+1}}</td>
             <td>{{item.Title}}</td>
+            <td>{{item.Owners}}</td>
             <td>
               <div ng-bind-html="ctrl.textToHtml(item.Description)"></div>
             </td>
             <td>{{item.DueDate | date: 'MM/dd/yyyy'}}</td>
-            <td>
-              <div>
-                <a
-                  ng-if="item.ResourcesLink"
-                  ng-href="{{item.ResourcesLink}}"
-                  target="_blank"
-                  >Link</a
-                >
-              </div>
-              <div>
-                <a
-                  ng-if="item.ResourcesFile"
-                  ng-href="{{item.ResourcesFile.url}}"
-                  target="_blank"
-                  >{{item.ResourcesFile.name}}</a
-                >
-              </div>
-            </td>
-            <td ng-if="ctrl.item.Stage === 1">
-              <i class="glyphicon glyphicon-pencil"></i>
-              <i class="glyphicon glyphicon-trash"></i>
-            </td>
           </tr>
         </table>
-        <div class="text-right" ng-if="ctrl.item.Stage === 1">
+        <!-- <div class="text-right" ng-if="ctrl.item.Stage === 1">
           <span class="add-timeline-row" ng-click="ctrl.openTimelineModal()"
             >Add row <i class="glyphicon glyphicon-plus"></i
           ></span>
-        </div>
+        </div> -->
       </div>
     </div>
-    <div class="approval-status" ng-if="ctrl.item.Stage === 2">
+    <div class="approval-status" ng-if="ctrl.item.Stage >= 2">
       <div class="approval-status-header">
         <h4>Approval Status</h4>
         <div class="approval-status-info">
@@ -106,8 +95,8 @@
             Approved
           </div>
           <div class="cancelled">
-            <div ng-bind-html="ctrl.getApprovalStatus('Cancelled')"></div>
-            Cancelled
+            <div ng-bind-html="ctrl.getApprovalStatus('Canceled')"></div>
+            Canceled
           </div>
           <div class="rejected">
             <div ng-bind-html="ctrl.getApprovalStatus('Rejected')"></div>
@@ -116,19 +105,22 @@
         </div>
       </div>
       <div>
-        <table class="table">
+        <table class="table approva-table">
           <tr>
             <th>Role</th>
             <th>Name</th>
             <th>Date</th>
-            <th>Approval</th>
+            <th>Status</th>
           </tr>
           <tr ng-repeat="item in ctrl.approvalStatusItems track by $index">
             <td>{{item.Role}}</td>
-            <td>{{item.Name}}</td>
-            <td>{{item.Date | date: 'MM/dd/yyyy'}}</td>
             <td>
-              <div ng-bind-html="ctrl.getApprovalStatus(item.Status)"></div>
+              {{ctrl.item[item.UserFieldName] ?
+              ctrl.item[item.UserFieldName].Title : null}}
+            </td>
+            <td>{{ctrl.item[item.DateFieldName] | date: 'MM/dd/yyyy'}}</td>
+            <td>
+              <div ng-bind-html="ctrl.checkApprovalStatus(item)"></div>
             </td>
           </tr>
         </table>
@@ -148,6 +140,23 @@
       </button>
       <button type="button" class="submitBtn" ng-click="ctrl.submit()">
         Submit
+      </button>
+    </div>
+    <div
+      class="text-center form-footer"
+      ng-if="ctrl.item.Stage === 2 && ctrl.checkShowApproverControl()"
+    >
+      <button type="button" class="closeBtn" ng-click="ctrl.close()">
+        Close
+      </button>
+      <button type="button" class="reject-btn" ng-click="ctrl.reject()">
+        Reject
+      </button>
+      <button type="button" class="cancel-btn" ng-click="ctrl.cancel()">
+        Cancel
+      </button>
+      <button type="button" class="approve-btn" ng-click="ctrl.approve()">
+        Approve
       </button>
     </div>
   </div>

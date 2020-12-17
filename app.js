@@ -17,9 +17,28 @@ app.run(function ($rootScope, $location, $Preload, $ApiService) {
             }
         }
     });
+    $ApiService.getCurrentUser().then(function (res) {
+        window.currentSPUser = res;
+    });
 });
-app.controller('AppCtrl', [function () {
-    var vm = this;
+app.controller('AppCtrl', ['$location', function ($location) {
+    var ctrl = this;
+    ctrl.location = $location;
+    ctrl.navLinks = [
+        {
+            title: "Dashboard",
+            link: "/dashboard",
+        }, {
+            title: "Import Applications",
+            link: "/import-applications",
+        }, {
+            title: "Owner Dashboard",
+            link: "/owners-dashboard",
+        },
+    ];
+    ctrl.isActivePath = function (path) {
+        return $location.path() == path;
+    }
 }]);
 app.config(function ($routeProvider, $locationProvider) {
     $locationProvider.hashPrefix('');
@@ -37,7 +56,10 @@ app.config(function ($routeProvider, $locationProvider) {
         .when('/import-applications', {
             template: '<import-applications></import-applications>'
         })
-        .otherwise('/import-applications');
+        .when('/owners-dashboard', {
+            template: '<application-ownership-dashboard></application-ownership-dashboard>'
+        })
+        .otherwise('/dashboard');
 });
 app.directive('fixFocusOnTouch', function () {
     return {

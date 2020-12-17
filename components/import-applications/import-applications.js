@@ -14,6 +14,9 @@
         ctrl.importData = [];
         var allApplications = [];
         var allApplicatinsTitle = [];
+        ctrl.currYear = new Date().getFullYear();
+        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/dashboard";
+        ctrl.emailTemplateUrl = window["APP_FOLDER"] + "components/import-applications/email-template.html"
 
         $ApiService.getDRApplicationItems().then(function (res) {
             allApplications = res;
@@ -33,17 +36,23 @@
                     req.push($ApiService.updateApplication({
                         Id: existItem.Id,
                         // Title: item.Application,
-                        Tier: item.Tier,
                         TestPlanOwnerId: item.TestPlanOwner && item.TestPlanOwner.Id ? item.TestPlanOwner.Id : null,
+                        ApprovingManagerId: item.ApprovingManager && item.ApprovingManager.Id ? item.ApprovingManager.Id : null,
+                        ApprovingDirectorId: item.ApprovingDirector && item.ApprovingDirector.Id ? item.ApprovingDirector.Id : null,
                         BusinessUnit: item['Business Unit'],
+                        ApplicationStatus: "Active",
+                        Status: "Late"
                     }));
                 }
                 else {
                     req.push($ApiService.createApplication({
                         Title: item.Application,
-                        Tier: item.Tier,
                         TestPlanOwnerId: item.TestPlanOwner && item.TestPlanOwner.Id ? item.TestPlanOwner.Id : null,
+                        ApprovingManagerId: item.ApprovingManager && item.ApprovingManager.Id ? item.ApprovingManager.Id : null,
+                        ApprovingDirectorId: item.ApprovingDirector && item.ApprovingDirector.Id ? item.ApprovingDirector.Id : null,
                         BusinessUnit: item['Business Unit'],
+                        ApplicationStatus: "Active",
+                        Status: "Late"
                     }));
                 }
             });
@@ -51,8 +60,12 @@
                 setTimeout(function () {
                     $scope.$apply(function () {
                         $Preload.hide();
+                        alert("Import completed!");
+                        ctrl.resetFileInput();
+                        ctrl.importData = [];
                     });
                 }, 0);
+
             }, function (error) {
                 setTimeout(function () {
                     $scope.$apply(function () {
@@ -63,6 +76,71 @@
             });
         }
 
+        ctrl.sendInitialEmails = function () {
+            $Preload.show();
+            let activeApps = [];
+            $ApiService.getDRApplicationItems().then(function (applications) {
+                activeApps = applications.filter(function (x) {
+                    return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.ApprovingManagerId && x.ApprovingDirectorId;
+                });
+                let req = [];
+                activeApps.forEach(function (item) {
+                    req.push($ApiService.updateApplication({
+                        Id: item.Id,
+                        TestDate: new Date().toISOString(),
+                    }));
+                    req.push($ApiService.sendEmail({
+                        ToId: { 'results': [item.TestPlanOwnerId, item.ApprovingManagerId] },
+                        CCId: { 'results': [item.ApprovingDirectorId] },
+                        Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + new Date().getFullYear(),
+                        Body: $("#initial-email-template").html(),
+                        ApplicationId: item.Id,
+                    }));
+                    req.push($ApiService.sendEmail({
+                        ToId: { 'results': [item.TestPlanOwnerId] },
+                        CCId: { 'results': [item.ApprovingManagerId] },
+                        Subject: item.Title + " Failover Exercise Requirement Due/Not Completed",
+                        Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
+                            "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
+                            "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                            "Thank you,<br>EDR Team",
+                        DelayDate: new Date(new Date().setDate(new Date().getDate() + 5)),
+                        // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                        ApplicationId: item.Id,
+                    }));
+                    req.push($ApiService.sendEmail({
+                        ToId: { 'results': [item.TestPlanOwnerId] },
+                        CCId: { 'results': [item.ApprovingManagerId] },
+                        Subject: item.Title + " Failover Exercise Requirement Due/Not Completed",
+                        Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
+                            "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
+                            "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                            "Thank you,<br>EDR Team",
+                        DelayDate: getNextMonday(new Date(new Date().setDate(new Date().getDate() + 6))),
+                        // DelayDate: new Date(new Date().getTime() + 15 * 60000).toISOString(),
+                        ApplicationId: item.Id,
+                        RepeatDay: "3"
+                    }));
+                });
+                Promise.all(req).then(function (res) {
+                    setTimeout(function () {
+                        $scope.$apply(function () {
+                            $Preload.hide();
+                            alert("Process started!");
+                        });
+                    }, 0);
+
+                }, function (error) {
+                    setTimeout(function () {
+                        $scope.$apply(function () {
+                            console.log(error);
+                            $Preload.hide();
+                        });
+                    }, 0);
+                });;
+            });
+        }
+
         async function validateUserColumn(data) {
 
             // validate plan owner
@@ -70,15 +148,28 @@
                 if (data[i]['Plan Owner']) {
                     let res = await $ApiService.searchUserByName(data[i]['Plan Owner']);
                     if (res.SearchPrincipalsUsingContextWeb.results.length) {
-                        let spUser = await $pnp.sp.web.ensureUser(res.SearchPrincipalsUsingContextWeb.results[0].Email);
+                        let spUser = await $pnp.sp.web.ensureUser(res.SearchPrincipalsUsingContextWeb.results[0].LoginName);
                         data[i].TestPlanOwner = spUser.data;
+                    }
+                }
+                if (data[i]['Approving IT Manager']) {
+                    let res = await $ApiService.searchUserByName(data[i]['Approving IT Manager']);
+                    if (res.SearchPrincipalsUsingContextWeb.results.length) {
+                        let spUser = await $pnp.sp.web.ensureUser(res.SearchPrincipalsUsingContextWeb.results[0].LoginName);
+                        data[i].ApprovingManager = spUser.data;
+                    }
+                }
+                if (data[i]['Approving IT Director']) {
+                    let res = await $ApiService.searchUserByName(data[i]['Approving IT Director']);
+                    if (res.SearchPrincipalsUsingContextWeb.results.length) {
+                        let spUser = await $pnp.sp.web.ensureUser(res.SearchPrincipalsUsingContextWeb.results[0].LoginName);
+                        data[i].ApprovingDirector = spUser.data;
                     }
                 }
             }
             setTimeout(function () {
                 $scope.$apply(function () {
                     ctrl.importData = data;
-                    console.log(ctrl.importData);
                     $Preload.hide();
                 });
             }, 0);
@@ -86,14 +177,15 @@
 
 
         var ExcelToJSON = function (file) {
+            if (!file) return;
             var reader = new FileReader();
 
             reader.onload = function (e) {
                 /* read workbook */
                 var bstr = e.target.result;
                 var workbook = XLSX.read(bstr, { type: "binary" });
-                var sheetName = "Failover Tracking";
-                var sheet = workbook.Sheets[workbook.SheetNames.filter(function (x) { return x === sheetName })[0]];
+                // var sheetName = "Failover Tracking";
+                var sheet = workbook.Sheets[workbook.SheetNames[0]];
 
                 // remove header row"
                 // delete_row(sheet, 0);
@@ -137,13 +229,21 @@
             $Preload.show();
             let element = document.getElementById("import-file");
             let files = element["files"];
-
-            setTimeout(function () {
-                $scope.$apply(function () {
-                    ctrl.importFile = files[0];
-                    ExcelToJSON(ctrl.importFile);
-                });
-            }, 0);
+            if (files && files.length) {
+                setTimeout(function () {
+                    $scope.$apply(function () {
+                        ctrl.importFile = files[0];
+                        ExcelToJSON(ctrl.importFile);
+                    });
+                }, 0);
+            }
+            else {
+                setTimeout(function () {
+                    $scope.$apply(function () {
+                        $Preload.hide();
+                    });
+                }, 0);
+            }
 
         };
 
@@ -152,5 +252,11 @@
             element["value"] = "";
             ctrl.importFile = null;
         };
+
+        function getNextMonday(date) {
+            var d = new Date(date);
+            d.setDate(d.getDate() + (1 + 7 - d.getDay()) % 7);
+            return d;
+        }
     }
 })();

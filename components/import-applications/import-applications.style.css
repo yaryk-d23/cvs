@@ -1,5 +1,5 @@
 .import-applications .form-body .uploadBtn {
-  width: 80px;
+  min-width: 115px;
   color: #fff;
   font-weight: 700;
   background-color: #ff9d00;

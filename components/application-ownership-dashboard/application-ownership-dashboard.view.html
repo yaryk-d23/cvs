@@ -1,0 +1,95 @@
+<div class="application-ownership-dashboard">
+  <div class="header">
+    <h3 class="sectionHeader">Application Ownership</h3>
+    <div class="controlsBar">
+      <div class="statusInfo">
+        <div class="status">
+          <span class="statusIndicator approvedStatus"></span>
+          Completed
+        </div>
+        <div class="status">
+          <span class="statusIndicator inProgressStatus"></span>
+          In Progress
+        </div>
+        <div class="status">
+          <span class="statusIndicator notStartedStatus"></span>
+          Late
+        </div>
+      </div>
+      <date-range
+        on-range-change="ctrl.onDateRangeChange(startDate, endDate)"
+        start-date="ctrl.filterStartDate"
+        end-date="ctrl.filterEndDate"
+      />
+    </div>
+  </div>
+  <div>
+    <table class="table">
+      <tr>
+        <th>Approve</th>
+        <th>Edit</th>
+        <th>Business Unit</th>
+        <th>Application</th>
+        <th>Approving IT Manager</th>
+        <th>Approving IT Director</th>
+        <th>Plan Owner</th>
+        <th>Status</th>
+        <th style="min-width: 150px">Last Updated Date</th>
+      </tr>
+      <tr ng-repeat="item in ctrl.filteredItems">
+        <td>
+          <div class="checkbox text-center">
+            <label>
+              <input type="checkbox" ng-model="item.selected" />
+            </label>
+          </div>
+        </td>
+        <td>
+          <i
+            class="glyphicon glyphicon-edit editIcon"
+            ng-click="ctrl.setIncorrectData(item)"
+          ></i>
+        </td>
+        <td>{{item.BusinessUnit}}</td>
+        <td>{{item.Title}}</td>
+        <td>{{item.ApprovingManager.Title}}</td>
+        <td>{{item.ApprovingDirector.Title}}</td>
+        <td>{{item.TestPlanOwner.Title}}</td>
+        <td>
+          <div
+            class="text-center"
+            ng-bind-html="ctrl.getStatusIndicator(item.Status)"
+          ></div>
+        </td>
+        <td>{{item.Modified | date:'MM/dd/yyyy'}}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="footer">
+    <div>
+      <button
+        type="button"
+        class="mark-approved-btn"
+        ng-click="ctrl.markApproved()"
+        ng-disabled="!ctrl.checkSelectedItemsLength()"
+      >
+        <i class="glyphicon glyphicon-ok"></i>
+        Mark Approved
+      </button>
+    </div>
+    <div>
+      <ul
+        uib-pagination
+        total-items="ctrl.filteredItems.length"
+        ng-model="ctrl.pageNumber"
+        max-size="5"
+        items-per-page="ctrl.itemsPerPage"
+        class="pagination-sm"
+        boundary-link-numbers="true"
+        previous-text="<"
+        next-text=">"
+        ng-change="ctrl.filterData()"
+      ></ul>
+    </div>
+  </div>
+</div>

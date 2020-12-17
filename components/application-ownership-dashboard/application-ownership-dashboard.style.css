@@ -1,0 +1,83 @@
+.application-ownership-dashboard .table th {
+  padding: 5px 10px;
+  text-align: left;
+  vertical-align: middle;
+}
+.application-ownership-dashboard .table td {
+  padding: 5px 10px;
+  vertical-align: middle;
+}
+.application-ownership-dashboard .header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.application-ownership-dashboard .header .headerTitle {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.application-ownership-dashboard .header .sectionHeader {
+  margin-left: 10px;
+  margin: 1em 0 1em 10px;
+  color: #de0000;
+}
+.application-ownership-dashboard .header .controlsBar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+.application-ownership-dashboard .header .controlsBar .statusInfo {
+  margin-right: 1em;
+}
+.application-ownership-dashboard .footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin: 2em 0 1em;
+}
+.application-ownership-dashboard .status {
+  display: inline-block;
+  margin-right: 1em;
+}
+.application-ownership-dashboard .statusIndicator {
+  display: inline-block;
+  vertical-align: middle;
+  width: 10px;
+  height: 10px;
+  margin-right: 5px;
+}
+.application-ownership-dashboard .statusIndicator.approvedStatus {
+  background-color: #2eca79;
+}
+.application-ownership-dashboard .statusIndicator.inProgressStatus {
+  background-color: #ff9d00;
+}
+.application-ownership-dashboard .statusIndicator.notStartedStatus {
+  background-color: #de0000;
+}
+.application-ownership-dashboard .editIcon {
+  color: green;
+  cursor: pointer;
+}
+.application-ownership-dashboard .mark-approved-btn {
+  width: 160px;
+}
+.application-ownership-dashboard .mark-approved-btn:hover {
+  background-color: #cdcdcd;
+  border-color: #cdcdcd;
+}
+.application-ownership-dashboard .mark-approved-btn:focus {
+  outline: none;
+}
+.application-ownership-dashboard .mark-approved-btn:disabled {
+  background-color: #cdcdcd;
+  cursor: not-allowed;
+}
+.application-ownership-dashboard .pagination {
+  margin: 0;
+}

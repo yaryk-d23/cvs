@@ -31,7 +31,7 @@
   align-items: center;
 }
 .applicationTestPlanDashboard .header .controlsBar .statusInfo {
-  margin-right: 2em;
+  margin-right: 1em;
 }
 .applicationTestPlanDashboard .footer {
   display: flex;

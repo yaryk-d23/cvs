@@ -2,10 +2,23 @@
  <head></head>
  <body>
  <div class="app-container container" id="dr-process-automation" ng-app="App" ng-controller="AppCtrl as ctrl">
-    <div ng-view></div>
+  <nav class="navbar navbar-default">
+      <ul class="nav navbar-nav">
+        <li 
+          ng-repeat="item in ctrl.navLinks" 
+          ng-class="{'active': ctrl.isActivePath(item.link)}">
+            <a ng-href="#{{item.link}}">
+              {{item.title}} 
+              <span class="sr-only" ng-if="ctrl.isActivePath(item.link)">
+                (current)
+              </span>
+            </a>
+          </li>
+      </ul>
+  </nav>
+  <div ng-view></div>
  </div>
 <script>
-
   window["SITE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/"; 
   window["APP_FOLDER"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/SiteAssets/DRProcessAutomationSolution/";   
   window["APP_PAGE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/SitePages/DRProcessAutomation.aspx"; 
@@ -23,6 +36,7 @@
       "modules/bootstrap/js/ui-bootstrap-tpls-2.5.0.min.js",
       "modules/ui-select/select.js",
       "modules/xlsx.full.min.js",
+      "modules/dayjs.min.js",
       
     ];
 var scripts = [
@@ -40,8 +54,11 @@ var scripts = [
       "components/post-test-results/post-test-results.js",
       "components/timeline-modal/timeline-modal.js",
       "components/import-applications/import-applications.js",
+      "components/application-ownership-dashboard/application-ownership-dashboard.js",
 
       "common/date-range/date-range.js",
+      "common/reject-modal/reject-modal.js",
+      "common/comments-modal/comments-modal.js",
     ];
   var styles = [
       "modules/bootstrap/css/bootstrap.min.css",
@@ -55,6 +72,7 @@ var scripts = [
       "components/post-test-results/post-test-results.style.css",
       "components/timeline-modal/timeline-modal.style.css",
       "components/import-applications/import-applications.style.css",
+      "components/application-ownership-dashboard/application-ownership-dashboard.style.css",
     ];
 
   for (var i = 0; i < styles.length; i++) {

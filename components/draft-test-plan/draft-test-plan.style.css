@@ -14,7 +14,7 @@
   margin: 0 0 1em;
 }
 .draft-test-plan .form-body .uploadBtn {
-  width: 80px;
+  min-width: 115px;
   color: #fff;
   font-weight: 700;
   background-color: #ff9d00;
@@ -28,6 +28,10 @@
 }
 .draft-test-plan .form-body .uploadBtn:focus {
   outline: none;
+}
+.draft-test-plan .form-body .uploadBtn:disabled {
+  background-color: #ffcf83;
+  cursor: not-allowed;
 }
 .draft-test-plan .form-body .uploadFileContainer {
   width: 300px;
@@ -59,34 +63,6 @@
   align-items: center;
 }
 
-.excercise-timeline .table {
-  border-collapse: separate;
-  border-spacing: 0 15px;
-}
-.excercise-timeline .table th {
-  vertical-align: middle;
-  border-top: none;
-}
-.excercise-timeline .table td {
-  vertical-align: middle;
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  color: #818181;
-}
-.excercise-timeline .table td:first-child {
-  border-left: 1px solid #ddd;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-  color: inherit;
-  font-weight: 600;
-}
-.excercise-timeline .table td:last-child {
-  border-right: 1px solid #ddd;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-  width: 60px;
-  color: inherit;
-}
 .add-timeline-row {
   font-style: italic;
   cursor: pointer;

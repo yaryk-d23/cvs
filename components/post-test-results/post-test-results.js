@@ -6,29 +6,302 @@
                 item: '='
             },
             controllerAs: 'ctrl',
-            controller: ['$scope', '$ApiService', '$Preload', '$q', '$location', ctrl]
+            controller: ['$scope', '$ApiService', '$Preload', '$q', '$location', '$uibModal', ctrl]
         });
 
-    function ctrl($scope, $ApiService, $Preload, $q, $location) {
+    function ctrl($scope, $ApiService, $Preload, $q, $location, $uibModal) {
         var ctrl = this;
-        ctrl.api = $ApiService;
-        ctrl.postFiles = null;
+        ctrl.errors = {};
+        ctrl.curentApproval = null;
+        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/dashboard";
         ctrl.approvalStatusItems = [{
             Role: "EDR Review",
-            Name: "Alex Pashkevych",
+            FieldName: "PostTestEDRReview",
+            UserFieldName: "PostTestEDRReviewUser",
+            DateFieldName: "PostTestEDRReviewDate",
+            CommentFieldName: "PostTestEDRReviewComment",
+            Name: "",
             Date: null,
             Approval: null
         }, {
             Role: "IT Manager",
-            Name: "Alex Pashkevych",
+            FieldName: "PostTestITManager",
+            UserFieldName: "PostTestITManagerUser",
+            DateFieldName: "PostTestITManagerDate",
+            CommentFieldName: "PostTestITManagerComment",
+            Name: "",
             Date: null,
             Approval: null
         }, {
             Role: "IT Director",
-            Name: "Alex Pashkevych",
+            FieldName: "PostTestITDirector",
+            UserFieldName: "PostTestITDirectorUser",
+            DateFieldName: "PostTestITDirectorDate",
+            CommentFieldName: "PostTestITDirectoComment",
+            Name: "",
             Date: null,
             Approval: null
         },];
+
+        setTimeout(function () {
+            setCurrentApprover();
+        }, 1000);
+
+        ctrl.close = function () {
+            $location.path("/dashboard");
+        }
+
+        ctrl.submit = function () {
+            ctrl.errors = {};
+            if (!ctrl.item.TestResultsAttachment || !ctrl.item.TestResultsAttachment.name) {
+                ctrl.errors["postFile"] = "Upload Post Result file";
+            }
+            if (Object.keys(ctrl.errors).length) return;
+            $Preload.show();
+            $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
+                $ApiService.updateApplicationTestPlan({
+                    Id: ctrl.item.Id,
+                    Stage: 4,
+                    CompletedResults: ctrl.item.CompletedResults,
+                    PostTestEDRReview: "",
+                    PostTestITManager: "",
+                    PostTestITDirector: ""
+                }).then(function () {
+                    $ApiService.uploadFile("ApplicationAttachments", ctrl.item.TestResultsAttachment, {
+                        ApplicationTestPlanId: ctrl.item.Id,
+                        AttachmentType: "Tests Results"
+                    }).then(function () {
+                        $ApiService.sendEmail({
+                            ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] }, //Disasterrecoverytestteam@cvshealth.com
+                            Subject: "Attached DR Test Results for: " + ctrl.item.Application.Title + " Failover Exercise ",
+                            Body: "Need email template when plan owner upload post test results: Hello, <p>\"Test Plan Owner\" initial email to Request EDR review of Draft DR Test Results.</p>",
+                            ApplicationId: ctrl.item.Application.Id,
+                        }).then(function () {
+                            setTimeout(function () {
+                                $scope.$apply(function () {
+                                    $location.path("/dashboard");
+                                    $Preload.hide();
+                                });
+                            }, 0);
+                        });
+                    });
+                });
+            });
+
+        }
+
+        ctrl.reject = function () {
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: window["APP_FOLDER"] + 'common/reject-modal/reject-modal.view.html?rnd' + Math.random(),
+                controller: 'rejectModalCtrl',
+                controllerAs: 'ctrl',
+                resolve: {}
+            });
+            modalInstance.result.then(function (comment) {
+                $Preload.show();
+                let item = {
+                    Id: ctrl.item.Id,
+                    Stage: 3,
+                };
+                item[ctrl.curentApproval.FieldName] = "Rejected";
+                item[ctrl.curentApproval.UserFieldName + "Id"] = window.currentSPUser.Id;
+                item[ctrl.curentApproval.DateFieldName] = new Date().toISOString();
+                $ApiService.updateApplicationTestPlan(item).then(function () {
+                    $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
+                        $ApiService.sendEmail({
+                            ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] }, //Disasterrecoverytestteam@cvshealth.com
+                            CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
+                            Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Rejected",
+                            Body: "Hello, <p>The results you submitted for the " + ctrl.item.Application.Title + " Failover Exercise has been REJECTED for the following reasons:</p>" +
+                                "<p>" + comment.replace(/\n/g, '<br>') + "</p>" +
+                                "<p>Please make these updates to the Application Failover Test Plan and re-upload into the Failover Exercise Portal as soon as possible.</p>" +
+                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "Thank you,<br>EDR Team",
+                            ApplicationId: ctrl.item.Application.Id,
+                        }).then(function () {
+                            setTimeout(function () {
+                                $scope.$apply(function () {
+                                    $location.path("/dashboard");
+                                    $Preload.hide();
+                                });
+                            }, 0);
+                        });
+                    });
+                });
+            }, function () {
+            });
+
+        }
+        ctrl.cancel = function () {
+            $Preload.show();
+            let item = {
+                Id: ctrl.item.Id,
+            };
+            item[ctrl.curentApproval.FieldName] = "Canceled";
+            item[ctrl.curentApproval.UserFieldName + "Id"] = window.currentSPUser.Id;
+            item[ctrl.curentApproval.DateFieldName] = new Date().toISOString();
+            $ApiService.updateApplicationTestPlan(item).then(function () {
+                setTimeout(function () {
+                    $scope.$apply(function () {
+                        $location.path("/dashboard");
+                        $Preload.hide();
+                    });
+                }, 0);
+            });
+        }
+        ctrl.approve = function () {
+            $Preload.show();
+            let item = {
+                Id: ctrl.item.Id,
+            };
+            item[ctrl.curentApproval.FieldName] = "Approved";
+            item[ctrl.curentApproval.UserFieldName + "Id"] = window.currentSPUser.Id;
+            item[ctrl.curentApproval.DateFieldName] = new Date().toISOString();
+            if (ctrl.curentApproval.FieldName === "PostTestITDirector") {
+                item.Stage = 5;
+            }
+            $ApiService.updateApplicationTestPlan(item).then(function (updatedItem) {
+                if (ctrl.curentApproval.FieldName === "PostTestEDRReview") {
+                    $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
+                        let req = [];
+                        req.push($ApiService.createExcerciseTimeline({
+                            Title: "Application Failover Results and Timeline – FINAL Approval Process",
+                            Owners: "Application Teams and Application Managers",
+                            Description: "<p>Upon EDR Approval of the Failover Exercise Results, Approve the Final Application Failover Exercise Results via the " +
+                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>",
+                            DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
+                                new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us'),
+                            TestPlanItemId: ctrl.item.Id,
+                        }));
+                        req.push($ApiService.sendEmail({
+                            ToId: { 'results': [ctrl.item.Application.ApprovingManagerId, ctrl.item.Application.ApprovingDirectorId] },
+                            CCId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },
+                            Subject: ctrl.item.Application.Title + " Failover Results Require Approvall",
+                            Body: "Hello, <p>You are receiving this email because the " + ctrl.item.Application.Title + " Failover Results " +
+                                "require Manager and Director approval for Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
+                                "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a>, review the Results and provide your approval as soon as possible.</p>" +
+                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>",
+                            ApplicationId: ctrl.item.Application.Id,
+                        }));
+                        req.push($ApiService.sendEmail({
+                            ToId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
+                            CCId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },//Disasterrecoverytestteam@cvshealth.com
+                            Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
+                            Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
+                                " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
+                                "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a>, to review the Results and provide your approval as soon as possible.</p>" +
+                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "Thank you,<br>EDR Team",
+                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
+                            // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() + 9 * 60000).toISOString(),
+                            ApplicationId: ctrl.item.Application.Id,
+                        }));
+                        req.push($ApiService.sendEmail({
+                            ToId: { 'results': [ctrl.item.Application.ApprovingDirectorId] },
+                            CCId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },//Disasterrecoverytestteam@cvshealth.com
+                            Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
+                            Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
+                                " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
+                                "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a>, review the Test Plan and provide your approval as soon as possible.</p>" +
+                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "Thank you,<br>EDR Team",
+                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
+                            // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() + 9 * 60000).toISOString(),
+                            ApplicationId: ctrl.item.Application.Id,
+                        }));
+                        Promise.all(req).then(function () {
+                            setTimeout(function () {
+                                $scope.$apply(function () {
+                                    $location.path("/dashboard");
+                                    $Preload.hide();
+                                });
+                            }, 0);
+                        });
+                    });
+                }
+                else if (updatedItem.PostTestITManager === "Approved" && updatedItem.PostTestITDirector === "Approved") {
+                    $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
+                        $ApiService.updateApplicationTestPlan({
+                            Id: ctrl.item.Id,
+                            Stage: 5
+                        }).then(function () {
+                            let req = [];
+                            req.push($ApiService.updateApplication({
+                                Id: ctrl.item.Application.Id,
+                                Status: "Completed"
+                            }));
+                            req.push($ApiService.createExcerciseTimeline({
+                                Title: "DR Plan Review in BCITC",
+                                Owners: "Application Teams Infrastructure Teams",
+                                Description: "<p>Review DR Plans in BC in the Cloud to ensure it is still current; if nothing has changed, no action is required in BCITC.</p>",
+                                DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
+                                    new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us'),
+                                TestPlanItemId: ctrl.item.Id,
+                            }));
+                            req.push($ApiService.sendEmail({
+                                ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },
+                                Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Complete",
+                                Body: "Hello, <p>Thank you! You have now completed all Failover Exercise requirements for " + ctrl.item.Application.Title + ".</p>" +
+                                    "<p>" + ctrl.item.Application.Title + " are also posted on SharePoint in the Failover Application Folder(s):" +
+                                    "<br><a href='" + (ctrl.item.TestResultsAttachment.LinkingUrl || ctrl.item.TestResultsAttachment.ServerRelativeUrl) + "'>Link to file</a></p>" +
+                                    "Thanks again,<br>EDR Team",
+                                ApplicationId: ctrl.item.Application.Id,
+                            }));
+                            Promise.all(req).then(function () {
+                                setTimeout(function () {
+                                    $scope.$apply(function () {
+                                        $location.path("/dashboard");
+                                        $Preload.hide();
+                                    });
+                                }, 0);
+                            });
+                        });
+                    });
+                }
+                else {
+                    setTimeout(function () {
+                        $scope.$apply(function () {
+                            $location.path("/dashboard");
+                            $Preload.hide();
+                        });
+                    }, 0);
+                }
+            });
+        }
+
+        function setCurrentApprover() {
+            // ctrl.approvalStatusItems.forEach(function (item) {
+            //     if (!ctrl.curentApproval && !ctrl.item[item.FieldName]) {
+            //         ctrl.curentApproval = item;
+            //     }
+            // });
+            ctrl.approvalStatusItems.forEach(function (item) {
+                if ((!ctrl.curentApproval && !ctrl.item.PostTestEDRReview && item.FieldName === "PostTestEDRReview") ||
+                    (!ctrl.curentApproval && !ctrl.item.PostTestITManager && item.FieldName === "PostTestITManager" && ctrl.item.Application.ApprovingManagerId === window.currentSPUser.Id) ||
+                    (!ctrl.curentApproval && !ctrl.item.PostTestITDirector && item.FieldName === "PostTestITDirector" && ctrl.item.Application.ApprovingDirectorId === window.currentSPUser.Id)) {
+                    ctrl.curentApproval = item;
+                }
+            });
+        }
+
+        ctrl.checkShowApproverControl = function () {
+            let show = true;
+            ctrl.approvalStatusItems.forEach(function (item) {
+                if (ctrl.item[item.FieldName] === "Rejected" || ctrl.item[item.FieldName] === "Canceled") {
+                    show = false;
+                }
+            });
+            if (ctrl.item.PostTestITDirector === 'Approved') {
+                show = false;
+            }
+            return show;
+        }
+        ctrl.checkApprovalStatus = function (item) {
+            return ctrl.getApprovalStatus(ctrl.item[item.FieldName]);
+        }
 
         ctrl.formatBytes = (a, b = 2) => {
             if (0 === a) return "0 bytes";
@@ -52,23 +325,37 @@
 
             setTimeout(function () {
                 $scope.$apply(function () {
-                    ctrl.postFiles = files;
+                    ctrl.item.TestResultsAttachment = files[0];
                 });
             }, 0);
 
         };
 
         ctrl.resetFileInput = () => {
-            let element = document.getElementById("post-attachment-file");
-            element["value"] = "";
-            ctrl.postFiles = null;
+            if (ctrl.item.TestResultsAttachment.ServerRelativeUrl) {
+                $ApiService.deleteFile(ctrl.item.TestResultsAttachment.ServerRelativeUrl).then(function () {
+                    setTimeout(function () {
+                        $scope.$apply(function () {
+                            let element = document.getElementById("post-attachment-file");
+                            element["value"] = "";
+                            ctrl.item.TestResultsAttachment = null;
+                        });
+                    }, 0);
+
+                });
+            }
+            else {
+                let element = document.getElementById("post-attachment-file");
+                element["value"] = "";
+                ctrl.item.TestResultsAttachment = null;
+            }
         };
 
         ctrl.getApprovalStatus = function (status) {
             switch (status) {
                 case "Approved":
                     return '<img class="status-icon" src="' + window["APP_FOLDER"] + 'assets/approved.png" />';
-                case "Cancelled":
+                case "Canceled":
                     return '<img class="status-icon" src="' + window["APP_FOLDER"] + 'assets/cancelled.png" />';
                 case "Rejected":
                     return '<img class="status-icon" src="' + window["APP_FOLDER"] + 'assets/rejected.png" />';

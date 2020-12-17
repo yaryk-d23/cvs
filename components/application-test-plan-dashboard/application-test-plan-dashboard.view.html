@@ -1,4 +1,4 @@
-<div class="applicationTestPlanDashboard">
+<div class="applicationTestPlanDashboard component-block">
   <div class="header">
     <div class="headerTitle">
       <h3 class="sectionHeader">Application Test Plans</h3>
@@ -35,10 +35,10 @@
         <th>Application</th>
         <th>Test Plan Owner</th>
         <th>Due Date</th>
-        <th>Draft Plan Received</th>
-        <th>Test Plan Approved</th>
-        <th>Draft Results Received</th>
-        <th>Results Approved</th>
+        <th style="min-width: 140px">Draft Plan Received</th>
+        <th style="min-width: 140px">Test Plan Approved</th>
+        <th style="min-width: 140px">Draft Results Received</th>
+        <th style="min-width: 140px">Results Approved</th>
       </tr>
       <tr ng-repeat="item in ctrl.filteredItems">
         <td>
@@ -46,7 +46,7 @@
             ><i class="glyphicon glyphicon-edit editIcon"></i
           ></a>
         </td>
-        <td>{{item.Title}}</td>
+        <td>{{item.Application.Title}}</td>
         <td>{{item.Application.TestPlanOwner.Title}}</td>
         <td>{{item.Modified | date: 'MM/dd/yyyy'}}</td>
         <td>

@@ -1,4 +1,4 @@
-<div class="import-applications">
+<div class="import-applications component-block">
   <div class="form-header">
     <h2>Import Applications</h2>
   </div>
@@ -47,29 +47,54 @@
         >
           Import
         </button>
+        <button
+          type="button"
+          class="btn btn-warning"
+          ng-click="ctrl.sendInitialEmails()"
+          style="margin-left: 1em"
+        >
+          Start Process
+        </button>
       </div>
       <table class="table">
         <tr>
           <th>Application</th>
-          <th>Tier</th>
-          <th>Test Plan Owner</th>
+          <th style="min-width: 150px">Plan Owner</th>
           <th>Business Unit</th>
-          <th>Approving Manager</th>
-          <th>Approving Director</th>
+          <th style="min-width: 150px">Approving Manager</th>
+          <th style="min-width: 150px">Approving Director</th>
         </tr>
         <tr ng-repeat="item in ctrl.importData">
           <td>{{item.Application}}</td>
-          <td>{{item.Tier}}</td>
           <td>
             {{item.TestPlanOwner && item.TestPlanOwner.Title ?
-            (item.TestPlanOwner.Title +'('+item['Plan Owner']+')') : item['Plan
-            Owner']}}
+            item.TestPlanOwner.Title : null}}
+            <br />
+            <small ng-if="item.TestPlanOwner && item.TestPlanOwner.Title"
+              >({{item['Plan Owner']}})</small
+            >
           </td>
           <td>{{item['Business Unit']}}</td>
-          <td></td>
-          <td></td>
+          <td>
+            {{item.ApprovingManager && item.ApprovingManager.Title ?
+            item.ApprovingManager.Title : null}}
+            <br />
+            <small ng-if="item.ApprovingManager && item.ApprovingManager.Title"
+              >({{item['Approving IT Manager']}})</small
+            >
+          </td>
+          <td>
+            {{item.ApprovingDirector && item.ApprovingDirector.Title ?
+            item.ApprovingDirector.Title : null}}
+            <br />
+            <small
+              ng-if="item.ApprovingDirector && item.ApprovingDirector.Title"
+              >({{item['Approving IT Director']}})</small
+            >
+          </td>
         </tr>
       </table>
     </div>
   </div>
 </div>
+<div ng-include="ctrl.emailTemplateUrl"></div>

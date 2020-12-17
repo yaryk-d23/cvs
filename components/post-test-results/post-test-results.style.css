@@ -3,7 +3,7 @@
   margin: 1em 0;
 }
 .post-tests-results .form-body .uploadBtn {
-  width: 80px;
+  min-width: 115px;
   color: #fff;
   font-weight: 700;
   background-color: #ff9d00;
@@ -21,6 +21,10 @@
 }
 .post-tests-results .form-body .uploadBtn:focus {
   outline: none;
+}
+.post-tests-results .form-body .uploadBtn:disabled {
+  background-color: #ffcf83;
+  cursor: not-allowed;
 }
 .post-tests-results .form-body .uploadFileContainer {
   width: 300px;

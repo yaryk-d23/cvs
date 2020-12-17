@@ -1,9 +1,23 @@
-<div class="section">
-  <process-info all-applications="ctrl.allApplications" item="ctrl.item" />
-</div>
-<div class="section" ng-if="ctrl.item.Application.Status ==='In progress'">
-  <draft-test-plan item="ctrl.item" />
-</div>
-<div class="section" ng-if="ctrl.item.TestITDirector ==='Approved'">
-  <post-test-results item="ctrl.item"></post-test-results>
+<div class="component-block">
+  <div class="section">
+    <process-info all-applications="ctrl.allApplications" item="ctrl.item" />
+  </div>
+  <div
+    class="section"
+    ng-if="ctrl.item.Stage >= 1 && ctrl.currentUserPermissions !== 'Access Denied'"
+  >
+    <draft-test-plan item="ctrl.item" />
+  </div>
+  <div
+    class="section"
+    ng-if="(ctrl.item.TestITManager ==='Approved' && ctrl.item.TestITDirector ==='Approved') && ctrl.currentUserPermissions !== 'Access Denied'"
+  >
+    <post-test-results item="ctrl.item"></post-test-results>
+  </div>
+  <div
+    class="section text-center"
+    ng-if="ctrl.currentUserPermissions === 'Access Denied'"
+  >
+    <h2>Access Denied!</h2>
+  </div>
 </div>

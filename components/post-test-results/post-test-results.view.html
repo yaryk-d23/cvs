@@ -14,6 +14,7 @@
           name="CompletedResults"
           id="CompletedResults"
           ng-model="ctrl.item.CompletedResults"
+          ng-disabled="ctrl.item.Stage !== 3"
         ></textarea>
       </div>
     </div>
@@ -26,7 +27,7 @@
           name="attachment"
           id="post-attachment-file"
           ng-change="ctrl.onFileChange()"
-          ng-model="ctrl.postFiles"
+          ng-model="ctrl.item.TestResultsAttachment"
         />
         <div class="fileNameContainer">
           <i
@@ -34,14 +35,16 @@
             style="font-size: 22px; margin-left: 2px"
           ></i>
           <div class="fileName">
-            {{ctrl.postFiles && ctrl.postFiles.length ? ctrl.postFiles[0].name :
-            ''}}
+            {{ctrl.item.TestResultsAttachment ?
+            (ctrl.item.TestResultsAttachment.name ||
+            ctrl.item.TestResultsAttachment.Name) : ''}}
           </div>
         </div>
         <button
           type="button"
           class="uploadBtn"
           ng-click="ctrl.onClickUploadButton()"
+          ng-disabled="ctrl.item.TestResultsAttachment.Name"
         >
           Upload
         </button>
@@ -49,13 +52,21 @@
       <div class="filesContainer">
         <div
           class="file"
-          ng-repeat="file in ctrl.postFiles"
-          ng-if="ctrl.postFiles && ctrl.postFiles.length"
+          ng-if="ctrl.item.TestResultsAttachment && (ctrl.item.TestResultsAttachment.name || ctrl.item.TestResultsAttachment.Name)"
         >
-          <a>{{file.name}}</a>
+          <a
+            target="_blank"
+            ng-href="{{ctrl.item.TestResultsAttachment.Name ? (ctrl.item.TestResultsAttachment.LinkingUrl || ctrl.item.TestResultsAttachment.ServerRelativeUrl) : ''}}"
+            >{{(ctrl.item.TestResultsAttachment.name ||
+            ctrl.item.TestResultsAttachment.Name)}}</a
+          >
           <div>
-            <span>{{this.formatBytes(file.size)}}</span>
+            <span
+              >{{this.formatBytes(ctrl.item.TestResultsAttachment.size ||
+              ctrl.item.TestResultsAttachment.Length)}}</span
+            >
             <i
+              ng-if="(ctrl.item.TestResultsAttachment.name || ctrl.item.TestResultsAttachment.Name) && ctrl.item.Stage === 3"
               class="glyphicon glyphicon-remove"
               ng-click="ctrl.resetFileInput()"
               style="font-size: 10px; cursor: pointer; margin-left: 10px"
@@ -64,7 +75,7 @@
         </div>
       </div>
     </div>
-    <div class="approval-status">
+    <div class="approval-status" ng-if="ctrl.item.Stage >= 4">
       <div class="approval-status-header">
         <h4>Approval Status</h4>
         <div class="approval-status-info">
@@ -73,8 +84,8 @@
             Approved
           </div>
           <div class="cancelled">
-            <div ng-bind-html="ctrl.getApprovalStatus('Cancelled')"></div>
-            Cancelled
+            <div ng-bind-html="ctrl.getApprovalStatus('Canceled')"></div>
+            Canceled
           </div>
           <div class="rejected">
             <div ng-bind-html="ctrl.getApprovalStatus('Rejected')"></div>
@@ -83,23 +94,56 @@
         </div>
       </div>
       <div>
-        <table class="table">
+        <table class="table approva-table">
           <tr>
             <th>Role</th>
             <th>Name</th>
             <th>Date</th>
-            <th>Approval</th>
+            <th>Status</th>
           </tr>
           <tr ng-repeat="item in ctrl.approvalStatusItems track by $index">
             <td>{{item.Role}}</td>
-            <td>{{item.Name}}</td>
-            <td>{{item.Date | date: 'MM/dd/yyyy'}}</td>
             <td>
-              <div ng-bind-html="ctrl.getApprovalStatus(item)"></div>
+              {{ctrl.item[item.UserFieldName] ?
+              ctrl.item[item.UserFieldName].Title : null}}
+            </td>
+            <td>{{ctrl.item[item.DateFieldName] | date: 'MM/dd/yyyy'}}</td>
+            <td>
+              <div ng-bind-html="ctrl.checkApprovalStatus(item)"></div>
             </td>
           </tr>
         </table>
       </div>
+    </div>
+    <div class="text-center">
+      <p class="error-msg" ng-show="ctrl.errors.postFile">
+        {{ctrl.errors.postFile}}
+      </p>
+    </div>
+    <div class="text-center form-footer" ng-if="ctrl.item.Stage === 3">
+      <button type="button" class="closeBtn" ng-click="ctrl.close()">
+        Close
+      </button>
+      <button type="button" class="submitBtn" ng-click="ctrl.submit()">
+        Submit
+      </button>
+    </div>
+    <div
+      class="text-center form-footer"
+      ng-if="ctrl.item.Stage === 4 && ctrl.checkShowApproverControl()"
+    >
+      <button type="button" class="closeBtn" ng-click="ctrl.close()">
+        Close
+      </button>
+      <button type="button" class="reject-btn" ng-click="ctrl.reject()">
+        Reject
+      </button>
+      <button type="button" class="cancel-btn" ng-click="ctrl.cancel()">
+        Cancel
+      </button>
+      <button type="button" class="approve-btn" ng-click="ctrl.approve()">
+        Approve
+      </button>
     </div>
   </div>
 </div>
