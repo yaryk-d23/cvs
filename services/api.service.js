@@ -74,7 +74,7 @@
                     "ApprovingDirector/Id,ApprovingDirector/Title"
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
-                .filter("Status eq 'Late' and TestPlanOwnerId eq " + window.currentSPUser.Id)
+                .filter("Status ne 'Over Due' and TestPlanOwnerId eq " + window.currentSPUser.Id)
                 .get()
                 .then((response) => {
                     return response;

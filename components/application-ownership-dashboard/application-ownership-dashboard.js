@@ -18,7 +18,7 @@
         ctrl.itemsPerPage = 10;
         ctrl.filterStartDate = getCurrentMonthFirstDate();
         ctrl.filterEndDate = getCurrentMonthLastDate();
-        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/dashboard";
+        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
 
         function getData() {
             $ApiService.getMyApplicationItems().then(function (res) {
@@ -36,9 +36,9 @@
             switch (status) {
                 case "In progress":
                     return '<span class="statusIndicator inProgressStatus" ></span>';
-                case "Approved":
+                case "Completed":
                     return '<span class="statusIndicator approvedStatus" ></span>';
-                case "Late":
+                case "Over Due":
                     return '<span class="statusIndicator notStartedStatus" ></span>';
                 default:
                     return null;
@@ -121,14 +121,16 @@
                 $Preload.show();
                 $ApiService.deleteEmailItems(item.Id).then(function () {
                     $ApiService.sendEmail({
-                        ToId: { 'results': [item.TestPlanOwnerId] },
-                        CCId: { 'results': [item.TestPlanOwnerId] },
+                        // ToId: { 'results': [item.TestPlanOwnerId] },
+                        // ToEmails: "disasterrecoverytestteam@cvshealth.com",
+                        ToEmails: "sales@chironit.com",
+                        // CCId: { 'results': [item.TestPlanOwnerId] },
                         Subject: "Failover Exercise Notification – Incorrect Application Ownership",
                         Body: "<p>Hello EDR Team,</p>" +
                             "<p>You are receiving this email because " + item.Title + " indicated in the " +
                             "Failover Exercise Portal that the Application Ownership is incorrect.  " +
                             "<p>Comments: <br>" + comment.replace(/\n/g, '<br>') + "</p>" +
-                            "Please follow up with " + item.TestPlanOwner.Title + " to correct the information. </p>" +
+                            "Please follow up with " + item.TestPlanOwner.results.map(function (i) { return i.Title; }).join('; ') + " to correct the information. </p>" +
                             "<p>Thank you!</p>"
                     }).then(function () {
                         setTimeout(function () {
@@ -156,16 +158,16 @@
                 selectedApp.forEach(function (item) {
                     req.push($ApiService.updateApplication({
                         Id: item.Id,
-                        Status: "In progress"
+                        Status: "Completed"
                     }));
                 });
                 Promise.all(req).then(function (_) {
                     req = [];
                     selectedApp.forEach(function (item) {
                         req.push($ApiService.sendEmail({
-                            ToId: { 'results': [item.TestPlanOwnerId] },
+                            ToId: { 'results': item.TestPlanOwnerId.results },
                             CCId: { 'results': [item.ApprovingManagerId] },
-                            Subject: item.Title + " Failover Exercise Requirement Due/Not Completed",
+                            Subject: "Reminder: " + item.Title + " Failover Exercise Requirement Due/Not Completed",
                             Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
                                 "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
@@ -175,9 +177,9 @@
                             ApplicationId: item.Id,
                         }));
                         req.push($ApiService.sendEmail({
-                            ToId: { 'results': [item.TestPlanOwnerId] },
+                            ToId: { 'results': item.TestPlanOwnerId.results },
                             CCId: { 'results': [item.ApprovingManagerId] },
-                            Subject: item.Title + " Failover Exercise Requirement Due/Not Completed",
+                            Subject: "Reminder: " + item.Title + " Failover Exercise Requirement Due/Not Completed",
                             Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
                                 "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +

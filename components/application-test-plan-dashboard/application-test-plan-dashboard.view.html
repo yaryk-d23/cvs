@@ -18,7 +18,7 @@
         </div>
         <div class="status">
           <span class="statusIndicator notStartedStatus"></span>
-          Late
+          Over Due
         </div>
       </div>
       <date-range
@@ -33,7 +33,7 @@
       <tr>
         <th></th>
         <th>Application</th>
-        <th>Test Plan Owner</th>
+        <th>Test Plan Owner/POC</th>
         <th>Due Date</th>
         <th style="min-width: 140px">Draft Plan Received</th>
         <th style="min-width: 140px">Test Plan Approved</th>
@@ -48,7 +48,7 @@
         </td>
         <td>{{item.Application.Title}}</td>
         <td>{{item.Application.TestPlanOwner.Title}}</td>
-        <td>{{item.Modified | date: 'MM/dd/yyyy'}}</td>
+        <td>{{item.DueDate | date: 'MM/dd/yyyy'}}</td>
         <td>
           <div
             class="text-center"

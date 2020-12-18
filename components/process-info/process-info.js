@@ -43,7 +43,7 @@
                         Title: "Identify any changes to Application ownership",
                         Owners: "Application Teams",
                         Description: "Application Ownership / ITLT POC changes must be acknowledged and updated via the " +
-                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Exercise Portal</a>.",
+                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>.",
                         DueDate: new Date(ctrl.item.Application.TestDate).toLocaleDateString('en-us') + " - "
                             + new Date(new Date(ctrl.item.Application.TestDate).setDate(new Date(ctrl.item.Application.TestDate).getDate() + 7)).toLocaleDateString('en-us'),
                         TestPlanItemId: res.data.Id,
@@ -53,7 +53,7 @@
                         Title: "Identify and submit " + new Date().getFullYear() + " Failover Exercise date",
                         Owners: "Application Teams",
                         Description: "Test dates must be identified and submitted via the " +
-                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Exercise Portal</a>.",
+                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>.",
                         DueDate: new Date(ctrl.item.Application.TestDate).toLocaleDateString('en-us') + " - "
                             + new Date(new Date(ctrl.item.Application.TestDate).setDate(new Date(ctrl.item.Application.TestDate).getDate() + 14)).toLocaleDateString('en-us'),
                         TestPlanItemId: res.data.Id,
@@ -64,13 +64,13 @@
                     $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
                         let req = [];
                         req.push($ApiService.sendEmail({
-                            ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },
+                            ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
                             CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
-                            Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise ",
+                            Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise",
                             Body: "Hello, <p>Just a reminder that the " + ctrl.item.Application.Title + " Failover Exercise is scheduled for " + new Date(ctrl.item.DueDate).toLocaleDateString() +
                                 " and it is time to begin completing " +
                                 "the required documentation.  Please complete the Application Failover Test Plan and Timeline and upload it into the " +
-                                "Failover Exercise Portal within the next two weeks.</p>" +
+                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> within the next two weeks.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
                             DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 28)),
@@ -78,15 +78,31 @@
                             ApplicationId: ctrl.item.Application.Id,
                         }));
                         req.push($ApiService.sendEmail({
-                            ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },
+                            ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
                             CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
-                            Subject: ctrl.item.Application.Title + " Failover Exercise Requirement Due/Not Completed",
+                            Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise Requirement Due",
                             Body: "Hello, <p>Just a reminder that the " + ctrl.item.Application.Title + " Failover Exercise is scheduled for " + new Date(ctrl.item.DueDate).toLocaleDateString() +
                                 " and the Failover Exercise Requirements have not been completed. " +
-                                "Please complete the Application Failover Test Plan and Timeline and upload into the Failover Exercise Portal as soon as possible.</p>" +
+                                "Please complete the Application Failover Test Plan and Timeline and upload into the <a href='"
+                                + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
                             DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)),
+                            // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() - 13 * 60000).toISOString(),
+                            ApplicationId: ctrl.item.Application.Id,
+                            RepeatDay: "3"
+                        }));
+                        req.push($ApiService.sendEmail({
+                            ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                            CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
+                            Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise Requirement Past Due",
+                            Body: "Hello, <p>Just a reminder that the " + ctrl.item.Application.Title + " Failover Exercise is scheduled for " + new Date(ctrl.item.DueDate).toLocaleDateString() +
+                                " and the Failover Exercise Requirements have not been completed. " +
+                                "Please complete the Application Failover Test Plan and Timeline and upload into the <a href='"
+                                + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> as soon as possible.</p>" +
+                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "Thank you,<br>EDR Team",
+                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 17)),
                             // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() - 13 * 60000).toISOString(),
                             ApplicationId: ctrl.item.Application.Id,
                             RepeatDay: "3"

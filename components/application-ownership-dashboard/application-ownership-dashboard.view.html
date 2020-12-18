@@ -13,7 +13,7 @@
         </div>
         <div class="status">
           <span class="statusIndicator notStartedStatus"></span>
-          Late
+          Over Due
         </div>
       </div>
       <date-range
@@ -32,7 +32,7 @@
         <th>Application</th>
         <th>Approving IT Manager</th>
         <th>Approving IT Director</th>
-        <th>Plan Owner</th>
+        <th>Test Plan Owner/POC</th>
         <th>Status</th>
         <th style="min-width: 150px">Last Updated Date</th>
       </tr>
@@ -54,7 +54,9 @@
         <td>{{item.Title}}</td>
         <td>{{item.ApprovingManager.Title}}</td>
         <td>{{item.ApprovingDirector.Title}}</td>
-        <td>{{item.TestPlanOwner.Title}}</td>
+        <td>
+          <div ng-repeat="i in item.TestPlanOwner.results">{{i.Title}}</div>
+        </td>
         <td>
           <div
             class="text-center"

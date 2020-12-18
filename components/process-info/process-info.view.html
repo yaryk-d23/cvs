@@ -36,14 +36,23 @@
         </div>
         <div class="col-sm-12 col-md-12 col-lg-6">
           <div class="form-group">
-            <label for="AppOwner" class="control-label">Test Plan Owner</label>
-            <input
+            <label for="AppOwner" class="control-label"
+              >Test Plan Owner/POC</label
+            >
+            <!-- <input
               type="text"
               class="form-control"
               name="AppOwner"
               ng-model="ctrl.item.Application.TestPlanOwner.Title"
               ng-disabled="true"
-            />
+            /> -->
+            <div class="form-control">
+              <span
+                ng-repeat="i in ctrl.item.Application.TestPlanOwner.results"
+                style="margin-right: 5px"
+                >{{i.Title}};
+              </span>
+            </div>
           </div>
         </div>
       </div>

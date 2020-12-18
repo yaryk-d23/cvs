@@ -59,7 +59,7 @@
       <table class="table">
         <tr>
           <th>Application</th>
-          <th style="min-width: 150px">Plan Owner</th>
+          <th style="min-width: 150px">Test Plan Owner/POC</th>
           <th>Business Unit</th>
           <th style="min-width: 150px">Approving Manager</th>
           <th style="min-width: 150px">Approving Director</th>
@@ -67,10 +67,8 @@
         <tr ng-repeat="item in ctrl.importData">
           <td>{{item.Application}}</td>
           <td>
-            {{item.TestPlanOwner && item.TestPlanOwner.Title ?
-            item.TestPlanOwner.Title : null}}
-            <br />
-            <small ng-if="item.TestPlanOwner && item.TestPlanOwner.Title"
+            <div ng-repeat="i in item.TestPlanOwner">{{i.Title}}</div>
+            <small ng-if="item.TestPlanOwner && item.TestPlanOwner.length"
               >({{item['Plan Owner']}})</small
             >
           </td>

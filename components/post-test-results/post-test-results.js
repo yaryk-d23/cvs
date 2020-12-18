@@ -71,19 +71,19 @@
                         ApplicationTestPlanId: ctrl.item.Id,
                         AttachmentType: "Tests Results"
                     }).then(function () {
-                        $ApiService.sendEmail({
-                            ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] }, //Disasterrecoverytestteam@cvshealth.com
-                            Subject: "Attached DR Test Results for: " + ctrl.item.Application.Title + " Failover Exercise ",
-                            Body: "Need email template when plan owner upload post test results: Hello, <p>\"Test Plan Owner\" initial email to Request EDR review of Draft DR Test Results.</p>",
-                            ApplicationId: ctrl.item.Application.Id,
-                        }).then(function () {
-                            setTimeout(function () {
-                                $scope.$apply(function () {
-                                    $location.path("/dashboard");
-                                    $Preload.hide();
-                                });
-                            }, 0);
-                        });
+                        // $ApiService.sendEmail({
+                        //     ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] }, //Disasterrecoverytestteam@cvshealth.com
+                        //     Subject: "Attached DR Test Results for: " + ctrl.item.Application.Title + " Failover Exercise ",
+                        //     Body: "Need email template when plan owner upload post test results: Hello, <p>\"Test Plan Owner\" initial email to Request EDR review of Draft DR Test Results.</p>",
+                        //     ApplicationId: ctrl.item.Application.Id,
+                        // }).then(function () {
+                        setTimeout(function () {
+                            $scope.$apply(function () {
+                                $location.path("/dashboard");
+                                $Preload.hide();
+                            });
+                        }, 0);
+                        // });
                     });
                 });
             });
@@ -112,12 +112,13 @@
                 $ApiService.updateApplicationTestPlan(item).then(function () {
                     $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
                         $ApiService.sendEmail({
-                            ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] }, //Disasterrecoverytestteam@cvshealth.com
+                            ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
                             CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
                             Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Rejected",
                             Body: "Hello, <p>The results you submitted for the " + ctrl.item.Application.Title + " Failover Exercise has been REJECTED for the following reasons:</p>" +
                                 "<p>" + comment.replace(/\n/g, '<br>') + "</p>" +
-                                "<p>Please make these updates to the Application Failover Test Plan and re-upload into the Failover Exercise Portal as soon as possible.</p>" +
+                                "<p>Please make these updates to the Application Failover Test Plan and re-upload into the <a href='" +
+                                window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
                             ApplicationId: ctrl.item.Application.Id,
@@ -178,21 +179,21 @@
                         }));
                         req.push($ApiService.sendEmail({
                             ToId: { 'results': [ctrl.item.Application.ApprovingManagerId, ctrl.item.Application.ApprovingDirectorId] },
-                            CCId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },
-                            Subject: ctrl.item.Application.Title + " Failover Results Require Approvall",
+                            CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                            Subject: ctrl.item.Application.Title + " Failover Results Require Approval",
                             Body: "Hello, <p>You are receiving this email because the " + ctrl.item.Application.Title + " Failover Results " +
                                 "require Manager and Director approval for Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a>, review the Results and provide your approval as soon as possible.</p>" +
+                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal</a>, review the Results and provide your approval as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>",
                             ApplicationId: ctrl.item.Application.Id,
                         }));
                         req.push($ApiService.sendEmail({
                             ToId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
-                            CCId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },//Disasterrecoverytestteam@cvshealth.com
+                            CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
                             Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
                             Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                                 " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a>, to review the Results and provide your approval as soon as possible.</p>" +
+                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal</a>, to review the Results and provide your approval as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
                             DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
@@ -201,11 +202,11 @@
                         }));
                         req.push($ApiService.sendEmail({
                             ToId: { 'results': [ctrl.item.Application.ApprovingDirectorId] },
-                            CCId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },//Disasterrecoverytestteam@cvshealth.com
+                            CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
                             Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
                             Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                                 " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a>, review the Test Plan and provide your approval as soon as possible.</p>" +
+                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal</a>, review the Test Plan and provide your approval as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
                             DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
@@ -242,11 +243,9 @@
                                 TestPlanItemId: ctrl.item.Id,
                             }));
                             req.push($ApiService.sendEmail({
-                                ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] },
+                                ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
                                 Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Complete",
                                 Body: "Hello, <p>Thank you! You have now completed all Failover Exercise requirements for " + ctrl.item.Application.Title + ".</p>" +
-                                    "<p>" + ctrl.item.Application.Title + " are also posted on SharePoint in the Failover Application Folder(s):" +
-                                    "<br><a href='" + (ctrl.item.TestResultsAttachment.LinkingUrl || ctrl.item.TestResultsAttachment.ServerRelativeUrl) + "'>Link to file</a></p>" +
                                     "Thanks again,<br>EDR Team",
                                 ApplicationId: ctrl.item.Application.Id,
                             }));

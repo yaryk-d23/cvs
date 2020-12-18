@@ -24,7 +24,7 @@
                             setTimeout(function () {
                                 $scope.$apply(function () {
                                     ctrl.allApplications = res.filter(function (x) {
-                                        return x.ApplicationStatus === "Active" && x.TestPlanOwnerId === window.currentSPUser.Id;
+                                        return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1;
                                     });
                                     ctrl.item = item;
                                     ctrl.item.DueDate = new Date(ctrl.item.DueDate);
@@ -67,7 +67,7 @@
                     setTimeout(function () {
                         $scope.$apply(function () {
                             ctrl.allApplications = res.filter(function (x) {
-                                return x.ApplicationStatus === "Active" && x.TestPlanOwnerId === window.currentSPUser.Id;
+                                return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1;
                             });
                             $Preload.hide();
                         });
@@ -78,7 +78,7 @@
         ctrl.loadData();
 
         function checkPermissions() {
-            if (window.currentSPUser.Id === ctrl.item.Application.TestPlanOwnerId ||
+            if (ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
                 window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId ||
                 window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId ||
                 checkCurrentUserInGroup("EDR Team")) {
@@ -86,7 +86,7 @@
             }
             switch (ctrl.item.Stage) {
                 case 1:
-                    if (window.currentSPUser.Id === ctrl.item.Application.TestPlanOwnerId) {
+                    if (ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) {
                         ctrl.currentUserPermissions = "Edit";
                     }
                 case 2:
@@ -96,7 +96,7 @@
                         ctrl.currentUserPermissions = "Edit";
                     }
                 case 3:
-                    if (window.currentSPUser.Id === ctrl.item.Application.TestPlanOwnerId) {
+                    if (ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) {
                         ctrl.currentUserPermissions = "Edit";
                     }
                 case 4:

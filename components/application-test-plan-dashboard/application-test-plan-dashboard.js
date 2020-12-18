@@ -99,7 +99,7 @@
                 return "<span class=\"statusIndicator approvedStatus\" ></span>";
             }
             else {
-                return '<span class="statusIndicator notStartedStatus" ></span>';
+                return '<span class="statusIndicator inProgressStatus" ></span>';
             }
         };
         ctrl.getTestsResultsReceivedIndicator = function (item) {
@@ -115,7 +115,7 @@
                 return "<span class=\"statusIndicator approvedStatus\" ></span>";
             }
             else {
-                return '<span class="statusIndicator notStartedStatus" ></span>';
+                return '<span class="statusIndicator inProgressStatus" ></span>';
             }
         };
         ctrl.getTestsResultsApprovedIndicator = function (item) {
@@ -142,7 +142,7 @@
                 return "<span class=\"statusIndicator approvedStatus\" ></span>";
             }
             else {
-                return '<span class="statusIndicator notStartedStatus" ></span>';
+                return '<span class="statusIndicator inProgressStatus" ></span>';
             }
         };
 
@@ -152,7 +152,7 @@
                     return '<span class="statusIndicator inProgressStatus" ></span>';
                 case "Approved":
                     return '<span class="statusIndicator approvedStatus" ></span>';
-                case "Late":
+                case "Over Due":
                     return '<span class="statusIndicator notStartedStatus" ></span>';
                 default:
                     return null;
@@ -186,9 +186,9 @@
         ) => {
             return items.filter((x) => {
                 return (
-                    new Date(x.Modified).getTime() >=
+                    new Date(x.DueDate).getTime() >=
                     ctrl.filterStartDate.getTime() &&
-                    new Date(x.Modified).getTime() <= ctrl.filterEndDate.getTime()
+                    new Date(x.DueDate).getTime() <= ctrl.filterEndDate.getTime()
                 );
             });
         };

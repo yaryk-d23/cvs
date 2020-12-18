@@ -15,7 +15,7 @@
         var allApplications = [];
         var allApplicatinsTitle = [];
         ctrl.currYear = new Date().getFullYear();
-        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/dashboard";
+        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
         ctrl.emailTemplateUrl = window["APP_FOLDER"] + "components/import-applications/email-template.html"
 
         $ApiService.getDRApplicationItems().then(function (res) {
@@ -36,23 +36,23 @@
                     req.push($ApiService.updateApplication({
                         Id: existItem.Id,
                         // Title: item.Application,
-                        TestPlanOwnerId: item.TestPlanOwner && item.TestPlanOwner.Id ? item.TestPlanOwner.Id : null,
+                        TestPlanOwnerId: item.TestPlanOwner && item.TestPlanOwner.length ? { results: item.TestPlanOwner.map(function (x) { return x.Id; }) } : { results: [0] },
                         ApprovingManagerId: item.ApprovingManager && item.ApprovingManager.Id ? item.ApprovingManager.Id : null,
                         ApprovingDirectorId: item.ApprovingDirector && item.ApprovingDirector.Id ? item.ApprovingDirector.Id : null,
                         BusinessUnit: item['Business Unit'],
                         ApplicationStatus: "Active",
-                        Status: "Late"
+                        Status: "Over Due"
                     }));
                 }
                 else {
                     req.push($ApiService.createApplication({
                         Title: item.Application,
-                        TestPlanOwnerId: item.TestPlanOwner && item.TestPlanOwner.Id ? item.TestPlanOwner.Id : null,
+                        TestPlanOwnerId: item.TestPlanOwner && item.TestPlanOwner.length ? { results: item.TestPlanOwner.map(function (x) { return x.Id; }) } : { results: [0] },
                         ApprovingManagerId: item.ApprovingManager && item.ApprovingManager.Id ? item.ApprovingManager.Id : null,
                         ApprovingDirectorId: item.ApprovingDirector && item.ApprovingDirector.Id ? item.ApprovingDirector.Id : null,
                         BusinessUnit: item['Business Unit'],
                         ApplicationStatus: "Active",
-                        Status: "Late"
+                        Status: "Over Due"
                     }));
                 }
             });
@@ -85,21 +85,24 @@
                 });
                 let req = [];
                 activeApps.forEach(function (item) {
+                    req.push($ApiService.deleteEmailItems(item.Id));
                     req.push($ApiService.updateApplication({
                         Id: item.Id,
                         TestDate: new Date().toISOString(),
+                        Status: "In progress"
                     }));
                     req.push($ApiService.sendEmail({
-                        ToId: { 'results': [item.TestPlanOwnerId, item.ApprovingManagerId] },
+                        ToId: { 'results': item.TestPlanOwnerId.results.concat([item.ApprovingManagerId]) },
+                        // CCEmails: "disasterrecoverytestteam@cvshealth.com",
                         CCId: { 'results': [item.ApprovingDirectorId] },
                         Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + new Date().getFullYear(),
                         Body: $("#initial-email-template").html(),
                         ApplicationId: item.Id,
                     }));
                     req.push($ApiService.sendEmail({
-                        ToId: { 'results': [item.TestPlanOwnerId] },
+                        ToId: { 'results': item.TestPlanOwnerId.results },
                         CCId: { 'results': [item.ApprovingManagerId] },
-                        Subject: item.Title + " Failover Exercise Requirement Due/Not Completed",
+                        Subject: "Reminder: " + item.Title + " Failover Exercise Requirement Due/Not Completed",
                         Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
                             "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
@@ -109,9 +112,9 @@
                         ApplicationId: item.Id,
                     }));
                     req.push($ApiService.sendEmail({
-                        ToId: { 'results': [item.TestPlanOwnerId] },
+                        ToId: { 'results': item.TestPlanOwnerId.results },
                         CCId: { 'results': [item.ApprovingManagerId] },
-                        Subject: item.Title + " Failover Exercise Requirement Due/Not Completed",
+                        Subject: "Reminder: " + item.Title + " Failover Exercise Requirement Due/Not Completed",
                         Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
                             "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
@@ -146,10 +149,14 @@
             // validate plan owner
             for (let i = 0; i < data.length; i++) {
                 if (data[i]['Plan Owner']) {
-                    let res = await $ApiService.searchUserByName(data[i]['Plan Owner']);
-                    if (res.SearchPrincipalsUsingContextWeb.results.length) {
-                        let spUser = await $pnp.sp.web.ensureUser(res.SearchPrincipalsUsingContextWeb.results[0].LoginName);
-                        data[i].TestPlanOwner = spUser.data;
+                    let planOwners = data[i]['Plan Owner'] ? data[i]['Plan Owner'].split(";") : [];
+                    data[i].TestPlanOwner = [];
+                    for (let j = 0; j < planOwners.length; j++) {
+                        let res = await $ApiService.searchUserByName(planOwners[j]);
+                        if (res.SearchPrincipalsUsingContextWeb.results.length) {
+                            let spUser = await $pnp.sp.web.ensureUser(res.SearchPrincipalsUsingContextWeb.results[0].LoginName);
+                            data[i].TestPlanOwner.push(spUser.data);
+                        }
                     }
                 }
                 if (data[i]['Approving IT Manager']) {
