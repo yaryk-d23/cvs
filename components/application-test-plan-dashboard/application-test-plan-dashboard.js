@@ -75,6 +75,9 @@
             else if (item.TestPlanAttachment) {
                 return "<span class=\"statusIndicator approvedStatus\" ></span>";
             }
+            else {
+                return "";
+            }
         };
         ctrl.getDraftTestPlanManagerApprovalIndicator = function (item) {
             let currDate = new Date().getTime();
@@ -99,7 +102,7 @@
                 return "<span class=\"statusIndicator approvedStatus\" ></span>";
             }
             else {
-                return '<span class="statusIndicator inProgressStatus" ></span>';
+                return '';
             }
         };
         ctrl.getTestsResultsReceivedIndicator = function (item) {
@@ -115,7 +118,7 @@
                 return "<span class=\"statusIndicator approvedStatus\" ></span>";
             }
             else {
-                return '<span class="statusIndicator inProgressStatus" ></span>';
+                return '';
             }
         };
         ctrl.getTestsResultsApprovedIndicator = function (item) {
@@ -142,7 +145,7 @@
                 return "<span class=\"statusIndicator approvedStatus\" ></span>";
             }
             else {
-                return '<span class="statusIndicator inProgressStatus" ></span>';
+                return '';
             }
         };
 
@@ -162,14 +165,14 @@
         function getCurrentMonthFirstDate() {
             let date = new Date(),
                 y = date.getFullYear(),
-                m = date.getMonth();
+                m = date.getMonth() - 6;
             return new Date(y, m, 1);
         };
 
         function getCurrentMonthLastDate() {
             let date = new Date(),
                 y = date.getFullYear(),
-                m = date.getMonth();
+                m = date.getMonth() + 6;
             return new Date(y, m + 1, 0);
         };
 

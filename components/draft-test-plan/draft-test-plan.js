@@ -224,6 +224,7 @@
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
                         CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                        CCEmails: "disasterrecoverytestteam@cvshealth.com",
                         Subject: ctrl.item.Application.Title + " Failover Test Plan Approval Past Due",
                         Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                             " Failover Test Plan for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
@@ -237,6 +238,7 @@
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': [ctrl.item.Application.ApprovingDirectorId] },
                         CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                        CCEmails: "disasterrecoverytestteam@cvshealth.com",
                         Subject: ctrl.item.Application.Title + " Failover Test Plan Approval Past Due",
                         Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                             " Failover Test Plan for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +

@@ -93,7 +93,7 @@
                     }));
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': item.TestPlanOwnerId.results.concat([item.ApprovingManagerId]) },
-                        // CCEmails: "disasterrecoverytestteam@cvshealth.com",
+                        CCEmails: "disasterrecoverytestteam@cvshealth.com",
                         CCId: { 'results': [item.ApprovingDirectorId] },
                         Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + new Date().getFullYear(),
                         Body: $("#initial-email-template").html(),

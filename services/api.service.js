@@ -194,7 +194,7 @@
             return new Promise(function (resolve, reject) {
                 getFormDigestValue().then(function (formDigestValue) {
                     var addToFileName =
-                        "---" + new Date().getTime() + "---" + Math.random() + "---";
+                        (Math.floor(Math.random() * 9) + 1) + "-";
                     var input_file_name = data.name.split(".");
                     var ext = input_file_name.pop();
                     input_file_name = input_file_name.join(".");

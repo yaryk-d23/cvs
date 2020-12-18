@@ -123,7 +123,7 @@
                     $ApiService.sendEmail({
                         // ToId: { 'results': [item.TestPlanOwnerId] },
                         // ToEmails: "disasterrecoverytestteam@cvshealth.com",
-                        ToEmails: "sales@chironit.com",
+                        ToEmails: "disasterrecoverytestteam@cvshealth.com",
                         // CCId: { 'results': [item.TestPlanOwnerId] },
                         Subject: "Failover Exercise Notification – Incorrect Application Ownership",
                         Body: "<p>Hello EDR Team,</p>" +

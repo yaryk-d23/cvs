@@ -46,6 +46,7 @@
         </td>
         <td>
           <i
+            ng-if="item.Statue !== 'Completed'"
             class="glyphicon glyphicon-edit editIcon"
             ng-click="ctrl.setIncorrectData(item)"
           ></i>
