@@ -38,7 +38,7 @@
       </tr>
       <tr ng-repeat="item in ctrl.filteredItems">
         <td>
-          <div class="checkbox text-center">
+          <div class="checkbox text-center" ng-if="item.Status !== 'Completed'">
             <label>
               <input type="checkbox" ng-model="item.selected" />
             </label>
@@ -46,7 +46,7 @@
         </td>
         <td>
           <i
-            ng-if="item.Statue !== 'Completed'"
+            ng-if="item.Status !== 'Completed'"
             class="glyphicon glyphicon-edit editIcon"
             ng-click="ctrl.setIncorrectData(item)"
           ></i>
