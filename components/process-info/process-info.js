@@ -42,7 +42,7 @@
                     $ApiService.createExcerciseTimeline({
                         Title: "Identify any changes to Application ownership",
                         Owners: "Application Teams",
-                        Description: "Application Ownership / ITLT POC changes must be acknowledged and updated via the " +
+                        Description: "Application Ownership / POC changes must be acknowledged and updated via the " +
                             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>.",
                         DueDate: new Date(ctrl.item.Application.TestDate).toLocaleDateString('en-us') + " - "
                             + new Date(new Date(ctrl.item.Application.TestDate).setDate(new Date(ctrl.item.Application.TestDate).getDate() + 7)).toLocaleDateString('en-us'),

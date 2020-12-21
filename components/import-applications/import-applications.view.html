@@ -61,8 +61,8 @@
           <th>Application</th>
           <th style="min-width: 150px">Test Plan Owner/POC</th>
           <th>Business Unit</th>
-          <th style="min-width: 150px">Approving Manager</th>
-          <th style="min-width: 150px">Approving Director</th>
+          <th style="min-width: 150px">Manager/Tech Owner</th>
+          <th style="min-width: 150px">Director/Sub Portfolio Owner</th>
         </tr>
         <tr ng-repeat="item in ctrl.importData">
           <td>{{item.Application}}</td>
@@ -78,7 +78,7 @@
             item.ApprovingManager.Title : null}}
             <br />
             <small ng-if="item.ApprovingManager && item.ApprovingManager.Title"
-              >({{item['Approving IT Manager']}})</small
+              >({{item['Approving IT Manager/Tech Owner']}})</small
             >
           </td>
           <td>
@@ -87,7 +87,7 @@
             <br />
             <small
               ng-if="item.ApprovingDirector && item.ApprovingDirector.Title"
-              >({{item['Approving IT Director']}})</small
+              >({{item['Director/Sub Portfolio Owner']}})</small
             >
           </td>
         </tr>

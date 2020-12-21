@@ -93,7 +93,6 @@
                     }));
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': item.TestPlanOwnerId.results.concat([item.ApprovingManagerId]) },
-                        CCEmails: "disasterrecoverytestteam@cvshealth.com",
                         CCId: { 'results': [item.ApprovingDirectorId] },
                         Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + new Date().getFullYear(),
                         Body: $("#initial-email-template").html(),
@@ -159,15 +158,15 @@
                         }
                     }
                 }
-                if (data[i]['Approving IT Manager']) {
-                    let res = await $ApiService.searchUserByName(data[i]['Approving IT Manager']);
+                if (data[i]['Approving IT Manager/Tech Owner']) {
+                    let res = await $ApiService.searchUserByName(data[i]['Approving IT Manager/Tech Owner']);
                     if (res.SearchPrincipalsUsingContextWeb.results.length) {
                         let spUser = await $pnp.sp.web.ensureUser(res.SearchPrincipalsUsingContextWeb.results[0].LoginName);
                         data[i].ApprovingManager = spUser.data;
                     }
                 }
-                if (data[i]['Approving IT Director']) {
-                    let res = await $ApiService.searchUserByName(data[i]['Approving IT Director']);
+                if (data[i]['Approving IT Director/Sub Portfolio Owner']) {
+                    let res = await $ApiService.searchUserByName(data[i]['Approving IT Director/Sub Portfolio Owner']);
                     if (res.SearchPrincipalsUsingContextWeb.results.length) {
                         let spUser = await $pnp.sp.web.ensureUser(res.SearchPrincipalsUsingContextWeb.results[0].LoginName);
                         data[i].ApprovingDirector = spUser.data;

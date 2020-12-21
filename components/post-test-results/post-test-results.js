@@ -24,7 +24,7 @@
             Date: null,
             Approval: null
         }, {
-            Role: "IT Manager",
+            Role: "Manager/Tech Owner",
             FieldName: "PostTestITManager",
             UserFieldName: "PostTestITManagerUser",
             DateFieldName: "PostTestITManagerDate",
@@ -33,7 +33,7 @@
             Date: null,
             Approval: null
         }, {
-            Role: "IT Director",
+            Role: "Director/Sub Portfolio Owner",
             FieldName: "PostTestITDirector",
             UserFieldName: "PostTestITDirectorUser",
             DateFieldName: "PostTestITDirectorDate",
@@ -170,7 +170,7 @@
                         let req = [];
                         req.push($ApiService.createExcerciseTimeline({
                             Title: "Application Failover Results and Timeline – FINAL Approval Process",
-                            Owners: "Application Teams and Application Managers",
+                            Owners: "Application Managers/Tech Owners and Directors/Sub Portfolio Owners",
                             Description: "<p>Upon EDR Approval of the Failover Exercise Results, Approve the Final Application Failover Exercise Results via the " +
                                 "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>",
                             DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
@@ -182,7 +182,7 @@
                             CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
                             Subject: ctrl.item.Application.Title + " Failover Results Require Approval",
                             Body: "Hello, <p>You are receiving this email because the " + ctrl.item.Application.Title + " Failover Results " +
-                                "require Manager and Director approval for Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
+                                "require Manager/Tech Owner and Director/Sub Portfolio Owner approval for Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
                                 "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal</a>, review the Results and provide your approval as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>",
                             ApplicationId: ctrl.item.Application.Id,

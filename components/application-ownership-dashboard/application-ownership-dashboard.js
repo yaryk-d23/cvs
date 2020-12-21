@@ -121,16 +121,13 @@
                 $Preload.show();
                 $ApiService.deleteEmailItems(item.Id).then(function () {
                     $ApiService.sendEmail({
-                        // ToId: { 'results': [item.TestPlanOwnerId] },
-                        // ToEmails: "disasterrecoverytestteam@cvshealth.com",
                         ToEmails: "disasterrecoverytestteam@cvshealth.com",
-                        // CCId: { 'results': [item.TestPlanOwnerId] },
                         Subject: "Failover Exercise Notification – Incorrect Application Ownership",
                         Body: "<p>Hello EDR Team,</p>" +
-                            "<p>You are receiving this email because " + item.Title + " indicated in the " +
-                            "Failover Exercise Portal that the Application Ownership is incorrect.  " +
+                            "<p>You are receiving this email because " + item.Title + " indicated in the Failover Exercise Portal that the Application Ownership is incorrect. " +
                             "<p>Comments: <br>" + comment.replace(/\n/g, '<br>') + "</p>" +
-                            "Please follow up with " + item.TestPlanOwner.results.map(function (i) { return i.Title; }).join('; ') + " to correct the information. </p>" +
+                            "Please follow up with " + item.TestPlanOwner.results.map(function (i) { return i.Title; }).join('; ') +
+                            " and inform them the information has been corrected and they should access the Failover Exercise Portal to review and approve the updates.</p>" +
                             "<p>Thank you!</p>"
                     }).then(function () {
                         setTimeout(function () {
