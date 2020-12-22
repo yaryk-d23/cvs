@@ -28,7 +28,7 @@
                                     });
                                     ctrl.item = item;
                                     ctrl.item.DueDate = new Date(ctrl.item.DueDate);
-                                    ctrl.item.Application = ctrl.allApplications.filter(function (x) {
+                                    ctrl.item.Application = res.filter(function (x) {
                                         return x.Id === item.ApplicationId;
                                     })[0];
                                     let TestPlanAttachment = ctrl.item.TestPlanAttachment = attachments.filter(function (x) {
@@ -44,11 +44,11 @@
                                         ctrl.item.TestResultsAttachment = TestResultsAttachment.File;
                                     }
 
-                                    let ExcerciseAttachment = ctrl.item.ExcerciseAttachment = attachments.filter(function (x) {
-                                        return x.AttachmentType === "Excercise";
+                                    let ExerciseAttachment = ctrl.item.ExerciseAttachment = attachments.filter(function (x) {
+                                        return x.AttachmentType === "Exercise";
                                     });
-                                    if (ExcerciseAttachment && ExcerciseAttachment.length) {
-                                        ctrl.item.ExcerciseAttachment = ExcerciseAttachment.map(function (item) {
+                                    if (ExerciseAttachment && ExerciseAttachment.length) {
+                                        ctrl.item.ExerciseAttachment = ExerciseAttachment.map(function (item) {
                                             return item.File;
                                         });
                                     }

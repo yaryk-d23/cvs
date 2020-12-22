@@ -58,18 +58,18 @@
         </div>
       </div>
     </div>
-    <div class="excercise-timeline">
-      <h4>Excercise timeline</h4>
+    <div class="exercise-timeline">
+      <h4>Exercise timeline</h4>
       <div>
         <table class="table">
           <tr>
             <th style="width: 5%"></th>
-            <th style="width: 25%">Excercise Tasks</th>
+            <th style="width: 25%">Exercise Tasks</th>
             <th style="width: 10%">Owner(s)</th>
             <th style="width: 40%">Task Description</th>
             <th style="width: 20%">Due Date</th>
           </tr>
-          <tr ng-repeat="item in ctrl.excerciseTimelineItems track by $index">
+          <tr ng-repeat="item in ctrl.exerciseTimelineItems track by $index">
             <td class="text-center">{{$index+1}}</td>
             <td>{{item.Title}}</td>
             <td>{{item.Owners}}</td>
@@ -130,8 +130,8 @@
       <p class="error-msg" ng-show="ctrl.errors.draftFile">
         {{ctrl.errors.draftFile}}
       </p>
-      <p class="error-msg" ng-show="ctrl.errors.excerciseTimelineItems">
-        {{ctrl.errors.excerciseTimelineItems}}
+      <p class="error-msg" ng-show="ctrl.errors.exerciseTimelineItems">
+        {{ctrl.errors.exerciseTimelineItems}}
       </p>
     </div>
     <div class="text-center form-footer" ng-if="ctrl.item.Stage === 1">

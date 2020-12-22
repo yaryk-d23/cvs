@@ -3,24 +3,24 @@
     <button type="button" class="close" ng-click="ctrl.cancel()">
       &times;
     </button>
-    <h3 class="modal-title" id="modal-title">Excercise timeline</h3>
+    <h3 class="modal-title" id="modal-title">Exercise timeline</h3>
   </div>
   <div class="modal-body" id="modal-body">
     <ng-form name="ctrl.form">
       <div class="form-group">
-        <label for="Excercise" class="control-label required">Excercise</label>
+        <label for="Exercise" class="control-label required">Exercise</label>
         <input
           type="text"
           class="form-control"
-          name="Excercise"
-          id="Excercise"
+          name="Exercise"
+          id="Exercise"
           ng-model="ctrl.item.Title"
           required
         />
         <span
           class="error-msg"
-          ng-show="ctrl.form.Excercise.$touched && ctrl.form.Excercise.$invalid"
-          >Excercise is required.</span
+          ng-show="ctrl.form.Exercise.$touched && ctrl.form.Exercise.$invalid"
+          >Exercise is required.</span
         >
       </div>
       <div class="form-group">

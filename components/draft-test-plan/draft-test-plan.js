@@ -12,7 +12,7 @@
     function ctrl($scope, $ApiService, $Preload, $q, $location, $uibModal, $routeParams) {
         var ctrl = this;
         ctrl.errors = {};
-        ctrl.excerciseTimelineItems = [];
+        ctrl.exerciseTimelineItems = [];
         ctrl.curentApproval = null;
         ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/dashboard";
         ctrl.approvalStatusItems = [{
@@ -45,10 +45,10 @@
         },];
 
         if ($routeParams.id) {
-            $ApiService.getExcerciseTimelineItems($routeParams.id).then(function (res) {
+            $ApiService.getExerciseTimelineItems($routeParams.id).then(function (res) {
                 setTimeout(function () {
                     $scope.$apply(function () {
-                        ctrl.excerciseTimelineItems = res;
+                        ctrl.exerciseTimelineItems = res;
                         setCurrentApprover();
                     });
                 }, 0);
@@ -66,59 +66,59 @@
             }
             if (Object.keys(ctrl.errors).length) return;
             $Preload.show();
-            let req = [
-                $ApiService.createExcerciseTimeline({
-                    Title: "Application Failover Test Plan and Timeline - DRAFT",
-                    Owners: "Application Teams",
-                    Description: "<p>Upload the first draft of the Failover Exercise Test Plan via the " +
-                        "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>" +
-                        "<p>EDR Team will review and reject/provide feedback or Approve via the Portal.</p>" +
-                        "<p>1st Time Failover Testing: Application Failover Test Plan and Results Template is located on " +
-                        "<a href='https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/SitePages/Home.aspx?RootFolder=%2Fsites%2FDisasterRecovery%2FExercises%2FShared%20Documents%2FExercises%2F2021%20EDR%20Exercises%2FFailover&FolderCTID=0x0120008ED08C2B756CCF4496D4F6DDF22E6A21&View=%7B2122DA51%2D3F10%2D43CF%2DAC61%2DE90D82A513EF%7D'>Failover</a>section of the EDR SharePoint site.</p>" +
-                        "<p>Previous Failover Testing: Use last year’s Application Failover Test Plan and Results document and update it for " + new Date().getFullYear() + ".</p>" +
-                        "<p>Located here: <a target='_blank' href='https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/_layouts/15/start.aspx#/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2Fsites%2FDisasterRecovery%2FExercises%2FShared%20Documents%2FApplication%20Test%20Plans%2FFailover&FolderCTID=0x0120008ED08C2B756CCF4496D4F6DDF22E6A21&View=%7B5BC6DCA6%2D5BED%2D4FA6%2DBF69%2D9F4DEF9C28E5%7D'></a></p>",
-                    DueDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)).toLocaleDateString('en-us') + " - " +
-                        new Date(ctrl.item.DueDate).toLocaleDateString('en-us'),
-                    TestPlanItemId: ctrl.item.Id,
-                }),
-                $ApiService.createExcerciseTimeline({
-                    Title: "Submit Request for Change (RFC)",
-                    Owners: "Application Teams",
-                    Description: "Submit RFC for the Failover Exercise",
-                    DueDate: "TBD",
-                    TestPlanItemId: ctrl.item.Id,
-                }),
-            ];
-            Promise.all(req).then(function (res) {
-                $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
-                    $ApiService.updateApplicationTestPlan({
-                        Id: ctrl.item.Id,
-                        Stage: 2,
-                        TestEDRReview: "",
-                        TestITManager: "",
-                        TestITDirector: ""
+            // let req = [
+            //     $ApiService.createExerciseTimeline({
+            //         Title: "Application Failover Test Plan and Timeline - DRAFT",
+            //         Owners: "Application Teams",
+            //         Description: "<p>Upload the first draft of the Failover Exercise Test Plan via the " +
+            //             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>" +
+            //             "<p>EDR Team will review and reject/provide feedback or Approve via the Portal.</p>" +
+            //             "<p>1st Time Failover Testing: Application Failover Test Plan and Results Template is located on " +
+            //             "<a href='https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/SitePages/Home.aspx?RootFolder=%2Fsites%2FDisasterRecovery%2FExercises%2FShared%20Documents%2FExercises%2F2021%20EDR%20Exercises%2FFailover&FolderCTID=0x0120008ED08C2B756CCF4496D4F6DDF22E6A21&View=%7B2122DA51%2D3F10%2D43CF%2DAC61%2DE90D82A513EF%7D'>Failover</a>section of the EDR SharePoint site.</p>" +
+            //             "<p>Previous Failover Testing: Use last year’s Application Failover Test Plan and Results document and update it for " + new Date().getFullYear() + ".</p>" +
+            //             "<p>Located here: <a target='_blank' href='https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/_layouts/15/start.aspx#/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2Fsites%2FDisasterRecovery%2FExercises%2FShared%20Documents%2FApplication%20Test%20Plans%2FFailover&FolderCTID=0x0120008ED08C2B756CCF4496D4F6DDF22E6A21&View=%7B5BC6DCA6%2D5BED%2D4FA6%2DBF69%2D9F4DEF9C28E5%7D'></a></p>",
+            //         DueDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)).toLocaleDateString('en-us') + " - " +
+            //             new Date(ctrl.item.DueDate).toLocaleDateString('en-us'),
+            //         TestPlanItemId: ctrl.item.Id,
+            //     }),
+            //     $ApiService.createExerciseTimeline({
+            //         Title: "Submit Request for Change (RFC)",
+            //         Owners: "Application Teams",
+            //         Description: "Submit RFC for the Failover Exercise",
+            //         DueDate: "TBD",
+            //         TestPlanItemId: ctrl.item.Id,
+            //     }),
+            // ];
+            // Promise.all(req).then(function (res) {
+            $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
+                $ApiService.updateApplicationTestPlan({
+                    Id: ctrl.item.Id,
+                    Stage: 2,
+                    TestEDRReview: "",
+                    TestITManager: "",
+                    TestITDirector: ""
+                }).then(function () {
+                    $ApiService.uploadFile("ApplicationAttachments", ctrl.item.TestPlanAttachment, {
+                        ApplicationTestPlanId: ctrl.item.Id,
+                        AttachmentType: "Test Plan"
                     }).then(function () {
-                        $ApiService.uploadFile("ApplicationAttachments", ctrl.item.TestPlanAttachment, {
-                            ApplicationTestPlanId: ctrl.item.Id,
-                            AttachmentType: "Test Plan"
-                        }).then(function () {
-                            // $ApiService.sendEmail({
-                            //     ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] }, //Disasterrecoverytestteam@cvshealth.com
-                            //     Subject: "Add draft Test Plan for: " + ctrl.item.Application.Title + " Failover Exercise ",
-                            //     Body: "Hello, <Submit>Need email template when add draft test plan</Submit>",
-                            //     ApplicationId: ctrl.item.Application.Id,
-                            // }).then(function () {
-                            setTimeout(function () {
-                                $scope.$apply(function () {
-                                    $location.path("/dashboard");
-                                    $Preload.hide();
-                                });
-                            }, 0);
-                            // });
-                        });
+                        // $ApiService.sendEmail({
+                        //     ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] }, //Disasterrecoverytestteam@cvshealth.com
+                        //     Subject: "Add draft Test Plan for: " + ctrl.item.Application.Title + " Failover Exercise ",
+                        //     Body: "Hello, <Submit>Need email template when add draft test plan</Submit>",
+                        //     ApplicationId: ctrl.item.Application.Id,
+                        // }).then(function () {
+                        setTimeout(function () {
+                            $scope.$apply(function () {
+                                $location.path("/dashboard");
+                                $Preload.hide();
+                            });
+                        }, 0);
+                        // });
                     });
                 });
             });
+            // });
 
         }
 
@@ -202,16 +202,6 @@
             $ApiService.updateApplicationTestPlan(item).then(function (updatedItem) {
                 if (ctrl.curentApproval.FieldName === "TestEDRReview") {
                     let req = [];
-                    req.push($ApiService.createExcerciseTimeline({
-                        Title: "Application Failover Test Plan and Timeline – FINAL Approval Process",
-                        Owners: "Application Managers/Tech Owners and Directors/Sub Portfolio Owners",
-                        Description: "<p>Upon EDR Approval of the Failover Exercise Test Plan, Approve the Final Application Failover Exercise Test Plan via the " +
-                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>" +
-                            "<p>The final test plan MUST include the RFC and timeline (IQ/OQ)</p>",
-                        DueDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 7)).toLocaleDateString('en-us') + " - " +
-                            new Date(ctrl.item.DueDate).toLocaleDateString('en-us'),
-                        TestPlanItemId: ctrl.item.Id,
-                    }));
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': [ctrl.item.Application.ApprovingManagerId, ctrl.item.Application.ApprovingDirectorId] },
                         CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
@@ -225,7 +215,7 @@
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
                         CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                        CCEmails: "disasterrecoverytestteam@cvshealth.com",
+                        // CCEmails: "disasterrecoverytestteam@cvshealth.com",
                         Subject: ctrl.item.Application.Title + " Failover Test Plan Approval Past Due",
                         Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                             " Failover Test Plan for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
@@ -239,7 +229,7 @@
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': [ctrl.item.Application.ApprovingDirectorId] },
                         CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                        CCEmails: "disasterrecoverytestteam@cvshealth.com",
+                        // CCEmails: "disasterrecoverytestteam@cvshealth.com",
                         Subject: ctrl.item.Application.Title + " Failover Test Plan Approval Past Due",
                         Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                             " Failover Test Plan for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
@@ -268,7 +258,7 @@
                             Stage: 3
                         }).then(function () {
                             let req = [];
-                            req.push($ApiService.createExcerciseTimeline({
+                            req.push($ApiService.createExerciseTimeline({
                                 Title: "Application Failover Results and Timeline - DRAFT",
                                 Owners: "Application Teams",
                                 Description: "<p>Upload the first draft of the Failover Exercise Results via the " +
@@ -276,6 +266,23 @@
                                     "<p>EDR Team will review and reject/provide feedback or Approve via the Portal</p>",
                                 DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
                                     new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)).toLocaleDateString('en-us'),
+                                TestPlanItemId: ctrl.item.Id,
+                            }));
+                            req.push($ApiService.createExerciseTimeline({
+                                Title: "Application Failover Results and Timeline – FINAL Approval Process",
+                                Owners: "Application Managers/Tech Owners and Directors/Sub Portfolio Owners",
+                                Description: "<p>Upon EDR Approval of the Failover Exercise Results, Approve the Final Application Failover Exercise Results via the " +
+                                    "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>",
+                                DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
+                                    new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us'),
+                                TestPlanItemId: ctrl.item.Id,
+                            }));
+                            req.push($ApiService.createExerciseTimeline({
+                                Title: "DR Plan Review in BCITC",
+                                Owners: "Application Teams Infrastructure Teams",
+                                Description: "<p>Review DR Plans in BC in the Cloud to ensure it is still current; if nothing has changed, no action is required in BCITC.</p>",
+                                DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
+                                    new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us'),
                                 TestPlanItemId: ctrl.item.Id,
                             }));
                             req.push($ApiService.sendEmail({
@@ -297,6 +304,7 @@
                                     "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> within the next week.</p>" +
                                     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                     "Thank you,<br>EDR Team",
+                                DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 1)),
                                 ApplicationId: ctrl.item.Application.Id,
                             }));
                             req.push($ApiService.sendEmail({
@@ -308,24 +316,24 @@
                                     "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                                     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                     "Thank you,<br>EDR Team",
-                                DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 8)),
+                                DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 5)),
                                 // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() + 9 * 60000).toISOString(),
                                 ApplicationId: ctrl.item.Application.Id,
                             }));
-                            req.push($ApiService.sendEmail({
-                                ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                                CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
-                                Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise Requirement Due/Not Completed",
-                                Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for the " + ctrl.item.Application.Title +
-                                    " Failover Exercise that was completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                    "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
-                                    "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                    "Thank you,<br>EDR Team",
-                                DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 11)),
-                                // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() + 9 * 60000).toISOString(),
-                                ApplicationId: ctrl.item.Application.Id,
-                                RepeatDay: "3"
-                            }));
+                            // req.push($ApiService.sendEmail({
+                            //     ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                            //     CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
+                            //     Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise Requirement Due/Not Completed",
+                            //     Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for the " + ctrl.item.Application.Title +
+                            //         " Failover Exercise that was completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
+                            //         "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
+                            //         "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                            //         "Thank you,<br>EDR Team",
+                            //     DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 11)),
+                            //     // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() + 9 * 60000).toISOString(),
+                            //     ApplicationId: ctrl.item.Application.Id,
+                            //     RepeatDay: "3"
+                            // }));
 
                             Promise.all(req).then(function () {
                                 setTimeout(function () {
@@ -423,7 +431,7 @@
             });
 
             modalInstance.result.then(function (item) {
-                ctrl.excerciseTimelineItems.push(item);
+                ctrl.exerciseTimelineItems.push(item);
             }, function () {
             });
         }

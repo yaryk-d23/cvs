@@ -168,15 +168,6 @@
                 if (ctrl.curentApproval.FieldName === "PostTestEDRReview") {
                     $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
                         let req = [];
-                        req.push($ApiService.createExcerciseTimeline({
-                            Title: "Application Failover Results and Timeline – FINAL Approval Process",
-                            Owners: "Application Managers/Tech Owners and Directors/Sub Portfolio Owners",
-                            Description: "<p>Upon EDR Approval of the Failover Exercise Results, Approve the Final Application Failover Exercise Results via the " +
-                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>",
-                            DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
-                                new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us'),
-                            TestPlanItemId: ctrl.item.Id,
-                        }));
                         req.push($ApiService.sendEmail({
                             ToId: { 'results': [ctrl.item.Application.ApprovingManagerId, ctrl.item.Application.ApprovingDirectorId] },
                             CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
@@ -190,7 +181,7 @@
                         req.push($ApiService.sendEmail({
                             ToId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
                             CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                            CCEmails: "disasterrecoverytestteam@cvshealth.com",
+                            // CCEmails: "disasterrecoverytestteam@cvshealth.com",
                             Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
                             Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                                 " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
@@ -204,7 +195,7 @@
                         req.push($ApiService.sendEmail({
                             ToId: { 'results': [ctrl.item.Application.ApprovingDirectorId] },
                             CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                            CCEmails: "disasterrecoverytestteam@cvshealth.com",
+                            // CCEmails: "disasterrecoverytestteam@cvshealth.com",
                             Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
                             Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                                 " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
@@ -235,14 +226,6 @@
                             req.push($ApiService.updateApplication({
                                 Id: ctrl.item.Application.Id,
                                 Status: "Completed"
-                            }));
-                            req.push($ApiService.createExcerciseTimeline({
-                                Title: "DR Plan Review in BCITC",
-                                Owners: "Application Teams Infrastructure Teams",
-                                Description: "<p>Review DR Plans in BC in the Cloud to ensure it is still current; if nothing has changed, no action is required in BCITC.</p>",
-                                DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
-                                    new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us'),
-                                TestPlanItemId: ctrl.item.Id,
                             }));
                             req.push($ApiService.sendEmail({
                                 ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },

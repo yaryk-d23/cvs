@@ -12,9 +12,9 @@
             updateApplication: updateApplication,
             createApplicationTestPlan: createApplicationTestPlan,
             updateApplicationTestPlan: updateApplicationTestPlan,
-            getExcerciseTimelineItems: getExcerciseTimelineItems,
-            createExcerciseTimeline: createExcerciseTimeline,
-            updateExcerciseTimeline: updateExcerciseTimeline,
+            getExerciseTimelineItems: getExerciseTimelineItems,
+            createExerciseTimeline: createExerciseTimeline,
+            updateExerciseTimeline: updateExerciseTimeline,
             uploadFile: uploadFile,
             getFormDigestValue: getFormDigestValue,
             getFormAttachments: getFormAttachments,
@@ -150,20 +150,20 @@
                 .update(data);
         }
 
-        function createExcerciseTimeline(data) {
-            return $pnp.sp.web.lists.getByTitle("Excercise Timeline").items.add(data);
+        function createExerciseTimeline(data) {
+            return $pnp.sp.web.lists.getByTitle("Exercise Timeline").items.add(data);
         }
 
-        function updateExcerciseTimeline(data) {
+        function updateExerciseTimeline(data) {
             return $pnp.sp.web.lists
-                .getByTitle("Excercise Timeline")
+                .getByTitle("Exercise Timeline")
                 .items.getById(data.Id)
                 .update(data);
         }
 
-        function getExcerciseTimelineItems(testPlanItemId) {
+        function getExerciseTimelineItems(testPlanItemId) {
             return $pnp.sp.web.lists
-                .getByTitle("Excercise Timeline")
+                .getByTitle("Exercise Timeline")
                 .items.filter("TestPlanItemId eq " + testPlanItemId)
                 .get();
         }
@@ -194,11 +194,11 @@
             return new Promise(function (resolve, reject) {
                 getFormDigestValue().then(function (formDigestValue) {
                     var addToFileName =
-                        (Math.floor(Math.random() * 9) + 1) + "-";
+                        new Date().getTime() + "---" + Math.random() + "---";
                     var input_file_name = data.name.split(".");
                     var ext = input_file_name.pop();
                     input_file_name = input_file_name.join(".");
-                    input_file_name = input_file_name.substring(0, 50);
+                    // input_file_name = input_file_name.substring(0, 50);
                     input_file_name = input_file_name + "." + ext;
 
                     var config = {
@@ -216,7 +216,7 @@
                         "')/RootFolder/Files/add(overwrite=true, url='" +
                         addToFileName +
                         input_file_name +
-                        "')?$select=ServerRelativeUrl,ListItemAllFields/Id&$expand=ListItemAllFields";
+                        "')?$select=*,ListItemAllFields/Id&$expand=ListItemAllFields";
                     $http({
                         method: "POST",
                         url: url,
@@ -224,44 +224,71 @@
                         data: data,
                         headers: config.headers,
                     }).then(function (res) {
-                        var createFileRes = res;
+
                         var id = res.data.d.ListItemAllFields.Id;
-                        var OldServerRelativeUrl = res.data.d.ServerRelativeUrl;
-                        var ServerRelativeUrl = OldServerRelativeUrl.split("/");
-                        var file_name = ServerRelativeUrl.pop();
-                        file_name = file_name.replace(addToFileName, "");
-                        file_name = file_name.split(".");
-                        var ext = file_name.pop();
-                        file_name = file_name.join(".") + "-" + id + "." + ext;
-                        ServerRelativeUrl.push(file_name);
-                        ServerRelativeUrl = ServerRelativeUrl.join("/");
-                        $http({
-                            method: "POST",
-                            url:
-                                window["SITE_LOCATION_URL"] +
-                                "/_api/web/getfilebyserverrelativeurl('" +
-                                OldServerRelativeUrl +
-                                "')/moveto(newurl='" +
-                                ServerRelativeUrl +
-                                "',flags=1)",
-                            headers: {
-                                Accept: "application/json;odata=verbose",
-                                "content-type": "application/json;odata=verbose",
-                                "X-RequestDigest": formDigestValue,
-                            },
-                        }).then(function () {
-                            if (spdata) {
-                                $pnp.sp.web.lists
-                                    .getByTitle(libraryTitle)
-                                    .items.getById(id)
-                                    .update(spdata)
-                                    .then(function () {
-                                        resolve(createFileRes.data.d);
-                                    });
-                            } else {
-                                resolve(createFileRes.data.d);
-                            }
-                        });
+                        var createFileRes = res.data.d;
+                        var fileName = res.data.d.Name.replace(addToFileName, "");
+                        fileName = fileName.split(".");
+                        var ext = fileName.pop();
+                        fileName = fileName.join(".") + "-" + id + "." + ext;
+                        $pnp.sp.web.lists
+                            .getByTitle(libraryTitle)
+                            .items.getById(id).get().then(function (fileItem) {
+                                var itemPayload = {};
+                                itemPayload['__metadata'] = { 'type': fileItem['__metadata']['type'] };
+                                itemPayload['Title'] = fileName.replace(addToFileName, "");
+                                itemPayload['FileLeafRef'] = fileName.replace(addToFileName, "");
+                                var itemUrl = fileItem['__metadata']['uri'];
+                                $http({
+                                    method: "POST",
+                                    url: itemUrl,
+                                    data: itemPayload,
+                                    headers: {
+                                        Accept: "application/json;odata=verbose",
+                                        "content-type": "application/json;odata=verbose",
+                                        "X-RequestDigest": formDigestValue,
+                                        "X-HTTP-Method": "MERGE",
+                                        "If-Match": "*"
+                                    },
+                                }).then(function () {
+                                    if (spdata) {
+                                        $pnp.sp.web.lists
+                                            .getByTitle(libraryTitle)
+                                            .items.getById(id)
+                                            .update(spdata)
+                                            .then(function () {
+                                                resolve(createFileRes);
+                                            });
+                                    } else {
+                                        resolve(createFileRes);
+                                    }
+                                });
+                            });
+                        // var OldServerRelativeUrl = res.data.d.ServerRelativeUrl;
+                        // var ServerRelativeUrl = OldServerRelativeUrl.split("/");
+                        // var file_name = ServerRelativeUrl.pop();
+                        // file_name = file_name.replace(addToFileName, "");
+                        // file_name = file_name.split(".");
+                        // var ext = file_name.pop();
+                        // file_name = file_name.join(".") + "-" + id + "." + ext;
+                        // ServerRelativeUrl.push(file_name);
+                        // ServerRelativeUrl = ServerRelativeUrl.join("/");
+                        // $http({
+                        //     method: "POST",
+                        //     url:
+                        //         window["SITE_LOCATION_URL"] +
+                        //         "/_api/web/getfilebyserverrelativeurl('" +
+                        //         OldServerRelativeUrl +
+                        //         "')/moveto(newurl='" +
+                        //         ServerRelativeUrl +
+                        //         "',flags=1)",
+                        //     headers: {
+                        //         Accept: "application/json;odata=verbose",
+                        //         "content-type": "application/json;odata=verbose",
+                        //         "X-RequestDigest": formDigestValue,
+                        //     },
+                        // })
+
                     });
                 });
             });
