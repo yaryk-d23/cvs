@@ -1,5 +1,5 @@
 (function () {
-    angular.module("App").factory("$ApiService", function ($http, $q) {
+    angular.module("App").factory("$ApiService", ['$http', '$q', '$injector', function ($http, $q, $injector) {
         return {
             getDRApplicationItems: getDRApplicationItems,
             getDRApplicationItemById: getDRApplicationItemById,
@@ -28,7 +28,7 @@
                 .get(window["SITE_LOCATION_URL"] + "/_api/web/currentuser?$expand=Groups")
                 .then(function (res) {
                     return res.data;
-                });
+                }, onError);
         }
 
         function getDRApplicationItems() {
@@ -44,7 +44,7 @@
                 .get()
                 .then((response) => {
                     return response;
-                });
+                }, onError);
         }
 
         function getDRApplicationItemById(id) {
@@ -61,7 +61,7 @@
                 .get()
                 .then((response) => {
                     return response;
-                });
+                }, onError);
         }
 
         function getMyApplicationItems() {
@@ -78,7 +78,7 @@
                 .get()
                 .then((response) => {
                     return response;
-                });
+                }, onError);
         }
 
         function getApplicationTestPlanItems() {
@@ -98,7 +98,7 @@
                 .get()
                 .then((response) => {
                     return response;
-                });
+                }, onError);
         }
 
         function getApplicationTestPlanItemById(id) {
@@ -119,13 +119,15 @@
                 .get()
                 .then((response) => {
                     return response;
-                });
+                }, onError);
         }
 
         function createApplicationTestPlan(data) {
             return $pnp.sp.web.lists
                 .getByTitle("Application Test Plan")
-                .items.add(data);
+                .items.add(data).then((response) => {
+                    return response;
+                }, onError);
         }
         function updateApplicationTestPlan(data) {
             return $pnp.sp.web.lists
@@ -136,40 +138,52 @@
                         .getByTitle("Application Test Plan")
                         .items.getById(data.Id)
                         .get();
-                });
+                }, onError);
         }
 
         function createApplication(data) {
-            return $pnp.sp.web.lists.getByTitle("DR Application").items.add(data);
+            return $pnp.sp.web.lists.getByTitle("DR Application").items.add(data).then((response) => {
+                return response;
+            }, onError);
         }
 
         function updateApplication(data) {
             return $pnp.sp.web.lists
                 .getByTitle("DR Application")
                 .items.getById(data.Id)
-                .update(data);
+                .update(data).then((response) => {
+                    return response;
+                }, onError);
         }
 
         function createExerciseTimeline(data) {
-            return $pnp.sp.web.lists.getByTitle("Exercise Timeline").items.add(data);
+            return $pnp.sp.web.lists.getByTitle("Exercise Timeline").items.add(data).then((response) => {
+                return response;
+            }, onError);
         }
 
         function updateExerciseTimeline(data) {
             return $pnp.sp.web.lists
                 .getByTitle("Exercise Timeline")
                 .items.getById(data.Id)
-                .update(data);
+                .update(data).then((response) => {
+                    return response;
+                }, onError);
         }
 
         function getExerciseTimelineItems(testPlanItemId) {
             return $pnp.sp.web.lists
                 .getByTitle("Exercise Timeline")
                 .items.filter("TestPlanItemId eq " + testPlanItemId)
-                .get();
+                .get().then((response) => {
+                    return response;
+                }, onError);
         }
 
         function searchUserByName(value) {
-            return $pnp.sp.utility.searchPrincipals(value, 1, 15, "", 10);
+            return $pnp.sp.utility.searchPrincipals(value, 1, 15, "", 10).then((response) => {
+                return response;
+            }, onError);
         }
 
         function getFormDigestValue() {
@@ -258,12 +272,12 @@
                                             .update(spdata)
                                             .then(function () {
                                                 resolve(createFileRes);
-                                            });
+                                            }, onError);
                                     } else {
                                         resolve(createFileRes);
                                     }
-                                });
-                            });
+                                }, onError);
+                            }, onError);
                         // var OldServerRelativeUrl = res.data.d.ServerRelativeUrl;
                         // var ServerRelativeUrl = OldServerRelativeUrl.split("/");
                         // var file_name = ServerRelativeUrl.pop();
@@ -289,7 +303,7 @@
                         //     },
                         // })
 
-                    });
+                    }, onError);
                 });
             });
         }
@@ -299,11 +313,15 @@
                 .getByTitle("ApplicationAttachments")
                 .items.expand("File")
                 .filter("ApplicationTestPlanId eq " + testPlanItemId)
-                .get();
+                .get().then((response) => {
+                    return response;
+                }, onError);
         }
 
         function sendEmail(data) {
-            return $pnp.sp.web.lists.getByTitle("EmailLog").items.add(data);
+            return $pnp.sp.web.lists.getByTitle("EmailLog").items.add(data).then((response) => {
+                return response;
+            }, onError);
         }
 
         function deleteEmailItems(appId) {
@@ -318,12 +336,21 @@
 
         function deleteFile(url) {
             return $pnp.sp.web.getFolderByServerRelativeUrl(url).getItem().then(item => {
-                return item.delete();
-            });
+                return item.delete().then((response) => {
+                    return response;
+                }, onError);
+            }, onError);
         }
 
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1);
         }
-    });
+
+        function onError(error) {
+            $injector.get('$popUp').msg("<div style='font-family: monospace; white-space: pre-line;'>" + JSON.stringify(error) + "</div>", "Server Error");
+            setTimeout(function () {
+                $injector.get('$Preload').hide();
+            }, 0);
+        }
+    }]);
 })();

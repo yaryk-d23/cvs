@@ -24,7 +24,7 @@
             $ApiService.getMyApplicationItems().then(function (res) {
                 setTimeout(function () {
                     $scope.$apply(function () {
-                        ctrl.items = res;
+                        ctrl.items = res || [];
                         ctrl.filterData();
                     });
                 }, 0);

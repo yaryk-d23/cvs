@@ -6,6 +6,7 @@ var app = angular.module('App', [
     "ui.bootstrap",
     'ui.select',
     'preloader',
+    'popUp',
 ]);
 app.run(function ($rootScope, $location, $Preload, $ApiService) {
     $Preload.show();
@@ -36,13 +37,72 @@ app.controller('AppCtrl', ['$location', function ($location) {
             link: "/owners-dashboard",
         },
     ];
+    ctrl.isAdmin = function () {
+        if (!window.currentSPUser) return;
+        let flag = false;
+        angular.forEach(window.currentSPUser.Groups, function (group) {
+            if (group.Title == 'EDR Team') {
+                flag = true;
+            }
+        });
+        return flag;
+    }
     ctrl.isActivePath = function (path) {
         return $location.path() == path;
     }
 }]);
-app.config(function ($routeProvider, $locationProvider) {
-    $locationProvider.hashPrefix('');
+app.config(function ($routeProvider, $locationProvider, $provide, $httpProvider) {
+    $provide.factory('httpInterceptor', function ($q, $injector) {
+        return {
+            responseError: function (rejection) {
+                if (!rejection.config.headers.noautomessage) {
+                    var scope = {
+                        pageURL: window.location.href,
+                        rejection: rejection
+                    }
 
+                    if (scope.rejection.data.error == undefined) {
+                        scope.rejection.data.error = scope.rejection.data['odata.error'];
+                    }
+
+                    var msg = [];
+                    if (scope.rejection.data.error) {
+                        msg.push("<b>Code:</b> " + scope.rejection.data.error.code);
+                        msg.push("<b>Message:</b> " + scope.rejection.data.error.message.value);
+                    } else {
+                        msg.push(angular.toJson(scope.rejection.data));
+                    }
+                    msg.push("");
+                    msg.push("<b>Request URL:</b> " + " " + scope.rejection.config.method + " " + scope.rejection.config.url);
+                    $injector.get('$popUp').msg("<div style='font-family: monospace; white-space: pre-line;'>" + msg.join("<br>") + "</div>", "Server Error");
+                    $injector.get('$Preload').hide('__all__');
+                    // $injector.get('$Progress').hide();
+
+                    // $injector.get('$SendEmail').Send("ServerError", undefined, scope)
+                }
+                return $q.reject(rejection);
+            }
+        };
+    });
+    $httpProvider.interceptors.push('httpInterceptor');
+    $locationProvider.hashPrefix('');
+    var isAdmins = async function ($location, $q, $ApiService) {
+        var deferred = $q.defer();
+        var currentUser = await $ApiService.getCurrentUser();
+        var flag = false;
+        angular.forEach(currentUser.Groups, function (group) {
+            if (group.Title == 'EDR Team') {
+                flag = true;
+                deferred.resolve();
+            }
+        });
+        if (!flag) {
+            deferred.reject();
+            $location.url('/dashboard');
+        }
+
+        return deferred.promise;
+    }
     $routeProvider
         .when('/dashboard', {
             template: '<application-test-plan-dashboard></application-test-plan-dashboard>'
@@ -54,7 +114,10 @@ app.config(function ($routeProvider, $locationProvider) {
             template: '<test-application-process></test-application-process>'
         })
         .when('/import-applications', {
-            template: '<import-applications></import-applications>'
+            template: '<import-applications></import-applications>',
+            resolve: {
+                loggedIn: isAdmins
+            }
         })
         .when('/owners-dashboard', {
             template: '<application-ownership-dashboard></application-ownership-dashboard>'

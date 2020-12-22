@@ -6,7 +6,8 @@
       <ul class="nav navbar-nav">
         <li 
           ng-repeat="item in ctrl.navLinks" 
-          ng-class="{'active': ctrl.isActivePath(item.link)}">
+          ng-class="{'active': ctrl.isActivePath(item.link)}"
+          ng-if="item.title !== 'Import Applications' || ctrl.isAdmin()">
             <a ng-href="#{{item.link}}">
               {{item.title}} 
               <span class="sr-only" ng-if="ctrl.isActivePath(item.link)">
@@ -45,6 +46,7 @@ var scripts = [
       //app
       "app.js",
       "services/api.service.js",
+      "services/popup.js",
       "services/email.service.js",
       "services/preloader.js",
       "services/fileSelect.js",
