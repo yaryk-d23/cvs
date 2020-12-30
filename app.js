@@ -18,6 +18,9 @@ app.run(function ($rootScope, $location, $Preload, $ApiService) {
             }
         }
     });
+    window.currentSPUser = {
+        Id: _spPageContextInfo.userId
+    };
     $ApiService.getCurrentUser().then(function (res) {
         window.currentSPUser = res;
     });

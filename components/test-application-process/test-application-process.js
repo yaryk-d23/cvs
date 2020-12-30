@@ -24,7 +24,9 @@
                             setTimeout(function () {
                                 $scope.$apply(function () {
                                     ctrl.allApplications = res.filter(function (x) {
-                                        return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1;
+                                        return x.ApplicationStatus === "Active" && x.Status === "Completed" &&
+                                            x.TestPlanOwnerId && x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 &&
+                                            x.ApprovingManagerId && x.ApprovingDirectorId && x.TestDate;
                                     });
                                     ctrl.item = item;
                                     ctrl.item.DueDate = new Date(ctrl.item.DueDate);
@@ -67,7 +69,9 @@
                     setTimeout(function () {
                         $scope.$apply(function () {
                             ctrl.allApplications = res.filter(function (x) {
-                                return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1;
+                                return x.ApplicationStatus === "Active" && x.Status === "Completed" &&
+                                    x.TestPlanOwnerId && x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 &&
+                                    x.ApprovingManagerId && x.ApprovingDirectorId && x.TestDate;
                             });
                             $Preload.hide();
                         });
