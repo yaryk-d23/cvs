@@ -121,8 +121,8 @@
                 $Preload.show();
                 $ApiService.deleteEmailItems(item.Id).then(function () {
                     $ApiService.sendEmail({
-                        // ToEmails: "disasterrecoverytestteam@cvshealth.com",
-                        ToEmails: "oleksii.pashkevych@cvshealth.com",
+                        ToEmails: "disasterrecoverytestteam@cvshealth.com",
+                        // ToEmails: "oleksii.pashkevych@cvshealth.com",
                         Subject: "Failover Exercise Notification – Incorrect Application Ownership",
                         Body: "<p>Hello EDR Team,</p>" +
                             "<p>You are receiving this email because " + item.Title + " indicated in the Failover Exercise Portal that the Application Ownership is incorrect. " +
