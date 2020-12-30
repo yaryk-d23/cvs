@@ -188,8 +188,8 @@
                                 "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal</a>, to review the Results and provide your approval as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
-                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
-                            // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() + 9 * 60000).toISOString(),
+                            // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
+                            DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
                             ApplicationId: ctrl.item.Application.Id,
                         }));
                         req.push($ApiService.sendEmail({
@@ -202,8 +202,8 @@
                                 "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal</a>, review the Test Plan and provide your approval as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
-                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
-                            // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() + 9 * 60000).toISOString(),
+                            // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
+                            DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
                             ApplicationId: ctrl.item.Application.Id,
                         }));
                         Promise.all(req).then(function () {

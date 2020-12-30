@@ -106,8 +106,8 @@
                             "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                             "Thank you,<br>EDR Team",
-                        DelayDate: new Date(new Date().setDate(new Date().getDate() + 5)),
-                        // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                        // DelayDate: new Date(new Date().setDate(new Date().getDate() + 5)),
+                        DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
                         ApplicationId: item.Id,
                     }));
                     req.push($ApiService.sendEmail({
@@ -118,8 +118,8 @@
                             "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                             "Thank you,<br>EDR Team",
-                        DelayDate: getNextMonday(new Date(new Date().setDate(new Date().getDate() + 6))),
-                        // DelayDate: new Date(new Date().getTime() + 15 * 60000).toISOString(),
+                        // DelayDate: getNextMonday(new Date(new Date().setDate(new Date().getDate() + 6))),
+                        DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
                         ApplicationId: item.Id,
                         RepeatDay: "3"
                     }));

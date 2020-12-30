@@ -104,8 +104,8 @@
                                 "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> within the next two weeks.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
-                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 28)),
-                            // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() - 9 * 60000).toISOString(),
+                            // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 28)),
+                            DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
                             ApplicationId: ctrl.item.Application.Id,
                         }));
                         req.push($ApiService.sendEmail({
@@ -118,8 +118,8 @@
                                 + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
-                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)),
-                            // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() - 13 * 60000).toISOString(),
+                            // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)),
+                            DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
                             ApplicationId: ctrl.item.Application.Id,
                             RepeatDay: "3"
                         }));
@@ -133,8 +133,8 @@
                                 + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 "Thank you,<br>EDR Team",
-                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 17)),
-                            // DelayDate: new Date(new Date(ctrl.item.DueDate).getTime() - 13 * 60000).toISOString(),
+                            // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 17)),
+                            DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
                             ApplicationId: ctrl.item.Application.Id,
                             RepeatDay: "3"
                         }));
