@@ -14,7 +14,7 @@
         ctrl.importData = [];
         var allApplications = [];
         var allApplicatinsTitle = [];
-        ctrl.currYear = new Date().getFullYear();
+        ctrl.currYear = "2021";//new Date().getFullYear();
         ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
         ctrl.emailTemplateUrl = window["APP_FOLDER"] + "components/import-applications/email-template.html"
 
@@ -94,7 +94,7 @@
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': item.TestPlanOwnerId.results.concat([item.ApprovingManagerId]) },
                         CCId: { 'results': [item.ApprovingDirectorId] },
-                        Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + new Date().getFullYear(),
+                        Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + ctrl.currYear,
                         Body: $("#initial-email-template").html(),
                         ApplicationId: item.Id,
                     }));

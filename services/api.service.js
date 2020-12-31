@@ -328,7 +328,7 @@
             return $pnp.sp.web.lists.getByTitle("EmailLog").items.filter('ApplicationId eq ' + appId).get().then(function (res) {
                 let req = [];
                 res.forEach(function (item) {
-                    req.push($pnp.sp.web.lists.getByTitle("EmailLog").items.getById(item.Id).delete());
+                    req.push($pnp.sp.web.lists.getByTitle("EmailLog").items.getById(item.Id).update({ Stop: true }));
                 });
                 return Promise.all(req);
             });

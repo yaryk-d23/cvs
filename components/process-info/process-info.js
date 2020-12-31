@@ -14,6 +14,7 @@
         var ctrl = this;
         ctrl.routeParams = $routeParams;
         ctrl.api = $ApiService;
+        var currYear = new Date().getFullYear();
         ctrl.dateOptions = {
             formatYear: 'yyyy',
             startingDay: 1
@@ -50,7 +51,7 @@
 
                     }),
                     $ApiService.createExerciseTimeline({
-                        Title: "Identify and submit " + new Date().getFullYear() + " Failover Exercise date",
+                        Title: "Identify and submit " + currYear + " Failover Exercise date",
                         Owners: "Application Teams",
                         Description: "Test dates must be identified and submitted via the " +
                             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>.",
@@ -67,7 +68,7 @@
                             "<p>EDR Team will review and reject/provide feedback or Approve via the Portal.</p>" +
                             "<p>1st Time Failover Testing: Application Failover Test Plan and Results Template is located on " +
                             "<a href='https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/SitePages/Home.aspx?RootFolder=%2Fsites%2FDisasterRecovery%2FExercises%2FShared%20Documents%2FExercises%2F2021%20EDR%20Exercises%2FFailover&FolderCTID=0x0120008ED08C2B756CCF4496D4F6DDF22E6A21&View=%7B2122DA51%2D3F10%2D43CF%2DAC61%2DE90D82A513EF%7D'>Failover</a>section of the EDR SharePoint site.</p>" +
-                            "<p>Previous Failover Testing: Use last year’s Application Failover Test Plan and Results document and update it for " + new Date().getFullYear() + ".</p>" +
+                            "<p>Previous Failover Testing: Use last year’s Application Failover Test Plan and Results document and update it for " + currYear + ".</p>" +
                             "<p>Located here: <a target='_blank' href='https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/_layouts/15/start.aspx#/Shared%20Documents/Forms/AllItems.aspx?RootFolder=%2Fsites%2FDisasterRecovery%2FExercises%2FShared%20Documents%2FApplication%20Test%20Plans%2FFailover&FolderCTID=0x0120008ED08C2B756CCF4496D4F6DDF22E6A21&View=%7B5BC6DCA6%2D5BED%2D4FA6%2DBF69%2D9F4DEF9C28E5%7D'></a></p>",
                         DueDate: new Date(new Date(res.data.DueDate).setDate(new Date(res.data.DueDate).getDate() - 14)).toLocaleDateString('en-us') + " - " +
                             new Date(res.data.DueDate).toLocaleDateString('en-us'),
