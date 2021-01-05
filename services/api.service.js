@@ -175,6 +175,7 @@
             return $pnp.sp.web.lists
                 .getByTitle("Exercise Timeline")
                 .items.filter("TestPlanItemId eq " + testPlanItemId)
+                .orderBy('SortOrder')
                 .get().then((response) => {
                     return response;
                 }, onError);

@@ -152,8 +152,9 @@
                             Body: "Hello, <p>The Test Plan you submitted for the " + ctrl.item.Application.Title + " Failover Exercise has been REJECTED for the following reasons:</p>" +
                                 "<p>" + comment.replace(/\n/g, '<br>') + "</p>" +
                                 "<p>Please make these updates to the Application Failover Test Plan and re-upload into the <a href='"
-                                + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> as soon as possible.</p>" +
+                                + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                                 "Thank you,<br>EDR Team",
                             ApplicationId: ctrl.item.Application.Id,
                         }).then(function () {
@@ -208,8 +209,10 @@
                         Subject: ctrl.item.Application.Title + " Failover Test Plan Requires Approval",
                         Body: "Hello, <p>You are receiving this email because the " + ctrl.item.Application.Title + " Failover Test Plan requires Manager/Tech Owner and Director/Sub Portfolio Owner " +
                             "approval for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>, review the Test Plan and provide your approval as soon as possible.</p>" +
-                            "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>",
+                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a>, review the Test Plan and provide your approval as soon as possible.</p>" +
+                            "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>"+
+                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                            "Thank you,<br>EDR Team",
                         ApplicationId: ctrl.item.Application.Id,
                     }));
                     req.push($ApiService.sendEmail({
@@ -219,8 +222,9 @@
                         Subject: ctrl.item.Application.Title + " Failover Test Plan Approval Past Due",
                         Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                             " Failover Test Plan for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>, review the Test Plan and provide your approval as soon as possible.</p>" +
+                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a>, review the Test Plan and provide your approval as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                             "Thank you,<br>EDR Team",
                         // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 7)),
                         DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -233,8 +237,9 @@
                         Subject: ctrl.item.Application.Title + " Failover Test Plan Approval Past Due",
                         Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                             " Failover Test Plan for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>, review the Test Plan and provide your approval as soon as possible.</p>" +
+                            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a>, review the Test Plan and provide your approval as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                             "Thank you,<br>EDR Team",
                         // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 7)),
                         DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -260,6 +265,7 @@
                             let req = [];
                             req.push($ApiService.createExerciseTimeline({
                                 Title: "Application Failover Results and Timeline - DRAFT",
+                                SortOrder: 6,
                                 Owners: "Application Teams",
                                 Description: "<p>Upload the first draft of the Failover Exercise Results via the " +
                                     "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>" +
@@ -270,6 +276,7 @@
                             }));
                             req.push($ApiService.createExerciseTimeline({
                                 Title: "Application Failover Results and Timeline – FINAL Approval Process",
+                                SortOrder: 7,
                                 Owners: "Application Managers/Tech Owners and Directors/Sub Portfolio Owners",
                                 Description: "<p>Upon EDR Approval of the Failover Exercise Results, Approve the Final Application Failover Exercise Results via the " +
                                     "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>",
@@ -279,6 +286,7 @@
                             }));
                             req.push($ApiService.createExerciseTimeline({
                                 Title: "DR Plan Review in BCITC",
+                                SortOrder: 8,
                                 Owners: "Application Teams Infrastructure Teams",
                                 Description: "<p>Review DR Plans in BC in the Cloud to ensure it is still current; if nothing has changed, no action is required in BCITC.</p>",
                                 DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
@@ -301,8 +309,9 @@
                                 Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Due",
                                 Body: "Hello, <p>Congratulations for completing the " + ctrl.item.Application.Title +
                                     " Failover Exercise on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please complete the Application Failover Results and Timeline and upload into the " +
-                                    "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> within the next week.</p>" +
+                                    "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> within the next week.</p>" +
                                     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                    "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                                     "Thank you,<br>EDR Team",
                                 // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 1)),
                                 DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -314,8 +323,9 @@
                                 Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise Requirement Due/Not Completed",
                                 Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for the " + ctrl.item.Application.Title +
                                     " Failover Exercise that was completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                    "<a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
+                                    "<a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                                     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                    "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                                     "Thank you,<br>EDR Team",
                                 // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 5)),
                                 DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -462,6 +472,29 @@
                 default:
                     return null;
             }
+        }
+
+        ctrl.checkShowReUploadMsg = function() {
+            let flag = false;
+            ctrl.approvalStatusItems.forEach(function (item) {
+                if(ctrl.item[item.FieldName] === "Rejected") {
+                    flag = true;
+                }
+            });
+            if(ctrl.item.Stage !== 1){
+                flag = false;
+            }
+            return flag;
+        }
+
+        ctrl.showCancelBtn = function() {
+            let isMember = false;
+            window.currentSPUser.Groups.forEach(function (group) {
+                if (group.Title === "EDR Team") {
+                    isMember = true;
+                }
+            });
+            return isMember;
         }
 
         ctrl.textToHtml = function (text) {

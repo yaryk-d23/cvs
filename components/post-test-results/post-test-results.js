@@ -118,8 +118,9 @@
                             Body: "Hello, <p>The results you submitted for the " + ctrl.item.Application.Title + " Failover Exercise has been REJECTED for the following reasons:</p>" +
                                 "<p>" + comment.replace(/\n/g, '<br>') + "</p>" +
                                 "<p>Please make these updates to the Application Failover Test Plan and re-upload into the <a href='" +
-                                window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> as soon as possible.</p>" +
+                                window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                                 "Thank you,<br>EDR Team",
                             ApplicationId: ctrl.item.Application.Id,
                         }).then(function () {
@@ -174,8 +175,10 @@
                             Subject: ctrl.item.Application.Title + " Failover Results Require Approval",
                             Body: "Hello, <p>You are receiving this email because the " + ctrl.item.Application.Title + " Failover Results " +
                                 "require Manager/Tech Owner and Director/Sub Portfolio Owner approval for Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal</a>, review the Results and provide your approval as soon as possible.</p>" +
-                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>",
+                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal<i style='color:red'>*</i></a>, review the Results and provide your approval as soon as possible.</p>" +
+                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>"+
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                                "Thank you,<br>EDR Team",
                             ApplicationId: ctrl.item.Application.Id,
                         }));
                         req.push($ApiService.sendEmail({
@@ -185,8 +188,9 @@
                             Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
                             Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                                 " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal</a>, to review the Results and provide your approval as soon as possible.</p>" +
+                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal<i style='color:red'>*</i></a>, to review the Results and provide your approval as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                                 "Thank you,<br>EDR Team",
                             // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
                             DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -199,8 +203,9 @@
                             Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
                             Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
                                 " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal</a>, review the Test Plan and provide your approval as soon as possible.</p>" +
+                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal<i style='color:red'>*</i></a>, review the Test Plan and provide your approval as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                                 "Thank you,<br>EDR Team",
                             // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
                             DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -346,6 +351,28 @@
                 default:
                     return null;
             }
+        }
+
+        ctrl.checkShowReUploadMsg = function() {
+            let flag = false;
+            ctrl.approvalStatusItems.forEach(function (item) {
+                if(ctrl.item[item.FieldName] === "Rejected") {
+                    flag = true;
+                }
+            });
+            if(ctrl.item.Stage !== 3){
+                flag = false;
+            }
+            return flag;
+        }
+        ctrl.showCancelBtn = function() {
+            let isMember = false;
+            window.currentSPUser.Groups.forEach(function (group) {
+                if (group.Title === "EDR Team") {
+                    isMember = true;
+                }
+            });
+            return isMember;
         }
     }
 })();

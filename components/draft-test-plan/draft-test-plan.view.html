@@ -58,6 +58,12 @@
         </div>
       </div>
     </div>
+    <div>
+      <p ng-if="ctrl.checkShowReUploadMsg()" class="bg-warning" style="padding: 10px;">
+        Note: To re-upload a test plan, first click on the <b>"x"</b> next to the
+        current test plan and then select <b>"Upload"</b>
+      </p>
+    </div>
     <div class="exercise-timeline">
       <h4>Exercise timeline</h4>
       <div>
@@ -152,7 +158,7 @@
       <button type="button" class="reject-btn" ng-click="ctrl.reject()">
         Reject
       </button>
-      <button type="button" class="cancel-btn" ng-click="ctrl.cancel()">
+      <button type="button" class="cancel-btn" ng-click="ctrl.cancel()" ng-if="ctrl.showCancelBtn()">
         Cancel
       </button>
       <button type="button" class="approve-btn" ng-click="ctrl.approve()">

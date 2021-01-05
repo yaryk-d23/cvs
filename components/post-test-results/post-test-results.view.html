@@ -1,25 +1,10 @@
 <div class="post-tests-results">
   <div class="form-header">
-    <h2>Post Tests Results</h2>
+    <h2>Post Test Results</h2>
   </div>
   <div class="form-body">
     <div>
-      <div class="form-group">
-        <label for="CompletedResults" class="control-label"
-          >Completed Results</label
-        >
-        <textarea
-          rows="3"
-          class="form-control"
-          name="CompletedResults"
-          id="CompletedResults"
-          ng-model="ctrl.item.CompletedResults"
-          ng-disabled="ctrl.item.Stage !== 3"
-        ></textarea>
-      </div>
-    </div>
-    <div>
-      <label for="attachment" class="control-label">Post Result Document</label>
+      <label for="attachment" class="control-label">Post Test Result Document</label>
       <div class="uploadFileContainer">
         <input
           style="display: none"
@@ -73,6 +58,27 @@
             ></i>
           </div>
         </div>
+      </div>
+    </div>
+    <div>
+      <p ng-if="ctrl.checkShowReUploadMsg()" class="bg-warning" style="padding: 10px;">
+        Note: To re-upload a test plan, first click on the <b>"x"</b> next to the
+        current test plan and then select <b>"Upload"</b>
+      </p>
+    </div>
+    <div>
+      <div class="form-group">
+        <label for="CompletedResults" class="control-label"
+          >Comments (optiona)</label
+        >
+        <textarea
+          rows="3"
+          class="form-control"
+          name="CompletedResults"
+          id="CompletedResults"
+          ng-model="ctrl.item.CompletedResults"
+          ng-disabled="ctrl.item.Stage !== 3"
+        ></textarea>
       </div>
     </div>
     <div class="approval-status" ng-if="ctrl.item.Stage >= 4">
@@ -138,7 +144,7 @@
       <button type="button" class="reject-btn" ng-click="ctrl.reject()">
         Reject
       </button>
-      <button type="button" class="cancel-btn" ng-click="ctrl.cancel()">
+      <button type="button" class="cancel-btn" ng-click="ctrl.cancel()" ng-if="ctrl.showCancelBtn()">
         Cancel
       </button>
       <button type="button" class="approve-btn" ng-click="ctrl.approve()">

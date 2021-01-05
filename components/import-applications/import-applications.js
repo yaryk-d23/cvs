@@ -103,8 +103,9 @@
                         CCId: { 'results': [item.ApprovingManagerId] },
                         Subject: "Reminder: " + item.Title + " Failover Exercise Requirement Due/Not Completed",
                         Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
-                            "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
+                            "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                             "Thank you,<br>EDR Team",
                         // DelayDate: new Date(new Date().setDate(new Date().getDate() + 5)),
                         DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -115,8 +116,9 @@
                         CCId: { 'results': [item.ApprovingManagerId] },
                         Subject: "Reminder: " + item.Title + " Failover Exercise Requirement Due/Not Completed",
                         Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
-                            "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal</a> and complete the Failover Exercise requirements as soon as possible.</p>" +
+                            "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                             "Thank you,<br>EDR Team",
                         // DelayDate: getNextMonday(new Date(new Date().setDate(new Date().getDate() + 6))),
                         DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),

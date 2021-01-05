@@ -42,6 +42,7 @@
                 let req = [
                     $ApiService.createExerciseTimeline({
                         Title: "Identify any changes to Application ownership",
+                        SortOrder: 1,
                         Owners: "Application Teams",
                         Description: "Application Ownership / POC changes must be acknowledged and updated via the " +
                             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>.",
@@ -52,6 +53,7 @@
                     }),
                     $ApiService.createExerciseTimeline({
                         Title: "Identify and submit " + currYear + " Failover Exercise date",
+                        SortOrder: 2,
                         Owners: "Application Teams",
                         Description: "Test dates must be identified and submitted via the " +
                             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>.",
@@ -62,6 +64,7 @@
                     }),
                     $ApiService.createExerciseTimeline({
                         Title: "Application Failover Test Plan and Timeline - DRAFT",
+                        SortOrder: 3,
                         Owners: "Application Teams",
                         Description: "<p>Upload the first draft of the Failover Exercise Test Plan via the " +
                             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>" +
@@ -76,6 +79,7 @@
                     }),
                     $ApiService.createExerciseTimeline({
                         Title: "Submit Request for Change (RFC)",
+                        SortOrder: 4,
                         Owners: "Application Teams",
                         Description: "Submit RFC for the Failover Exercise",
                         DueDate: "TBD",
@@ -83,6 +87,7 @@
                     }),
                     $ApiService.createExerciseTimeline({
                         Title: "Application Failover Test Plan and Timeline – FINAL Approval Process",
+                        SortOrder: 5,
                         Owners: "Application Managers/Tech Owners and Directors/Sub Portfolio Owners",
                         Description: "<p>Upon EDR Approval of the Failover Exercise Test Plan, Approve the Final Application Failover Exercise Test Plan via the " +
                             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>" +
@@ -102,8 +107,9 @@
                             Body: "Hello, <p>Just a reminder that the " + ctrl.item.Application.Title + " Failover Exercise is scheduled for " + new Date(ctrl.item.DueDate).toLocaleDateString() +
                                 " and it is time to begin completing " +
                                 "the required documentation.  Please complete the Application Failover Test Plan and Timeline and upload it into the " +
-                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> within the next two weeks.</p>" +
+                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> within the next two weeks.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                                 "Thank you,<br>EDR Team",
                             // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 28)),
                             DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -116,8 +122,9 @@
                             Body: "Hello, <p>Just a reminder that the " + ctrl.item.Application.Title + " Failover Exercise is scheduled for " + new Date(ctrl.item.DueDate).toLocaleDateString() +
                                 " and the Failover Exercise Requirements have not been completed. " +
                                 "Please complete the Application Failover Test Plan and Timeline and upload into the <a href='"
-                                + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> as soon as possible.</p>" +
+                                + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                                 "Thank you,<br>EDR Team",
                             // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)),
                             DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -131,8 +138,9 @@
                             Body: "Hello, <p>Just a reminder that the " + ctrl.item.Application.Title + " Failover Exercise is scheduled for " + new Date(ctrl.item.DueDate).toLocaleDateString() +
                                 " and the Failover Exercise Requirements have not been completed. " +
                                 "Please complete the Application Failover Test Plan and Timeline and upload into the <a href='"
-                                + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a> as soon as possible.</p>" +
+                                + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
                                 "Thank you,<br>EDR Team",
                             // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 17)),
                             DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
