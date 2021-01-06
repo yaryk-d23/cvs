@@ -165,14 +165,14 @@
         function getCurrentMonthFirstDate() {
             let date = new Date(),
                 y = date.getFullYear(),
-                m = date.getMonth() - 6;
+                m = 0;
             return new Date(y, m, 1);
         };
 
         function getCurrentMonthLastDate() {
             let date = new Date(),
                 y = date.getFullYear(),
-                m = date.getMonth() + 6;
+                m = 11;
             return new Date(y, m + 1, 0);
         };
 

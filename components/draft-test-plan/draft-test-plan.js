@@ -48,7 +48,10 @@
             $ApiService.getExerciseTimelineItems($routeParams.id).then(function (res) {
                 setTimeout(function () {
                     $scope.$apply(function () {
-                        ctrl.exerciseTimelineItems = res;
+                        ctrl.exerciseTimelineItems = res.sort(function (a,b) {
+                            return a.SortOrder - b.SordOrder;
+                        });
+                        setExercisesDueDate();
                         setCurrentApprover();
                     });
                 }, 0);
@@ -154,7 +157,7 @@
                                 "<p>Please make these updates to the Application Failover Test Plan and re-upload into the <a href='"
                                 + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                 "Thank you,<br>EDR Team",
                             ApplicationId: ctrl.item.Application.Id,
                         }).then(function () {
@@ -210,8 +213,8 @@
                         Body: "Hello, <p>You are receiving this email because the " + ctrl.item.Application.Title + " Failover Test Plan requires Manager/Tech Owner and Director/Sub Portfolio Owner " +
                             "approval for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
                             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a>, review the Test Plan and provide your approval as soon as possible.</p>" +
-                            "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>"+
-                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                            "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                             "Thank you,<br>EDR Team",
                         ApplicationId: ctrl.item.Application.Id,
                     }));
@@ -224,7 +227,7 @@
                             " Failover Test Plan for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
                             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a>, review the Test Plan and provide your approval as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                             "Thank you,<br>EDR Team",
                         // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 7)),
                         DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -239,7 +242,7 @@
                             " Failover Test Plan for the Failover Exercise scheduled on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
                             "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a>, review the Test Plan and provide your approval as soon as possible.</p>" +
                             "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                            "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                             "Thank you,<br>EDR Team",
                         // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 7)),
                         DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -311,7 +314,7 @@
                                     " Failover Exercise on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please complete the Application Failover Results and Timeline and upload into the " +
                                     "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> within the next week.</p>" +
                                     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                    "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                                    "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                     "Thank you,<br>EDR Team",
                                 // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 1)),
                                 DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -325,7 +328,7 @@
                                     " Failover Exercise that was completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
                                     "<a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                                     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                    "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                                    "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                     "Thank you,<br>EDR Team",
                                 // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 5)),
                                 DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -474,20 +477,20 @@
             }
         }
 
-        ctrl.checkShowReUploadMsg = function() {
+        ctrl.checkShowReUploadMsg = function () {
             let flag = false;
             ctrl.approvalStatusItems.forEach(function (item) {
-                if(ctrl.item[item.FieldName] === "Rejected") {
+                if (ctrl.item[item.FieldName] === "Rejected") {
                     flag = true;
                 }
             });
-            if(ctrl.item.Stage !== 1){
+            if (ctrl.item.Stage !== 1) {
                 flag = false;
             }
             return flag;
         }
 
-        ctrl.showCancelBtn = function() {
+        ctrl.showCancelBtn = function () {
             let isMember = false;
             window.currentSPUser.Groups.forEach(function (group) {
                 if (group.Title === "EDR Team") {
@@ -500,6 +503,39 @@
         ctrl.textToHtml = function (text) {
             if (!text) return "";
             return text.replace(/\n/g, '<br/>');
+        }
+        function setExercisesDueDate() {
+            if (ctrl.exerciseTimelineItems[0]) {
+                ctrl.exerciseTimelineItems[0].DueDate = new Date(ctrl.item.Application.TestDate).toLocaleDateString('en-us') + " - "
+                    + new Date(new Date(ctrl.item.Application.TestDate).setDate(new Date(ctrl.item.Application.TestDate).getDate() + 7)).toLocaleDateString('en-us');
+            }
+            if (ctrl.exerciseTimelineItems[1]) {
+                ctrl.exerciseTimelineItems[1].DueDate = new Date(ctrl.item.Application.TestDate).toLocaleDateString('en-us') + " - "
+                + new Date(new Date(ctrl.item.Application.TestDate).setDate(new Date(ctrl.item.Application.TestDate).getDate() + 14)).toLocaleDateString('en-us');
+            }
+            if (ctrl.exerciseTimelineItems[2]) {
+                ctrl.exerciseTimelineItems[2].DueDate = new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)).toLocaleDateString('en-us') + " - " +
+                new Date(ctrl.item.DueDate).toLocaleDateString('en-us');
+            }
+            if (ctrl.exerciseTimelineItems[3]) {
+                ctrl.exerciseTimelineItems[3].DueDate = "TBD";
+            }
+            if (ctrl.exerciseTimelineItems[4]) {
+                ctrl.exerciseTimelineItems[4].DueDate = new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 7)).toLocaleDateString('en-us') + " - " +
+                new Date(ctrl.item.DueDate).toLocaleDateString('en-us');
+            }
+            if (ctrl.exerciseTimelineItems[5]) {
+                ctrl.exerciseTimelineItems[5].DueDate = new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
+                new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)).toLocaleDateString('en-us');
+            }
+            if (ctrl.exerciseTimelineItems[6]) {
+                ctrl.exerciseTimelineItems[6].DueDate = new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
+                new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us');
+            }
+            if (ctrl.exerciseTimelineItems[7]) {
+                ctrl.exerciseTimelineItems[7].DueDate = new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
+                new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us');
+            }
         }
     }
 })();
