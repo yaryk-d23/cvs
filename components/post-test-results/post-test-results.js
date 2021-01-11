@@ -3,7 +3,8 @@
         .component('postTestResults', {
             templateUrl: window["APP_FOLDER"] + 'components/post-test-results/post-test-results.view.html?rnd' + Math.random(),
             bindings: {
-                item: '='
+                item: '=',
+                currentUserPermissions: '<'
             },
             controllerAs: 'ctrl',
             controller: ['$scope', '$ApiService', '$Preload', '$q', '$location', '$uibModal', ctrl]
@@ -162,9 +163,9 @@
             item[ctrl.curentApproval.FieldName] = "Approved";
             item[ctrl.curentApproval.UserFieldName + "Id"] = window.currentSPUser.Id;
             item[ctrl.curentApproval.DateFieldName] = new Date().toISOString();
-            if (ctrl.curentApproval.FieldName === "PostTestITDirector") {
-                item.Stage = 5;
-            }
+            // if (ctrl.curentApproval.FieldName === "PostTestITDirector") {
+            //     item.Stage = 5;
+            // }
             $ApiService.updateApplicationTestPlan(item).then(function (updatedItem) {
                 if (ctrl.curentApproval.FieldName === "PostTestEDRReview") {
                     $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
@@ -234,6 +235,7 @@
                             }));
                             req.push($ApiService.sendEmail({
                                 ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                                CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
                                 Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Complete",
                                 Body: "Hello, <p>Thank you! You have now completed all Failover Exercise requirements for " + ctrl.item.Application.Title + ".</p>" +
                                     "Thanks again,<br>EDR Team",
@@ -283,7 +285,7 @@
                     show = false;
                 }
             });
-            if (ctrl.item.PostTestITDirector === 'Approved') {
+            if (ctrl.item.PostTestITManager === 'Approved' && ctrl.item.PostTestITDirector === 'Approved') {
                 show = false;
             }
             return show;

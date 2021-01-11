@@ -88,28 +88,27 @@
                 checkCurrentUserInGroup("EDR Team")) {
                 ctrl.currentUserPermissions = "View";
             }
-            switch (ctrl.item.Stage) {
-                case 1:
-                    if (ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) {
-                        ctrl.currentUserPermissions = "Edit";
-                    }
-                case 2:
-                    if (window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId ||
-                        window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId ||
-                        checkCurrentUserInGroup("EDR Team")) {
-                        ctrl.currentUserPermissions = "Edit";
-                    }
-                case 3:
-                    if (ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) {
-                        ctrl.currentUserPermissions = "Edit";
-                    }
-                case 4:
-                    if (window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId ||
-                        window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId ||
-                        checkCurrentUserInGroup("EDR Team")) {
-                        ctrl.currentUserPermissions = "Edit";
-                    }
+            
+            if (ctrl.item.Stage === 1 && ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) {
+                ctrl.currentUserPermissions = "Edit";
             }
+
+            if (ctrl.item.Stage === 2 && (window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId ||
+                window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId ||
+                checkCurrentUserInGroup("EDR Team"))) {
+                ctrl.currentUserPermissions = "Edit";
+            }
+
+            if (ctrl.item.Stage === 3 && ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) {
+                ctrl.currentUserPermissions = "Edit";
+            }
+
+            if (ctrl.item.Stage === 4 && (window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId ||
+                window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId ||
+                checkCurrentUserInGroup("EDR Team"))) {
+                ctrl.currentUserPermissions = "Edit";
+            }
+
             if (!ctrl.currentUserPermissions) {
                 ctrl.currentUserPermissions = "Access Denied";
             }

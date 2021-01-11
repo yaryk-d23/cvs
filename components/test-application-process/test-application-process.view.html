@@ -6,13 +6,13 @@
     class="section"
     ng-if="ctrl.item.Stage >= 1 && ctrl.currentUserPermissions !== 'Access Denied'"
   >
-    <draft-test-plan item="ctrl.item" />
+    <draft-test-plan item="ctrl.item" current-user-permissions="ctrl.currentUserPermissions"/>
   </div>
   <div
     class="section"
     ng-if="(ctrl.item.TestITManager ==='Approved' && ctrl.item.TestITDirector ==='Approved') && ctrl.currentUserPermissions !== 'Access Denied'"
   >
-    <post-test-results item="ctrl.item"></post-test-results>
+    <post-test-results item="ctrl.item" current-user-permissions="ctrl.currentUserPermissions"></post-test-results>
   </div>
   <div
     class="section text-center"

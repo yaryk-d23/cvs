@@ -41,7 +41,8 @@
                         ApprovingDirectorId: item.ApprovingDirector && item.ApprovingDirector.Id ? item.ApprovingDirector.Id : null,
                         BusinessUnit: item['Business Unit'],
                         ApplicationStatus: "Active",
-                        Status: "Over Due"
+                        Status: "Over Due",
+                        EmailSent: false
                     }));
                 }
                 else {
@@ -52,7 +53,8 @@
                         ApprovingDirectorId: item.ApprovingDirector && item.ApprovingDirector.Id ? item.ApprovingDirector.Id : null,
                         BusinessUnit: item['Business Unit'],
                         ApplicationStatus: "Active",
-                        Status: "Over Due"
+                        Status: "Over Due",
+                        EmailSent: false
                     }));
                 }
             });
@@ -81,7 +83,7 @@
             let activeApps = [];
             $ApiService.getDRApplicationItems().then(function (applications) {
                 activeApps = applications.filter(function (x) {
-                    return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.ApprovingManagerId && x.ApprovingDirectorId;
+                    return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.ApprovingManagerId && x.ApprovingDirectorId && !x.EmailSent;
                 });
                 let req = [];
                 activeApps.forEach(function (item) {
@@ -89,7 +91,8 @@
                     req.push($ApiService.updateApplication({
                         Id: item.Id,
                         TestDate: new Date().toISOString(),
-                        Status: "In progress"
+                        Status: "In progress",
+                        EmailSent: true
                     }));
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': item.TestPlanOwnerId.results.concat([item.ApprovingManagerId]) },

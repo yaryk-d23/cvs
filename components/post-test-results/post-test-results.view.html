@@ -136,7 +136,7 @@
     </div>
     <div
       class="text-center form-footer"
-      ng-if="ctrl.item.Stage === 4 && ctrl.checkShowApproverControl()"
+      ng-if="ctrl.item.Stage === 4 && ctrl.checkShowApproverControl() && ctrl.currentUserPermissions === 'Edit'"
     >
       <button type="button" class="closeBtn" ng-click="ctrl.close()">
         Close

@@ -24,21 +24,35 @@
         var getData = async () => {
             let items = await ctrl.api.getApplicationTestPlanItems();
             let applicationIds = [];
+            let applicationTestPlanIds = [];
             items.forEach((item) => {
-                if (applicationIds.indexOf(item.ApplicationId) === -1)
+                if(applicationTestPlanIds.indexOf(item.Id) === -1) {
+                    applicationTestPlanIds.push(item.Id);
+                }
+                if (applicationIds.indexOf(item.ApplicationId) === -1){
                     applicationIds.push(item.ApplicationId);
+                }
+            });
+            let attachmentsReq = {};
+            applicationTestPlanIds.forEach((i) => {
+                attachmentsReq[i] = $ApiService.getFormAttachments(i);
             });
             let req = [];
             applicationIds.forEach((i) => {
                 req.push(ctrl.api.getDRApplicationItemById(i));
             });
-            let applicationItems = await $q.all(req);
+            let response = await $q.all({
+                applicationItems: $q.all(req),
+                attachments: $q.all(attachmentsReq)
+            });
             for (let j = 0; j < items.length; j++) {
                 let item = angular.copy(items[j]);
-                item.Application = applicationItems.filter(
+                item.Application = response.applicationItems.filter(
                     (x) => x.ID === item.ApplicationId
                 )[0];
-                let attachments = await $ApiService.getFormAttachments(item.Id);
+
+                let attachments = response.attachments[item.Id];
+                //  await $ApiService.getFormAttachments(item.Id);
                 let TestPlanAttachment = attachments.filter(function (x) {
                     return x.AttachmentType === "Test Plan";
                 })[0];

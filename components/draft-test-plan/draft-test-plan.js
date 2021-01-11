@@ -3,7 +3,8 @@
         .component('draftTestPlan', {
             templateUrl: window["APP_FOLDER"] + 'components/draft-test-plan/draft-test-plan.view.html?rnd' + Math.random(),
             bindings: {
-                item: '='
+                item: '=',
+                currentUserPermissions: "<"
             },
             controllerAs: 'ctrl',
             controller: ['$scope', '$ApiService', '$Preload', '$q', '$location', '$uibModal', '$routeParams', ctrl]
