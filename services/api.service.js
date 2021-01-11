@@ -74,7 +74,7 @@
                     "ApprovingDirector/Id,ApprovingDirector/Title"
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
-                .filter("Status ne 'Over Due' and TestPlanOwnerId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId))
+                .filter("Status ne 'Overdue' and TestPlanOwnerId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId))
                 .get()
                 .then((response) => {
                     return response;

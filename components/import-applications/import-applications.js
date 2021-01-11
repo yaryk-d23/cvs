@@ -41,7 +41,7 @@
                         ApprovingDirectorId: item.ApprovingDirector && item.ApprovingDirector.Id ? item.ApprovingDirector.Id : null,
                         BusinessUnit: item['Business Unit'],
                         ApplicationStatus: "Active",
-                        Status: "Over Due",
+                        Status: "Overdue",
                         EmailSent: false
                     }));
                 }
@@ -53,7 +53,7 @@
                         ApprovingDirectorId: item.ApprovingDirector && item.ApprovingDirector.Id ? item.ApprovingDirector.Id : null,
                         BusinessUnit: item['Business Unit'],
                         ApplicationStatus: "Active",
-                        Status: "Over Due",
+                        Status: "Overdue",
                         EmailSent: false
                     }));
                 }

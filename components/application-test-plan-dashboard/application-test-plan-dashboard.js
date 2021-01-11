@@ -169,7 +169,7 @@
                     return '<span class="statusIndicator inProgressStatus" ></span>';
                 case "Approved":
                     return '<span class="statusIndicator approvedStatus" ></span>';
-                case "Over Due":
+                case "Overdue":
                     return '<span class="statusIndicator notStartedStatus" ></span>';
                 default:
                     return null;
