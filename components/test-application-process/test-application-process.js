@@ -24,9 +24,11 @@
                             setTimeout(function () {
                                 $scope.$apply(function () {
                                     ctrl.allApplications = res.filter(function (x) {
-                                        return x.ApplicationStatus === "Active" && x.Status === "Completed" &&
-                                            x.TestPlanOwnerId && x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 &&
-                                            x.ApprovingManagerId && x.ApprovingDirectorId && x.TestDate;
+                                        return x.ApplicationStatus === "Active" && x.Status === "Completed" && x.TestPlanOwnerId &&
+                                            (x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
+                                                x.ApprovingManagerId === window.currentSPUser.Id ||
+                                                x.ApprovingDirectorId === window.currentSPUser.Id)
+                                            && x.TestDate;
                                     });
                                     ctrl.item = item;
                                     ctrl.item.DueDate = new Date(ctrl.item.DueDate);
@@ -69,9 +71,11 @@
                     setTimeout(function () {
                         $scope.$apply(function () {
                             ctrl.allApplications = res.filter(function (x) {
-                                return x.ApplicationStatus === "Active" && x.Status === "Completed" &&
-                                    x.TestPlanOwnerId && x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 &&
-                                    x.ApprovingManagerId && x.ApprovingDirectorId && x.TestDate;
+                                return x.ApplicationStatus === "Active" && x.Status === "Completed" && x.TestPlanOwnerId &&
+                                    (x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
+                                        x.ApprovingManagerId === window.currentSPUser.Id ||
+                                        x.ApprovingDirectorId === window.currentSPUser.Id)
+                                    && x.TestDate;
                             });
                             $Preload.hide();
                         });
@@ -88,7 +92,7 @@
                 checkCurrentUserInGroup("EDR Team")) {
                 ctrl.currentUserPermissions = "View";
             }
-            
+
             if (ctrl.item.Stage === 1 && ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) {
                 ctrl.currentUserPermissions = "Edit";
             }

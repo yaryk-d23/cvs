@@ -86,20 +86,18 @@
                     return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.ApprovingManagerId && x.ApprovingDirectorId && !x.EmailSent;
                 });
                 let req = [];
+                let toIds = [];
+                let ccIds = [];
                 activeApps.forEach(function (item) {
+                    toIds = toIds.concat(item.TestPlanOwnerId.results);
+                    toIds.push(item.ApprovingManagerId);
+                    ccIds.push(item.ApprovingDirectorId);
                     req.push($ApiService.deleteEmailItems(item.Id));
                     req.push($ApiService.updateApplication({
                         Id: item.Id,
                         TestDate: new Date().toISOString(),
                         Status: "In progress",
                         EmailSent: true
-                    }));
-                    req.push($ApiService.sendEmail({
-                        ToId: { 'results': item.TestPlanOwnerId.results.concat([item.ApprovingManagerId]) },
-                        CCId: { 'results': [item.ApprovingDirectorId] },
-                        Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + ctrl.currYear,
-                        Body: $("#initial-email-template").html(),
-                        ApplicationId: item.Id,
                     }));
                     req.push($ApiService.sendEmail({
                         ToId: { 'results': item.TestPlanOwnerId.results },
@@ -129,6 +127,13 @@
                         RepeatDay: "3"
                     }));
                 });
+                
+                req.push($ApiService.sendEmail({
+                    ToId: { 'results': toIds.unique() },
+                    CCId: { 'results': ccIds.unique() },
+                    Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + ctrl.currYear,
+                    Body: $("#initial-email-template").html()
+                }));
                 Promise.all(req).then(function (res) {
                     setTimeout(function () {
                         $scope.$apply(function () {
@@ -269,5 +274,21 @@
             d.setDate(d.getDate() + (1 + 7 - d.getDay()) % 7);
             return d;
         }
+        Array.prototype.contains = function(v) {
+            for (var i = 0; i < this.length; i++) {
+              if (this[i] === v) return true;
+            }
+            return false;
+          };
+          
+          Array.prototype.unique = function() {
+            var arr = [];
+            for (var i = 0; i < this.length; i++) {
+              if (!arr.contains(this[i])) {
+                arr.push(this[i]);
+              }
+            }
+            return arr;
+          }
     }
 })();
