@@ -95,7 +95,7 @@
                     req.push($ApiService.deleteEmailItems(item.Id));
                     req.push($ApiService.updateApplication({
                         Id: item.Id,
-                        TestDate: new Date().toISOString(),
+                        TestDate: dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss'),
                         Status: "In progress",
                         EmailSent: true
                     }));

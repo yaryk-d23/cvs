@@ -21,7 +21,12 @@
             sendEmail: sendEmail,
             deleteEmailItems: deleteEmailItems,
             deleteFile: deleteFile,
+            utcToLocalTime: utcToLocalTime
         };
+
+        function utcToLocalTime(utcDate) {
+            return $pnp.sp.web.regionalSettings.timeZone.utcToLocalTime(utcDate);
+        }
 
         function getCurrentUser() {
             return $http
@@ -42,7 +47,21 @@
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
                 .get()
-                .then((response) => {
+                .then(async (response) => {
+                    let req = {};
+                    for(let i=0;i<response.length;i++){
+                        if(response[i].TestDate) {
+                            req[response[i].Id] = utcToLocalTime(response[i].TestDate);
+                        }
+                    }
+                    let dates = await $q.all(req);
+                    Object.keys(dates).forEach(function(id) {
+                        for(let i=0;i<response.length;i++){
+                            if(response[i].Id === id) {
+                                response[i].TestDate = dates[id];
+                            }
+                        }
+                    });
                     return response;
                 }, onError);
         }
@@ -59,7 +78,10 @@
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
                 .get()
-                .then((response) => {
+                .then(async (response) => {
+                    if(response.TestDate) {
+                        response.TestDate = await utcToLocalTime(response.TestDate);
+                    }
                     return response;
                 }, onError);
         }
@@ -80,7 +102,21 @@
                 "ApprovingDirectorId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+
                 ")")
                 .get()
-                .then((response) => {
+                .then(async (response) => {
+                    let req = {};
+                    for(let i=0;i<response.length;i++){
+                        if(response[i].TestDate) {
+                            req[response[i].Id] = utcToLocalTime(response[i].TestDate);
+                        }
+                    }
+                    let dates = await $q.all(req);
+                    Object.keys(dates).forEach(function(id) {
+                        for(let i=0;i<response.length;i++){
+                            if(response[i].Id === id) {
+                                response[i].TestDate = dates[id];
+                            }
+                        }
+                    });
                     return response;
                 }, onError);
         }
@@ -100,7 +136,21 @@
                     "TestEDRReviewUser,TestITManagerUser,TestITDirectorUser,PostTestEDRReviewUser,PostTestITManagerUser,PostTestITDirectorUser"
                 )
                 .get()
-                .then((response) => {
+                .then(async (response) => {
+                    let req = {};
+                    for(let i=0;i<response.length;i++){
+                        if(response[i].DueDate) {
+                            req[response[i].Id] = utcToLocalTime(response[i].DueDate);
+                        }
+                    }
+                    let dates = await $q.all(req);
+                    Object.keys(dates).forEach(function(id) {
+                        for(let i=0;i<response.length;i++){
+                            if(response[i].Id === id) {
+                                response[i].DueDate = dates[id];
+                            }
+                        }
+                    });
                     return response;
                 }, onError);
         }
@@ -121,7 +171,21 @@
                     "TestEDRReviewUser,TestITManagerUser,TestITDirectorUser,PostTestEDRReviewUser,PostTestITManagerUser,PostTestITDirectorUser"
                 )
                 .get()
-                .then((response) => {
+                .then(async (response) => {
+                    let req = {};
+                    for(let i=0;i<response.length;i++){
+                        if(response[i].DueDate) {
+                            req[response[i].Id] = utcToLocalTime(response[i].DueDate);
+                        }
+                    }
+                    let dates = await $q.all(req);
+                    Object.keys(dates).forEach(function(id) {
+                        for(let i=0;i<response.length;i++){
+                            if(response[i].Id === id) {
+                                response[i].DueDate = dates[id];
+                            }
+                        }
+                    });
                     return response;
                 }, onError);
         }

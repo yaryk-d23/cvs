@@ -97,20 +97,33 @@
                 ctrl.currentUserPermissions = "Edit";
             }
 
-            if (ctrl.item.Stage === 2 && (window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId ||
-                window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId ||
-                checkCurrentUserInGroup("EDR Team"))) {
-                ctrl.currentUserPermissions = "Edit";
+            if (ctrl.item.Stage === 2) {
+                        if(!ctrl.item.TestEDRReview && checkCurrentUserInGroup("EDR Team")){
+                            ctrl.currentUserPermissions = "Edit";
+                        }
+                        else if(ctrl.item.TestEDRReview && !ctrl.item.TestITManager && window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId){
+                            ctrl.currentUserPermissions = "Edit";
+                        }
+                        else if(ctrl.item.TestEDRReview && !ctrl.item.TestITDirector && window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId){
+                            ctrl.currentUserPermissions = "Edit";
+                        }
+                
             }
 
             if (ctrl.item.Stage === 3 && ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) {
                 ctrl.currentUserPermissions = "Edit";
             }
 
-            if (ctrl.item.Stage === 4 && (window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId ||
-                window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId ||
-                checkCurrentUserInGroup("EDR Team"))) {
-                ctrl.currentUserPermissions = "Edit";
+            if (ctrl.item.Stage === 4) {
+                    if(!ctrl.item.PostTestEDRReview && checkCurrentUserInGroup("EDR Team")){
+                        ctrl.currentUserPermissions = "Edit";
+                    }
+                    else if(ctrl.item.PostTestEDRReview && !ctrl.item.PostTestITManager && window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId){
+                        ctrl.currentUserPermissions = "Edit";
+                    }
+                    else if(ctrl.item.PostTestEDRReview && !ctrl.item.PostTestITDirector && window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId){
+                        ctrl.currentUserPermissions = "Edit";
+                    }
             }
 
             if (!ctrl.currentUserPermissions) {
