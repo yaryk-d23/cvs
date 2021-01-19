@@ -47,22 +47,23 @@
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
                 .get()
-                .then(async (response) => {
+                .then((response) => {
                     let req = {};
                     for(let i=0;i<response.length;i++){
                         if(response[i].TestDate) {
                             req[response[i].Id] = utcToLocalTime(response[i].TestDate);
                         }
                     }
-                    let dates = await $q.all(req);
-                    Object.keys(dates).forEach(function(id) {
-                        for(let i=0;i<response.length;i++){
-                            if(response[i].Id === id) {
-                                response[i].TestDate = dates[id];
+                    return $q.all(req).then(function(dates){
+                        Object.keys(dates).forEach(function(id) {
+                            for(let i=0;i<response.length;i++){
+                                if(response[i].Id == id) {
+                                    response[i].TestDate = dates[id];
+                                }
                             }
-                        }
+                        });
+                        return response;
                     });
-                    return response;
                 }, onError);
         }
 
@@ -78,11 +79,14 @@
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
                 .get()
-                .then(async (response) => {
+                .then((response) => {
                     if(response.TestDate) {
-                        response.TestDate = await utcToLocalTime(response.TestDate);
+                        return utcToLocalTime(response.TestDate).then(function(date){
+                            response.TestDate = date;
+                            return response;
+                        });
                     }
-                    return response;
+                    else return response;
                 }, onError);
         }
 
@@ -102,22 +106,23 @@
                 "ApprovingDirectorId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+
                 ")")
                 .get()
-                .then(async (response) => {
+                .then((response) => {
                     let req = {};
                     for(let i=0;i<response.length;i++){
                         if(response[i].TestDate) {
                             req[response[i].Id] = utcToLocalTime(response[i].TestDate);
                         }
                     }
-                    let dates = await $q.all(req);
-                    Object.keys(dates).forEach(function(id) {
-                        for(let i=0;i<response.length;i++){
-                            if(response[i].Id === id) {
-                                response[i].TestDate = dates[id];
+                    return $q.all(req).then(function(dates){
+                        Object.keys(dates).forEach(function(id) {
+                            for(let i=0;i<response.length;i++){
+                                if(response[i].Id == id) {
+                                    response[i].TestDate = dates[id];
+                                }
                             }
-                        }
+                        });
+                        return response;
                     });
-                    return response;
                 }, onError);
         }
 
@@ -136,22 +141,28 @@
                     "TestEDRReviewUser,TestITManagerUser,TestITDirectorUser,PostTestEDRReviewUser,PostTestITManagerUser,PostTestITDirectorUser"
                 )
                 .get()
-                .then(async (response) => {
+                .then((response) => {
                     let req = {};
                     for(let i=0;i<response.length;i++){
                         if(response[i].DueDate) {
-                            req[response[i].Id] = utcToLocalTime(response[i].DueDate);
+                            req[response[i].Id] = $q.all({
+                                Created: utcToLocalTime(response[i].Created), 
+                                DueDate: utcToLocalTime(response[i].DueDate)
+                            });
                         }
                     }
-                    let dates = await $q.all(req);
-                    Object.keys(dates).forEach(function(id) {
-                        for(let i=0;i<response.length;i++){
-                            if(response[i].Id === id) {
-                                response[i].DueDate = dates[id];
+                    return $q.all(req).then(function(dates){
+                        Object.keys(dates).forEach(function(id) {
+                            for(let i=0;i<response.length;i++){
+                                if(response[i].Id == id) {
+                                    response[i].Created = dates[id].Created;
+                                    response[i].DueDate = dates[id].DueDate;
+                                }
                             }
-                        }
+                        });
+                        return response;
                     });
-                    return response;
+                    
                 }, onError);
         }
 
@@ -171,22 +182,15 @@
                     "TestEDRReviewUser,TestITManagerUser,TestITDirectorUser,PostTestEDRReviewUser,PostTestITManagerUser,PostTestITDirectorUser"
                 )
                 .get()
-                .then(async (response) => {
-                    let req = {};
-                    for(let i=0;i<response.length;i++){
-                        if(response[i].DueDate) {
-                            req[response[i].Id] = utcToLocalTime(response[i].DueDate);
-                        }
-                    }
-                    let dates = await $q.all(req);
-                    Object.keys(dates).forEach(function(id) {
-                        for(let i=0;i<response.length;i++){
-                            if(response[i].Id === id) {
-                                response[i].DueDate = dates[id];
-                            }
-                        }
+                .then((response) => {
+                    return $q.all({
+                        Created: utcToLocalTime(response.Created), 
+                        DueDate: utcToLocalTime(response.DueDate)
+                    }).then(function(res){
+                        response.Created = res.Created;
+                        response.DueDate = res.DueDate;
+                        return response;
                     });
-                    return response;
                 }, onError);
         }
 

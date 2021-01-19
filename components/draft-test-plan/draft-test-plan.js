@@ -515,8 +515,7 @@
                 + new Date(new Date(ctrl.item.Application.TestDate).setDate(new Date(ctrl.item.Application.TestDate).getDate() + 14)).toLocaleDateString('en-us');
             }
             if (ctrl.exerciseTimelineItems[2]) {
-                ctrl.exerciseTimelineItems[2].DueDate = new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)).toLocaleDateString('en-us') + " - " +
-                new Date(ctrl.item.DueDate).toLocaleDateString('en-us');
+                ctrl.exerciseTimelineItems[2].DueDate = new Date(ctrl.item.Created).toLocaleDateString('en-us') + " - " + new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)).toLocaleDateString('en-us');
             }
             if (ctrl.exerciseTimelineItems[3]) {
                 ctrl.exerciseTimelineItems[3].DueDate = "TBD";
