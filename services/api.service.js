@@ -46,6 +46,7 @@
                     "ApprovingDirector/Id,ApprovingDirector/Title"
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
+                .top(50000)
                 .get()
                 .then((response) => {
                     let req = {};
@@ -105,6 +106,7 @@
                 "ApprovingManagerId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+" or "+
                 "ApprovingDirectorId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+
                 ")")
+                .top(50000)
                 .get()
                 .then((response) => {
                     let req = {};
@@ -140,6 +142,7 @@
                 .expand(
                     "TestEDRReviewUser,TestITManagerUser,TestITDirectorUser,PostTestEDRReviewUser,PostTestITManagerUser,PostTestITDirectorUser"
                 )
+                .top(50000)
                 .get()
                 .then((response) => {
                     let req = {};

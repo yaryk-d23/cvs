@@ -518,7 +518,7 @@
                 ctrl.exerciseTimelineItems[2].DueDate = new Date(ctrl.item.Created).toLocaleDateString('en-us') + " - " + new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)).toLocaleDateString('en-us');
             }
             if (ctrl.exerciseTimelineItems[3]) {
-                ctrl.exerciseTimelineItems[3].DueDate = "TBD";
+                ctrl.exerciseTimelineItems[3].DueDate = "Follow normal guidelines/lead time for RFC submissions";
             }
             if (ctrl.exerciseTimelineItems[4]) {
                 ctrl.exerciseTimelineItems[4].DueDate = new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 7)).toLocaleDateString('en-us') + " - " +

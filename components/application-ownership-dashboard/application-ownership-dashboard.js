@@ -127,9 +127,10 @@
                         Body: "<p>Hello EDR Team,</p>" +
                             "<p>You are receiving this email because " + item.Title + " indicated in the Failover Exercise Portal that the Application Ownership is incorrect. " +
                             "<p>Comments: <br>" + comment.replace(/\n/g, '<br>') + "</p>" +
-                            "Please follow up with " + item.TestPlanOwner.results.map(function (i) { return i.Title; }).join('; ') +
+                            "Please follow up with " + window.currentSPUser.Title +
                             " and inform them the information has been corrected and they should access the Failover Exercise Portal to review and approve the updates.</p>" +
                             "<p>Thank you!</p>"
+                            // item.TestPlanOwner.results.map(function (i) { return i.Title; }).join('; ')
                     }).then(function () {
                         setTimeout(function () {
                             $scope.$apply(function () {

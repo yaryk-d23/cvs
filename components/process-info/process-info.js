@@ -81,7 +81,7 @@
                         SortOrder: 4,
                         Owners: "Application Teams",
                         Description: "Submit RFC for the Failover Exercise",
-                        DueDate: "TBD",
+                        DueDate: "Follow normal guidelines/lead time for RFC submissions",
                         TestPlanItemId: res.data.Id,
                     }),
                     $ApiService.createExerciseTimeline({

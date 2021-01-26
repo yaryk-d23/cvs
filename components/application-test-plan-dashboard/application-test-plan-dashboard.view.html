@@ -47,7 +47,7 @@
           ></a>
         </td>
         <td>{{item.Application.Title}}</td>
-        <td>{{item.Application.TestPlanOwner.Title}}</td>
+        <td><div ng-repeat="i in item.Application.TestPlanOwner.results">{{i.Title}}</div></td>
         <td>{{item.DueDate | date: 'MM/dd/yyyy'}}</td>
         <td>
           <div
