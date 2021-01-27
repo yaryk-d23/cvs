@@ -7,6 +7,7 @@ var app = angular.module('App', [
     'ui.select',
     'preloader',
     'popUp',
+    'constants',
 ]);
 app.run(function ($rootScope, $location, $Preload, $ApiService) {
     $Preload.show();

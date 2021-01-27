@@ -1,5 +1,5 @@
 (function () {
-    angular.module("App").factory("$ApiService", ['$http', '$q', '$injector', function ($http, $q, $injector) {
+    angular.module("App").factory("$ApiService", ['$http', '$q', '$injector', '$rootScope', '$compile', '$timeout', function ($http, $q, $injector, $rootScope, $compile, $timeout) {
         return {
             getDRApplicationItems: getDRApplicationItems,
             getDRApplicationItemById: getDRApplicationItemById,
@@ -21,8 +21,31 @@
             sendEmail: sendEmail,
             deleteEmailItems: deleteEmailItems,
             deleteFile: deleteFile,
-            utcToLocalTime: utcToLocalTime
+            utcToLocalTime: utcToLocalTime,
+            getHTMLTemplate: getHTMLTemplate,
+            getEmailTemplate: getEmailTemplate
         };
+
+        function getEmailTemplate(title) {
+            return $pnp.sp.web.lists
+                .getByTitle("EmailTemplates")
+                .items
+                .filter("Title eq '" + title + "'")
+                .get().then(function(data) {
+                    return data[0];
+                });
+        }
+
+        function getHTMLTemplate(template, scope) {
+            var $scope = $rootScope.$new();
+            angular.merge($scope, scope)
+            var el = $compile('<div style="display:none">' + template + '</div>')($scope);
+            angular.element(document).append(el);
+            $scope.$apply();
+            var html = el.html();
+            el.remove();
+            return html;
+        }
 
         function utcToLocalTime(utcDate) {
             return $pnp.sp.web.regionalSettings.timeZone.utcToLocalTime(utcDate);

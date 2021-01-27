@@ -6,10 +6,10 @@
                 //user: '<'
             },
             controllerAs: 'ctrl',
-            controller: ['$scope', '$ApiService', '$Preload', '$q', '$location', '$uibModal', ctrl]
+            controller: ['$scope', '$ApiService', '$Preload', '$q', '$location', '$uibModal', 'CONSTANT', ctrl]
         });
 
-    function ctrl($scope, $ApiService, $Preload, $q, $location, $uibModal) {
+    function ctrl($scope, $ApiService, $Preload, $q, $location, $uibModal, CONSTANT) {
         $Preload.show();
         var ctrl = this;
         ctrl.items = [];
@@ -120,23 +120,26 @@
             modalInstance.result.then(function (comment) {
                 $Preload.show();
                 $ApiService.deleteEmailItems(item.Id).then(function () {
-                    $ApiService.sendEmail({
-                        ToEmails: "disasterrecoverytestteam@cvshealth.com",
-                        // ToEmails: "oleksii.pashkevych@cvshealth.com",
-                        Subject: "Failover Exercise Notification – Incorrect Application Ownership",
-                        Body: "<p>Hello EDR Team,</p>" +
-                            "<p>You are receiving this email because " + item.Title + " indicated in the Failover Exercise Portal that the Application Ownership is incorrect. " +
-                            "<p>Comments: <br>" + comment.replace(/\n/g, '<br>') + "</p>" +
-                            "Please follow up with " + window.currentSPUser.Title +
-                            " and inform them the information has been corrected and they should access the Failover Exercise Portal to review and approve the updates.</p>" +
-                            "<p>Thank you!</p>"
+                    $ApiService.getEmailTemplate(CONSTANT.INCORRECT_APP).then(function (template) {
+                        $ApiService.sendEmail({
+                            // ToEmails: "disasterrecoverytestteam@cvshealth.com",
+                            ToEmails: "y.masyuk@chironit.com",
+                            Subject: $ApiService.getHTMLTemplate(template.Subject, {}),
+                            Body: $ApiService.getHTMLTemplate(template.Body, { Title: item.Title, comment: comment.replace(/\n/g, '<br>'), currentSPUser: window.currentSPUser })
+                            // "<p>Hello EDR Team,</p>" +
+                            //     "<p>You are receiving this email because " + item.Title + " indicated in the Failover Exercise Portal that the Application Ownership is incorrect. " +
+                            //     "<p>Comments: <br>" + comment.replace(/\n/g, '<br>') + "</p>" +
+                            //     "Please follow up with " + window.currentSPUser.Title +
+                            //     " and inform them the information has been corrected and they should access the Failover Exercise Portal to review and approve the updates.</p>" +
+                            //     "<p>Thank you!</p>"
                             // item.TestPlanOwner.results.map(function (i) { return i.Title; }).join('; ')
-                    }).then(function () {
-                        setTimeout(function () {
-                            $scope.$apply(function () {
-                                $Preload.hide();
-                            });
-                        }, 0);
+                        }).then(function () {
+                            setTimeout(function () {
+                                $scope.$apply(function () {
+                                    $Preload.hide();
+                                });
+                            }, 0);
+                        });
                     });
                 });
             }, function () {
@@ -170,7 +173,7 @@
                             Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
                                 "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                 "Thank you,<br>EDR Team",
                             DelayDate: new Date(new Date(item.TestDate).setDate(new Date(item.TestDate).getDate() + 9)),
                             // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
@@ -183,7 +186,7 @@
                             Body: "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
                                 "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                                 "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
+                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                 "Thank you,<br>EDR Team",
                             DelayDate: new Date(new Date(item.TestDate).setDate(new Date(item.TestDate).getDate() + 13)),
                             // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
