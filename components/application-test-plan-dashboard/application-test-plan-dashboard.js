@@ -81,6 +81,9 @@
                         item.Application.ApprovingDirectorId === window.currentSPUser.Id;
                 });
             }
+            items = items.filter(function(x) {
+                return x.Application && x.Application.Status !== "Out of Scope";
+            });
             setTimeout(function () {
                 $scope.$apply(function () {
                     ctrl.items = items;

@@ -46,6 +46,7 @@
                     "ApprovingDirector/Id,ApprovingDirector/Title"
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
+                .filter("Status ne 'Out of Scope'")
                 .top(50000)
                 .get()
                 .then((response) => {
@@ -101,7 +102,7 @@
                     "ApprovingDirector/Id,ApprovingDirector/Title"
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
-                .filter("Status ne 'Overdue' and ("+
+                .filter("Status ne 'Overdue' and Status ne 'Out of Scope' and ("+
                 "TestPlanOwnerId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+" or "+
                 "ApprovingManagerId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+" or "+
                 "ApprovingDirectorId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+
