@@ -23,13 +23,19 @@
 
         var getData = async () => {
             let items = await ctrl.api.getApplicationTestPlanItems();
+            let flag = false;
+            angular.forEach(window.currentSPUser.Groups, function (group) {
+                if (group.Title == 'EDR Team') {
+                    flag = true;
+                }
+            });
             let applicationIds = [];
             let applicationTestPlanIds = [];
             items.forEach((item) => {
-                if(applicationTestPlanIds.indexOf(item.Id) === -1) {
+                if (applicationTestPlanIds.indexOf(item.Id) === -1) {
                     applicationTestPlanIds.push(item.Id);
                 }
-                if (applicationIds.indexOf(item.ApplicationId) === -1){
+                if (applicationIds.indexOf(item.ApplicationId) === -1) {
                     applicationIds.push(item.ApplicationId);
                 }
             });
@@ -66,6 +72,14 @@
                     item.TestResultsAttachment = TestResultsAttachment.File;
                 }
                 items[j] = item;
+            }
+
+            if (!flag) {
+                items = items.filter(function (item) {
+                    return item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
+                        item.Application.ApprovingManagerId === window.currentSPUser.Id ||
+                        item.Application.ApprovingDirectorId === window.currentSPUser.Id;
+                });
             }
             setTimeout(function () {
                 $scope.$apply(function () {
