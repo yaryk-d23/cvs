@@ -11,6 +11,7 @@ var CONSTANT = {
     DRAFT_DELAY_REMINDER_APPROVAL_PAST_DUE: "Delay Reminder: Failover Test Plan Approval Past Due",
     DRAFT_REQUIREMENTS_COMPLETE: "Failover Exercise Requirements Complete",
     DRAFT_REQUIREMENTS_DUE: "Failover Exercise Requirements Due",
+    DRAFT_REQUIREMENTS_DUE_NOT_COMPLETED: "Failover Exercise Requirements Due/Not Completed",
     TEST_REJECT: "Test Failover Exercise Requirements Rejected",
     TEST_REQUIRES_APPROVAL: "Test Failover Results Require Approval",
     TEST_REMINDER_APPROVAL_PAST_DUE: "Reminder: Failover Results Approval Past Due",

@@ -112,25 +112,33 @@
                 item[ctrl.curentApproval.DateFieldName] = new Date().toISOString();
                 $ApiService.updateApplicationTestPlan(item).then(function () {
                     $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
-                        $ApiService.sendEmail({
-                            ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                            CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
-                            Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Rejected",
-                            Body: "Hello, <p>The results you submitted for the " + ctrl.item.Application.Title + " Failover Exercise has been REJECTED for the following reasons:</p>" +
-                                "<p>" + comment.replace(/\n/g, '<br>') + "</p>" +
-                                "<p>Please make these updates to the Application Failover Test Plan and re-upload into the <a href='" +
-                                window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
-                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
-                                "Thank you,<br>EDR Team",
-                            ApplicationId: ctrl.item.Application.Id,
-                        }).then(function () {
-                            setTimeout(function () {
-                                $scope.$apply(function () {
-                                    $location.path("/dashboard");
-                                    $Preload.hide();
-                                });
-                            }, 0);
+                        $ApiService.getEmailTemplate(CONSTANT.TEST_REJECT).then(function (template) {
+                            $ApiService.sendEmail({
+                                ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                                CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
+                                Subject: $ApiService.getHTMLTemplate(template.Subject, { Title: ctrl.item.Application.Title }),
+                                Body: $ApiService.getHTMLTemplate(template.Body, {
+                                    Title: ctrl.item.Application.Title,
+                                    comment: comment.replace(/\n/g, '<br>'),
+                                    APP_PAGE_LOCATION_URL: window["APP_PAGE_LOCATION_URL"]
+                                }),
+                                // Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Rejected",
+                                // Body: "Hello, <p>The results you submitted for the " + ctrl.item.Application.Title + " Failover Exercise has been REJECTED for the following reasons:</p>" +
+                                //     "<p>" + comment.replace(/\n/g, '<br>') + "</p>" +
+                                //     "<p>Please make these updates to the Application Failover Test Plan and re-upload into the <a href='" +
+                                //     window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
+                                //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
+                                //     "Thank you,<br>EDR Team",
+                                ApplicationId: ctrl.item.Application.Id,
+                            }).then(function () {
+                                setTimeout(function () {
+                                    $scope.$apply(function () {
+                                        $location.path("/dashboard");
+                                        $Preload.hide();
+                                    });
+                                }, 0);
+                            });
                         });
                     });
                 });
@@ -168,77 +176,72 @@
             // }
             $ApiService.updateApplicationTestPlan(item).then(function (updatedItem) {
                 if (ctrl.curentApproval.FieldName === "PostTestEDRReview") {
-                    $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
-                        let req = [];
-                        req.push($ApiService.sendEmail({
-                            ToId: { 'results': [ctrl.item.Application.ApprovingManagerId, ctrl.item.Application.ApprovingDirectorId] },
-                            CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                            Subject: ctrl.item.Application.Title + " Failover Results Require Approval",
-                            Body: "Hello, <p>You are receiving this email because the " + ctrl.item.Application.Title + " Failover Results " +
-                                "require Manager/Tech Owner and Director/Sub Portfolio Owner approval for Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal<i style='color:red'>*</i></a>, review the Results and provide your approval as soon as possible.</p>" +
-                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>"+
-                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
-                                "Thank you,<br>EDR Team",
-                            ApplicationId: ctrl.item.Application.Id,
-                        }));
-                        req.push($ApiService.sendEmail({
-                            ToId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
-                            CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                            // CCEmails: "disasterrecoverytestteam@cvshealth.com",
-                            Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
-                            Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
-                                " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal<i style='color:red'>*</i></a>, to review the Results and provide your approval as soon as possible.</p>" +
-                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
-                                "Thank you,<br>EDR Team",
-                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
-                            // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
-                            ApplicationId: ctrl.item.Application.Id,
-                        }));
-                        req.push($ApiService.sendEmail({
-                            ToId: { 'results': [ctrl.item.Application.ApprovingDirectorId] },
-                            CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                            // CCEmails: "disasterrecoverytestteam@cvshealth.com",
-                            Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
-                            Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
-                                " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
-                                "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal<i style='color:red'>*</i></a>, review the Test Plan and provide your approval as soon as possible.</p>" +
-                                "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>"+
-                                "Thank you,<br>EDR Team",
-                            DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
-                            // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
-                            ApplicationId: ctrl.item.Application.Id,
-                        }));
-                        Promise.all(req).then(function () {
-                            setTimeout(function () {
-                                $scope.$apply(function () {
-                                    $location.path("/dashboard");
-                                    $Preload.hide();
-                                });
-                            }, 0);
-                        });
-                    });
-                }
-                else if (updatedItem.PostTestITManager === "Approved" && updatedItem.PostTestITDirector === "Approved") {
-                    $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
-                        $ApiService.updateApplicationTestPlan({
-                            Id: ctrl.item.Id,
-                            Stage: 5
-                        }).then(function () {
+                    Promise.all([
+                        $ApiService.getEmailTemplate(CONSTANT.TEST_REQUIRES_APPROVAL),
+                        $ApiService.getEmailTemplate(CONSTANT.TEST_REMINDER_APPROVAL_PAST_DUE),
+                        $ApiService.getEmailTemplate(CONSTANT.TEST_DELAY_REMINDER_APPROVAL_PAST_DUE)
+                    ]).then(function (template) {
+
+                        $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
                             let req = [];
-                            req.push($ApiService.updateApplication({
-                                Id: ctrl.item.Application.Id,
-                                Status: "Completed"
+                            req.push($ApiService.sendEmail({
+                                ToId: { 'results': [ctrl.item.Application.ApprovingManagerId, ctrl.item.Application.ApprovingDirectorId] },
+                                CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                                Subject: $ApiService.getHTMLTemplate(template[0].Subject, { Title: ctrl.item.Application.Title }),
+                                Body: $ApiService.getHTMLTemplate(template[0].Body, {
+                                    Title: ctrl.item.Application.Title,
+                                    DueDate: new Date(ctrl.item.DueDate).toLocaleDateString(),
+                                    APP_PAGE_LOCATION_URL: window["APP_PAGE_LOCATION_URL"]
+                                }),
+                                // Subject: ctrl.item.Application.Title + " Failover Results Require Approval",
+                                // Body: "Hello, <p>You are receiving this email because the " + ctrl.item.Application.Title + " Failover Results " +
+                                //     "require Manager/Tech Owner and Director/Sub Portfolio Owner approval for Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
+                                //     "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal<i style='color:red'>*</i></a>, review the Results and provide your approval as soon as possible.</p>" +
+                                //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
+                                //     "Thank you,<br>EDR Team",
+                                ApplicationId: ctrl.item.Application.Id,
                             }));
                             req.push($ApiService.sendEmail({
-                                ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
-                                CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
-                                Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Complete",
-                                Body: "Hello, <p>Thank you! You have now completed all Failover Exercise requirements for " + ctrl.item.Application.Title + ".</p>" +
-                                    "Thanks again,<br>EDR Team",
+                                ToId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
+                                CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                                // CCEmails: "disasterrecoverytestteam@cvshealth.com",
+                                Subject: $ApiService.getHTMLTemplate(template[1].Subject, { Title: ctrl.item.Application.Title }),
+                                Body: $ApiService.getHTMLTemplate(template[1].Body, {
+                                    Title: ctrl.item.Application.Title,
+                                    DueDate: new Date(ctrl.item.DueDate).toLocaleDateString(),
+                                    APP_PAGE_LOCATION_URL: window["APP_PAGE_LOCATION_URL"]
+                                }),
+                                // Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
+                                // Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
+                                //     " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
+                                //     "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal<i style='color:red'>*</i></a>, to review the Results and provide your approval as soon as possible.</p>" +
+                                //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
+                                //     "Thank you,<br>EDR Team",
+                                DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
+                                // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                                ApplicationId: ctrl.item.Application.Id,
+                            }));
+                            req.push($ApiService.sendEmail({
+                                ToId: { 'results': [ctrl.item.Application.ApprovingDirectorId] },
+                                CCId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                                // CCEmails: "disasterrecoverytestteam@cvshealth.com",
+                                Subject: $ApiService.getHTMLTemplate(template[2].Subject, { Title: ctrl.item.Application.Title }),
+                                Body: $ApiService.getHTMLTemplate(template[2].Body, {
+                                    Title: ctrl.item.Application.Title,
+                                    DueDate: new Date(ctrl.item.DueDate).toLocaleDateString(),
+                                    APP_PAGE_LOCATION_URL: window["APP_PAGE_LOCATION_URL"]
+                                }),
+                                Subject: ctrl.item.Application.Title + " Failover Results Approval Past Due",
+                                // Body: "Hello, <p>You are receiving this email because you have not approved the " + ctrl.item.Application.Title +
+                                //     " Failover Results for the Failover Exercise completed on " + new Date(ctrl.item.DueDate).toLocaleDateString() + ". Please go to the " +
+                                //     "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Portal<i style='color:red'>*</i></a>, review the Test Plan and provide your approval as soon as possible.</p>" +
+                                //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
+                                //     "Thank you,<br>EDR Team",
+                                DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
+                                // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
                                 ApplicationId: ctrl.item.Application.Id,
                             }));
                             Promise.all(req).then(function () {
@@ -248,6 +251,42 @@
                                         $Preload.hide();
                                     });
                                 }, 0);
+                            });
+                        });
+                    });
+                }
+                else if (updatedItem.PostTestITManager === "Approved" && updatedItem.PostTestITDirector === "Approved") {
+                    $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
+                        $ApiService.updateApplicationTestPlan({
+                            Id: ctrl.item.Id,
+                            Stage: 5
+                        }).then(function () {
+                            $ApiService.getEmailTemplate(CONSTANT.TEST_COMPLETE).then(function (template) {
+                                let req = [];
+                                req.push($ApiService.updateApplication({
+                                    Id: ctrl.item.Application.Id,
+                                    Status: "Completed"
+                                }));
+                                req.push($ApiService.sendEmail({
+                                    ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
+                                    CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },
+                                    Subject: $ApiService.getHTMLTemplate(template.Subject, { Title: ctrl.item.Application.Title }),
+                                    Body: $ApiService.getHTMLTemplate(template.Body, {
+                                        Title: ctrl.item.Application.Title,
+                                    }),
+                                    // Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Complete",
+                                    // Body: "Hello, <p>Thank you! You have now completed all Failover Exercise requirements for " + ctrl.item.Application.Title + ".</p>" +
+                                    //     "Thanks again,<br>EDR Team",
+                                    ApplicationId: ctrl.item.Application.Id,
+                                }));
+                                Promise.all(req).then(function () {
+                                    setTimeout(function () {
+                                        $scope.$apply(function () {
+                                            $location.path("/dashboard");
+                                            $Preload.hide();
+                                        });
+                                    }, 0);
+                                });
                             });
                         });
                     });
@@ -355,19 +394,19 @@
             }
         }
 
-        ctrl.checkShowReUploadMsg = function() {
+        ctrl.checkShowReUploadMsg = function () {
             let flag = false;
             ctrl.approvalStatusItems.forEach(function (item) {
-                if(ctrl.item[item.FieldName] === "Rejected") {
+                if (ctrl.item[item.FieldName] === "Rejected") {
                     flag = true;
                 }
             });
-            if(ctrl.item.Stage !== 3){
+            if (ctrl.item.Stage !== 3) {
                 flag = false;
             }
             return flag;
         }
-        ctrl.showCancelBtn = function() {
+        ctrl.showCancelBtn = function () {
             let isMember = false;
             window.currentSPUser.Groups.forEach(function (group) {
                 if (group.Title === "EDR Team") {
