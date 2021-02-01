@@ -165,9 +165,9 @@
                 });
                 Promise.all(req).then(function (_) {
                     Promise.all([
-                        $ApiService.getEmailTemplate(CONSTANT.MARK_APPROVED_REMINDER,
+                        $ApiService.getEmailTemplate(CONSTANT.MARK_APPROVED_REMINDER),
                         $ApiService.getEmailTemplate(CONSTANT.DELAY_MARK_APPROVED_REMINDER)
-                        )]).then(function (template) {
+                        ]).then(function (template) {
                             req = [];
                             selectedApp.forEach(function (item) {
                                 req.push($ApiService.sendEmail({
@@ -180,22 +180,22 @@
                                     //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                     //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                     //     "Thank you,<br>EDR Team",
-                                    DelayDate: new Date(new Date(item.TestDate).setDate(new Date(item.TestDate).getDate() + 9)),
-                                    // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                                    // DelayDate: new Date(new Date(item.TestDate).setDate(new Date(item.TestDate).getDate() + 9)),
+                                    DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
                                     ApplicationId: item.Id,
                                 }));
                                 req.push($ApiService.sendEmail({
                                     ToId: { 'results': item.TestPlanOwnerId.results },
                                     CCId: { 'results': [item.ApprovingManagerId] },
                                     Subject: $ApiService.getHTMLTemplate(template[1].Subject, { Title: item.Title }),
-                                    Body: $ApiService.getHTMLTemplate(template.Body[1], { Title: item.Title, dashboardLink: ctrl.dashboardLink }), 
+                                    Body: $ApiService.getHTMLTemplate(template[1].Body, { Title: item.Title, dashboardLink: ctrl.dashboardLink }), 
                                         // "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
                                         // "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
                                         // "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                         // "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                         // "Thank you,<br>EDR Team",
-                                    DelayDate: new Date(new Date(item.TestDate).setDate(new Date(item.TestDate).getDate() + 13)),
-                                    // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                                    // DelayDate: new Date(new Date(item.TestDate).setDate(new Date(item.TestDate).getDate() + 13)),
+                                    DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
                                     ApplicationId: item.Id,
                                 }));
                             });

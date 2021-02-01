@@ -219,8 +219,8 @@
                                 //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                 //     "Thank you,<br>EDR Team",
-                                DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
-                                // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                                // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
+                                DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
                                 ApplicationId: ctrl.item.Application.Id,
                             }));
                             req.push($ApiService.sendEmail({
@@ -240,8 +240,8 @@
                                 //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                 //     "Thank you,<br>EDR Team",
-                                DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
-                                // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                                // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)),
+                                DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
                                 ApplicationId: ctrl.item.Application.Id,
                             }));
                             Promise.all(req).then(function () {

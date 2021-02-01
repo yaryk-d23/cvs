@@ -14,7 +14,7 @@
         ctrl.importData = [];
         var allApplications = [];
         var allApplicatinsTitle = [];
-        ctrl.currYear = "2021";//new Date().getFullYear();
+        ctrl.currYear = new Date().getFullYear();
         ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
         ctrl.emailTemplateUrl = window["APP_FOLDER"] + "components/import-applications/email-template.html"
 
@@ -114,8 +114,8 @@
                                 //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                 //     "Thank you,<br>EDR Team",
-                                DelayDate: new Date(new Date().setDate(new Date().getDate() + 5)),
-                                // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                                // DelayDate: new Date(new Date().setDate(new Date().getDate() + 5)),
+                                DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
                                 ApplicationId: item.Id,
                             }));
                             req.push($ApiService.sendEmail({
@@ -128,40 +128,51 @@
                                 //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                 //     "Thank you,<br>EDR Team",
-                                DelayDate: getNextMonday(new Date(new Date().setDate(new Date().getDate() + 6))),
-                                // DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                                // DelayDate: getNextMonday(new Date(new Date().setDate(new Date().getDate() + 6))),
+                                DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
                                 ApplicationId: item.Id,
                                 RepeatDay: "3"
                             }));
                         });
+                        if(activeApps && activeApps.length) {
+                            req.push($ApiService.sendEmail({
+                                ToId: { 'results': toIds.unique() },
+                                CCId: { 'results': ccIds.unique() },
+                                Subject: $ApiService.getHTMLTemplate(template[2].Subject, { currYear: ctrl.currYear }),
+                                Body: $ApiService.getHTMLTemplate(template[2].Body, { 
+                                    currYear: ctrl.currYear, 
+                                    dashboardLink: ctrl.dashboardLink 
+                                }), 
+                                // Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + ctrl.currYear,
+                                // Body: $("#initial-email-template").html()
+                            }));
+                            Promise.all(req).then(function (res) {
+                                setTimeout(function () {
+                                    $scope.$apply(function () {
+                                        $Preload.hide();
+                                        alert("Process started!");
+                                    });
+                                }, 0);
+    
+                            }, function (error) {
+                                setTimeout(function () {
+                                    $scope.$apply(function () {
+                                        console.log(error);
+                                        $Preload.hide();
+                                    });
+                                }, 0);
+                            });
+                        }
 
-                        req.push($ApiService.sendEmail({
-                            ToId: { 'results': toIds.unique() },
-                            CCId: { 'results': ccIds.unique() },
-                            Subject: $ApiService.getHTMLTemplate(template[2].Subject, { currYear: currYear }),
-                            Body: $ApiService.getHTMLTemplate(template[2].Body, { 
-                                currYear: ctrl.currYear, 
-                                dashboardLink: ctrl.dashboardLink 
-                            }), 
-                            // Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + ctrl.currYear,
-                            // Body: $("#initial-email-template").html()
-                        }));
-                        Promise.all(req).then(function (res) {
+                        else {
                             setTimeout(function () {
                                 $scope.$apply(function () {
                                     $Preload.hide();
-                                    alert("Process started!");
+                                    alert("No Active Item(s)!");
                                 });
                             }, 0);
+                        }
 
-                        }, function (error) {
-                            setTimeout(function () {
-                                $scope.$apply(function () {
-                                    console.log(error);
-                                    $Preload.hide();
-                                });
-                            }, 0);
-                        });
                     });
             });
         }
