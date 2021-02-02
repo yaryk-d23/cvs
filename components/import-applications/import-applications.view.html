@@ -67,9 +67,9 @@
         <tr ng-repeat="item in ctrl.importData">
           <td>{{item.Application}}</td>
           <td>
-            <div ng-repeat="i in item.TestPlanOwner">{{i.Title}}</div>
+            <div ng-repeat="i in item.TestPlanOwner">{{i.Title}} </div>
             <small ng-if="item.TestPlanOwner && item.TestPlanOwner.length"
-              >({{item['Plan Owner']}})</small
+              >({{item['Plan Owner']}}) </small
             >
           </td>
           <td>{{item['Business Unit']}}</td>
