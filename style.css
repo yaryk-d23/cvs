@@ -1,3 +1,7 @@
+.fr-wrapper>div:not(.fr-element),
+.fr-wrapper>.fr-placeholder {
+  display: none!important;
+}
 #s4-workspace {
   background-color: #f5f5f5;
 }
@@ -63,28 +67,28 @@
 
 /* table styles */
 
-.app-container .table {
+.app-container :not(.email-templates-table) .table {
   border-collapse: separate;
   border-spacing: 0 15px;
 }
-.app-container .table th {
+.app-container :not(.email-templates-table) .table th {
   vertical-align: middle;
   border-top: none;
 }
-.app-container .table td {
+.app-container :not(.email-templates-table) .table td {
   vertical-align: middle;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   color: #818181;
 }
-.app-container .table td:first-child {
+.app-container :not(.email-templates-table) .table td:first-child {
   border-left: 1px solid #ddd;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   color: inherit;
   font-weight: 600;
 }
-.app-container .table td:last-child {
+.app-container :not(.email-templates-table) .table td:last-child {
   border-right: 1px solid #ddd;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;

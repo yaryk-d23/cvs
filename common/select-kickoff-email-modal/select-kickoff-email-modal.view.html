@@ -1,0 +1,36 @@
+<div id="select-kickoff-email-modal">
+  <div class="modal-header">
+    <button
+      type="button"
+      class="close"
+      ng-click="ctrl.cancel()"
+      style="min-width: 0"
+    >
+      &times;
+    </button>
+    <h4 class="modal-title" id="modal-title">
+      Please, select Kick-off email template:
+    </h4>
+  </div>
+  <div class="modal-body" id="modal-body">
+    <ng-form name="ctrl.form">
+      <div class="form-group">
+        <label for="Template" class="control-label">Template {{ctrl.selectedTemplate}}</label>
+        <select
+          name="Template"
+          class="form-control"
+          ng-model="ctrl.selectedTemplate"
+          ng-options="i as i for i in ctrl.temeplates track by i"
+        ></select>
+      </div>
+    </ng-form>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-warning" type="button" ng-click="ctrl.cancel()">
+      Cancel
+    </button>
+    <button class="btn btn-success" type="button" ng-click="ctrl.ok()">
+      Ok
+    </button>
+  </div>
+</div>

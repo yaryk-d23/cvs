@@ -11,7 +11,7 @@
         <li 
           ng-repeat="item in ctrl.navLinks" 
           ng-class="{'active': ctrl.isActivePath(item.link)}"
-          ng-if="item.title !== 'Import Applications' || ctrl.isAdmin()">
+          ng-if="item.title !== 'Import Applications' || item.title !== 'Emails Template' || ctrl.isAdmin()">
             <a ng-href="#{{item.link}}">
               {{item.title}} 
               <span class="sr-only" ng-if="ctrl.isActivePath(item.link)">
@@ -28,9 +28,9 @@
   // window["APP_FOLDER"] = "https://chironitcom.sharepoint.com/sites/Demo/cvs/SiteAssets/DRProcessAutomationSolution/";   
   // window["APP_PAGE_LOCATION_URL"] = "https://chironitcom.sharepoint.com/sites/Demo/cvs/SitePages/Test.aspx"; 
 
-  window["SITE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/dev/"; 
-  window["APP_FOLDER"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/dev/SiteAssets/DRProcessAutomationSolution/";   
-  window["APP_PAGE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/dev/Exercises/SitePages/Failover%20Exercise%20Portal.aspx"; 
+  window["SITE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/QuarterlyFailoverExercises/"; 
+  window["APP_FOLDER"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/QuarterlyFailoverExercises/SiteAssets/DRProcessAutomationSolution/";   
+  window["APP_PAGE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/QuarterlyFailoverExercises/Exercises/SitePages/Failover%20Exercise%20Portal.aspx"; 
 
   var modules = [
       //modules
@@ -40,12 +40,14 @@
       "modules/angular/angular-sanitize.min.js",
       "modules/angular/angular-touch.min.js",
       "modules/pnp.js",
-      "modules/jquery-1.12.4.min.js",
+      "modules/jquery-2.0.3.min.js",
       "modules/bootstrap/js/bootstrap.min.js",
       "modules/bootstrap/js/ui-bootstrap-tpls-2.5.0.min.js",
       "modules/ui-select/select.js",
       "modules/xlsx.full.min.js",
       "modules/dayjs.min.js",
+      "modules/tinymce/tinymce.min.js",
+      "modules/tinymce/angular-ui-tinymce.js",
       
     ];
 var scripts = [
@@ -66,10 +68,12 @@ var scripts = [
       "components/timeline-modal/timeline-modal.js",
       "components/import-applications/import-applications.js",
       "components/application-ownership-dashboard/application-ownership-dashboard.js",
+      "components/email-templates/email-templates.js",
 
       "common/date-range/date-range.js",
       "common/reject-modal/reject-modal.js",
       "common/comments-modal/comments-modal.js",
+      "common/select-kickoff-email-modal/select-kickoff-email-modal.js",
     ];
   var styles = [
       "modules/bootstrap/css/bootstrap.min.css",
@@ -84,6 +88,7 @@ var scripts = [
       "components/timeline-modal/timeline-modal.style.css",
       "components/import-applications/import-applications.style.css",
       "components/application-ownership-dashboard/application-ownership-dashboard.style.css",
+      "components/email-templates/email-templates.style.css",
     ];
 
   for (var i = 0; i < styles.length; i++) {

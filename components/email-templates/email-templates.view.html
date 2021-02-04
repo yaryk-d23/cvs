@@ -1,0 +1,64 @@
+<div class="email-templates">
+  <div class="header">
+    <h3 class="sectionHeader">Emails Template</h3>
+  </div>
+  <div ng-if="!ctrl.selectedTemplate">
+    <table class="table email-templates-table">
+      <tr>
+        <th style="width: 5%"></th>
+        <th style="width: 25%">Subject</th>
+        <th style="width: 70%">Body</th>
+      </tr>
+      <tr ng-repeat="item in ctrl.allEmailTemplates">
+        <td>
+          <i
+            class="glyphicon glyphicon-edit editIcon"
+            ng-click="ctrl.editTemplate(item)"
+          ></i>
+        </td>
+        <td>{{item.Subject}}</td>
+        <td>
+          <div
+            ng-bind-html="ctrl.trustHtml(item.Body)"
+            class="email-body"
+          ></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div ng-if="ctrl.selectedTemplate">
+    <ng-form name="ctrl.form">
+      <div class="form-group">
+        <label for="Subject" class="control-label required">Subject</label>
+        <textarea
+          rows="3"
+          class="form-control"
+          name="Subject"
+          id="Subject"
+          ng-model="ctrl.selectedTemplate.Subject"
+          required
+        ></textarea>
+        <span
+          class="error-msg"
+          ng-show="ctrl.form.Subject.$touched && ctrl.form.Subject.$invalid"
+          >Subject is required.</span
+        >
+      </div>
+      <div class="form-group">
+        <label for="Body" class="control-label required">Body</label>
+        <textarea ui-tinymce="ctrl.options" ng-model="ctrl.selectedTemplate.Body"></textarea>
+        <span class="error-msg" ng-show="!ctrl.selectedTemplate.Body"
+          >Body is required.</span
+        >
+      </div>
+    </ng-form>
+    <div class="modal-footer">
+      <button class="btn btn-warning" type="button" ng-click="ctrl.cancelEdit()">
+        Cancel
+      </button>
+      <button class="btn btn-success" type="button" ng-click="ctrl.saveTemplate()">
+        Save
+      </button>
+    </div>
+  </div>
+</div>

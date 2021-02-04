@@ -20,6 +20,8 @@ var CONSTANT = {
     PROCESS_INFO: "Reminder: Failover Exercise",
     PROCESS_INFO_DUE: "Process Info Reminder: Failover Exercise Requirement Due",
     PROCESS_INFO_PAST_DUE: "Process Info Reminder: Failover Exercise Requirement Past Due",
+
+    KickoffEmailTemplates: ["KICK_OFF_EMAIL", "KICK_OFF_EMAIL_1"]
 };
 
 angular.module('constants', [])
