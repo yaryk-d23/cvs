@@ -12,6 +12,7 @@
         $Preload.hide();
         ctrl.allEmailTemplates = [];
         ctrl.selectedTemplate = null;
+        ctrl.categoryOptions = ["Kick-off", "Reminder"];
         ctrl.options = {
             height: 400,
             menubar: "edit format table",
@@ -44,7 +45,7 @@
         ctrl.editTemplate = function (template) {
             $Preload.show();
             ctrl.selectedTemplate = angular.copy(template);
-            ctrl.selectedTemplate.Body = ctrl.trustHtml(ctrl.selectedTemplate.Body);
+            // ctrl.selectedTemplate.Body = ctrl.trustHtml(ctrl.selectedTemplate.Body);
             setTimeout(function () {
                 $scope.$apply(function () {
                     $Preload.hide();
@@ -57,7 +58,9 @@
             $ApiService.updateEmailTemplate({
                 Id: ctrl.selectedTemplate.Id,
                 Subject: ctrl.selectedTemplate.Subject,
-                Body: ctrl.selectedTemplate.Body
+                Body: ctrl.selectedTemplate.Body.replace(/\n|\t/g, ' '),
+                Name: ctrl.selectedTemplate.Name,
+                Category: ctrl.selectedTemplate.Category
             }).then(function (_) {
                 loadData();
             });

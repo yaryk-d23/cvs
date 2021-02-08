@@ -187,6 +187,7 @@
                 .expand(
                     "TestEDRReviewUser,TestITManagerUser,TestITDirectorUser,PostTestEDRReviewUser,PostTestITManagerUser,PostTestITDirectorUser"
                 )
+                .filter("DueDate ne null")
                 .top(50000)
                 .get()
                 .then((response) => {

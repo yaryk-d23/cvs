@@ -76,7 +76,7 @@
 
             if (!flag) {
                 items = items.filter(function (item) {
-                    return item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
+                    return (item.Application.TestPlanOwnerId && item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) ||
                         item.Application.ApprovingManagerId === window.currentSPUser.Id ||
                         item.Application.ApprovingDirectorId === window.currentSPUser.Id;
                 });
@@ -86,13 +86,25 @@
             });
             setTimeout(function () {
                 $scope.$apply(function () {
-                    ctrl.items = items;
+                    ctrl.items = groupItems(items);
                     ctrl.filterData();
                 });
             }, 0);
 
         };
         getData();
+
+        function groupItems(items) {
+            let parentItems = items.filter(function(x) {
+                return !x.Application.ParentId;
+            });
+            parentItems.forEach(function(item) {
+                item.ChildrenItems = items.filter(function(x) {
+                    return x.Application.ParentId === item.Id;
+                });
+            });
+            return parentItems;
+        }
 
         ctrl.getDraftTestPlanReceivedIndicator = function (item) {
             let currDate = new Date().getTime();
