@@ -24,7 +24,7 @@
                             setTimeout(function () {
                                 $scope.$apply(function () {
                                     ctrl.allApplications = res.filter(function (x) {
-                                        return x.ApplicationStatus === "Active" && x.Status === "Completed" && x.TestPlanOwnerId &&
+                                        return x.ParentId && x.ApplicationStatus === "Active" && x.Status === "Completed" && x.TestPlanOwnerId &&
                                             (x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
                                                 x.ApprovingManagerId === window.currentSPUser.Id ||
                                                 x.ApprovingDirectorId === window.currentSPUser.Id)
@@ -71,7 +71,7 @@
                     setTimeout(function () {
                         $scope.$apply(function () {
                             ctrl.allApplications = res.filter(function (x) {
-                                return x.ApplicationStatus === "Active" && x.Status === "Completed" && x.TestPlanOwnerId &&
+                                return x.ParentId && x.ApplicationStatus === "Active" && x.Status === "Completed" && x.TestPlanOwnerId &&
                                     (x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
                                         x.ApprovingManagerId === window.currentSPUser.Id ||
                                         x.ApprovingDirectorId === window.currentSPUser.Id)

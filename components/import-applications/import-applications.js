@@ -42,7 +42,9 @@
                         BusinessUnit: item['Business Unit'],
                         ApplicationStatus: "Active",
                         Status: "Overdue",
-                        EmailSent: false
+                        EmailSent: false,
+                        TestMonth: item['Test Month'],
+                        Category: item['Category'],
                     }));
                 }
                 else {
@@ -54,7 +56,9 @@
                         BusinessUnit: item['Business Unit'],
                         ApplicationStatus: "Active",
                         Status: "Overdue",
-                        EmailSent: false
+                        EmailSent: false,
+                        TestMonth: item['Test Month'],
+                        Category: item['Category'],
                     }));
                 }
             });

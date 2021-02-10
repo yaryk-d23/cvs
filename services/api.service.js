@@ -66,9 +66,10 @@
                     "*," +
                     "TestPlanOwner/Id,TestPlanOwner/Title," +
                     "ApprovingManager/Id,ApprovingManager/Title," +
-                    "ApprovingDirector/Id,ApprovingDirector/Title"
+                    "ApprovingDirector/Id,ApprovingDirector/Title",
+                    "Parent/Title"
                 )
-                .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
+                .expand("TestPlanOwner,ApprovingManager,ApprovingDirector,Parent")
                 .filter("Status ne 'Out of Scope'")
                 .top(50000)
                 .get()

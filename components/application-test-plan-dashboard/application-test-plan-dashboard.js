@@ -12,9 +12,9 @@
     function ctrl($scope, $ApiService, $Preload, $q, $location) {
         $Preload.show();
         var ctrl = this;
-        ctrl.api = $ApiService;
 
         ctrl.items = [];
+        ctrl.parentDRApplicationItems = [];
         ctrl.filteredItems = [];
         ctrl.pageNumber = 1;
         ctrl.itemsPerPage = 10;
@@ -22,7 +22,11 @@
         ctrl.filterEndDate = getCurrentMonthLastDate();
 
         var getData = async () => {
-            let items = await ctrl.api.getApplicationTestPlanItems();
+            let items = await $ApiService.getApplicationTestPlanItems();
+            let drApplicationItems = await $ApiService.getDRApplicationItems();
+            ctrl.parentDRApplicationItems = drApplicationItems.filter(function(x) {
+                return !x.ParentId;
+            });
             let flag = false;
             angular.forEach(window.currentSPUser.Groups, function (group) {
                 if (group.Title == 'EDR Team') {
@@ -45,7 +49,7 @@
             });
             let req = [];
             applicationIds.forEach((i) => {
-                req.push(ctrl.api.getDRApplicationItemById(i));
+                req.push($ApiService.getDRApplicationItemById(i));
             });
             let response = await $q.all({
                 applicationItems: $q.all(req),
@@ -211,7 +215,17 @@
             $Preload.show();
             let items = this.filterItemsByDateRange(ctrl.items);
             items = this.getItemRange(items);
-            ctrl.filteredItems = items;
+            let groupedItemsByParent = [];
+            ctrl.parentDRApplicationItems.forEach(function(item){
+                let newItem = angular.copy(item);
+                newItem.ChildrenItems = items.filter(function(x) {
+                    return x.Application.ParentId === item.Id;
+                });
+                if(newItem.ChildrenItems && newItem.ChildrenItems.length) {
+                    groupedItemsByParent.push(newItem);
+                }
+            });
+            ctrl.filteredItems = groupedItemsByParent;
             $Preload.hide();
         };
 

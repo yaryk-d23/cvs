@@ -40,40 +40,49 @@
         <th style="min-width: 140px">Draft Results Received</th>
         <th style="min-width: 140px">Results Approved</th>
       </tr>
-      <tr ng-repeat="item in ctrl.filteredItems">
-        <td>
-          <a href="#/process-form/{{item.Id}}"
-            ><i class="glyphicon glyphicon-edit editIcon"></i
-          ></a>
-        </td>
-        <td>{{item.Application.Title}}</td>
-        <td><div ng-repeat="i in item.Application.TestPlanOwner.results">{{i.Title}}</div></td>
-        <td>{{item.DueDate | date: 'MM/dd/yyyy'}}</td>
-        <td>
-          <div
-            class="text-center"
-            ng-bind-html="ctrl.getDraftTestPlanReceivedIndicator(item)"
-          ></div>
-        </td>
-        <td>
-          <div
-            class="text-center"
-            ng-bind-html="ctrl.getDraftTestPlanManagerApprovalIndicator(item)"
-          ></div>
-        </td>
-        <td>
-          <div
-            class="text-center"
-            ng-bind-html="ctrl.getTestsResultsReceivedIndicator(item)"
-          ></div>
-        </td>
-        <td>
-          <div
-            class="text-center"
-            ng-bind-html="ctrl.getTestsResultsApprovedIndicator(item)"
-          ></div>
-        </td>
-      </tr>
+      <tbody ng-repeat="parent in ctrl.filteredItems">
+        <tr class="parent-row">
+          <td colspan="8">{{parent.Title}}</td>
+        </tr>
+        <tr ng-repeat="item in parent.ChildrenItems">
+          <td>
+            <a href="#/process-form/{{item.Id}}"
+              ><i class="glyphicon glyphicon-edit editIcon"></i
+            ></a>
+          </td>
+          <td>{{item.Application.Title}}</td>
+          <td>
+            <div ng-repeat="i in item.Application.TestPlanOwner.results">
+              {{i.Title}}
+            </div>
+          </td>
+          <td>{{item.DueDate | date: 'MM/dd/yyyy'}}</td>
+          <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getDraftTestPlanReceivedIndicator(item)"
+            ></div>
+          </td>
+          <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getDraftTestPlanManagerApprovalIndicator(item)"
+            ></div>
+          </td>
+          <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getTestsResultsReceivedIndicator(item)"
+            ></div>
+          </td>
+          <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getTestsResultsApprovedIndicator(item)"
+            ></div>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
   <div class="footer">

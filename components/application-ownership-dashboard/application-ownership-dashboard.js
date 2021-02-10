@@ -13,6 +13,7 @@
         $Preload.show();
         var ctrl = this;
         ctrl.items = [];
+        ctrl.parentDRApplicationItems = [];
         ctrl.filteredItems = [];
         ctrl.pageNumber = 1;
         ctrl.itemsPerPage = 10;
@@ -21,10 +22,17 @@
         ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
 
         function getData() {
-            $ApiService.getMyApplicationItems().then(function (res) {
+            let req = {
+                drApplicationItems: $ApiService.getDRApplicationItems(),
+                items: $ApiService.getMyApplicationItems()
+            };
+            $q.all(req).then(function (res) {
                 setTimeout(function () {
                     $scope.$apply(function () {
-                        ctrl.items = res || [];
+                        ctrl.parentDRApplicationItems = res.drApplicationItems.filter(function(x) {
+                            return !x.ParentId;
+                        });
+                        ctrl.items = res.items || [];
                         ctrl.filterData();
                     });
                 }, 0);
@@ -63,7 +71,17 @@
             $Preload.show();
             let items = this.filterItemsByDateRange(ctrl.items);
             items = this.getItemRange(items);
-            ctrl.filteredItems = items;
+            let groupedItemsByParent = [];
+            ctrl.parentDRApplicationItems.forEach(function(item){
+                let newItem = angular.copy(item);
+                newItem.ChildrenItems = items.filter(function(x) {
+                    return x.ParentId === item.Id;
+                });
+                if(newItem.ChildrenItems && newItem.ChildrenItems.length) {
+                    groupedItemsByParent.push(newItem);
+                }
+            });
+            ctrl.filteredItems = groupedItemsByParent;
             $Preload.hide();
         };
 

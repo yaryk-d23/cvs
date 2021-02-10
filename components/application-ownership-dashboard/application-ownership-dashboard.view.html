@@ -1,4 +1,4 @@
-<div class="application-ownership-dashboard">
+<div class="application-ownership-dashboard component-block">
   <div class="header">
     <h3 class="sectionHeader">Application Ownership</h3>
     <div class="controlsBar">
@@ -36,36 +36,44 @@
         <th>Status</th>
         <th style="min-width: 150px">Last Updated Date</th>
       </tr>
-      <tr ng-repeat="item in ctrl.filteredItems">
-        <td>
-          <div class="checkbox text-center" ng-if="item.Status !== 'Completed'">
-            <label>
-              <input type="checkbox" ng-model="item.selected" />
-            </label>
-          </div>
-        </td>
-        <td>
-          <i
-            ng-if="item.Status !== 'Completed'"
-            class="glyphicon glyphicon-edit editIcon"
-            ng-click="ctrl.setIncorrectData(item)"
-          ></i>
-        </td>
-        <td>{{item.BusinessUnit}}</td>
-        <td>{{item.Title}}</td>
-        <td>{{item.ApprovingManager.Title}}</td>
-        <td>{{item.ApprovingDirector.Title}}</td>
-        <td>
-          <div ng-repeat="i in item.TestPlanOwner.results">{{i.Title}}</div>
-        </td>
-        <td>
-          <div
-            class="text-center"
-            ng-bind-html="ctrl.getStatusIndicator(item.Status)"
-          ></div>
-        </td>
-        <td>{{item.Modified | date:'MM/dd/yyyy'}}</td>
-      </tr>
+      <tbody ng-repeat="parent in ctrl.filteredItems">
+        <tr class="parent-row">
+          <td colspan="9">{{parent.Title}}</td>
+        </tr>
+        <tr ng-repeat="item in parent.ChildrenItems">
+          <td>
+            <div
+              class="checkbox text-center"
+              ng-if="item.Status !== 'Completed'"
+            >
+              <label>
+                <input type="checkbox" ng-model="item.selected" />
+              </label>
+            </div>
+          </td>
+          <td>
+            <i
+              ng-if="item.Status !== 'Completed'"
+              class="glyphicon glyphicon-edit editIcon"
+              ng-click="ctrl.setIncorrectData(item)"
+            ></i>
+          </td>
+          <td>{{item.BusinessUnit}}</td>
+          <td>{{item.Title}}</td>
+          <td>{{item.ApprovingManager.Title}}</td>
+          <td>{{item.ApprovingDirector.Title}}</td>
+          <td>
+            <div ng-repeat="i in item.TestPlanOwner.results">{{i.Title}}</div>
+          </td>
+          <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getStatusIndicator(item.Status)"
+            ></div>
+          </td>
+          <td>{{item.Modified | date:'MM/dd/yyyy'}}</td>
+        </tr>
+      </tbody>
     </table>
   </div>
   <div class="footer">

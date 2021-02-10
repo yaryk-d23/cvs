@@ -1,3 +1,7 @@
+.fr-wrapper > div:not(.fr-element),
+.fr-wrapper > .fr-placeholder {
+  display: none !important;
+}
 #s4-workspace {
   background-color: #f5f5f5;
 }
@@ -60,8 +64,16 @@
   color: #818181;
   border: 2px solid #818181;
 }
+.ui-select-choices .ui-select-choices-group .ui-select-choices-group-label {
+  font-weight: bold;
+  color: #000;
+}
 
 /* table styles */
+
+.app-container .table tr.parent-row > td {
+  background: #f3f3f3;
+}
 
 .app-container .table {
   border-collapse: separate;

@@ -24,6 +24,10 @@
             $location.path("/dashboard");
         }
 
+        ctrl.groupByParent = function(item) {
+            return item.Parent.Title;
+        }
+
         ctrl.submit = function () {
             if (ctrl.form.$invalid) {
                 angular.forEach(ctrl.form.$error, function (field) {
