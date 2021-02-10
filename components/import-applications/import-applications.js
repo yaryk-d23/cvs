@@ -43,8 +43,6 @@
                         ApplicationStatus: "Active",
                         Status: "Overdue",
                         EmailSent: false,
-                        TestMonth: item['Test Month'],
-                        Category: item['Category'],
                     }));
                 }
                 else {
@@ -57,8 +55,6 @@
                         ApplicationStatus: "Active",
                         Status: "Overdue",
                         EmailSent: false,
-                        TestMonth: item['Test Month'],
-                        Category: item['Category'],
                     }));
                 }
             });
