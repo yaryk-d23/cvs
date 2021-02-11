@@ -19,6 +19,7 @@
               ng-class="{'ng-untouched': (!ctrl.form.Application.$touched)}"
               required
               fix-focus-on-touch
+              ng-change="ctrl.onChangeApplication()"
             >
               <ui-select-match placeholder="Select...">
                 {{$select.selected.Title}}
@@ -75,13 +76,12 @@
                 datepicker-options="ctrl.dateOptions"
                 close-text="Close"
                 show-button-bar="false"
-                ng-click="TestStartDateOpened=true"
                 readonly
                 required
               />
               <span class="input-group-btn">
                 <button
-                  ng-disabled="ctrl.routeParams.id"
+                  ng-disabled="true"
                   type="button"
                   class="btn btn-default"
                   ng-click="TestStartDateOpened=true"

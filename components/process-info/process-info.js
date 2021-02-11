@@ -13,12 +13,15 @@
     function ctrl($scope, $ApiService, $Preload, $q, $location, $routeParams) {
         var ctrl = this;
         ctrl.routeParams = $routeParams;
-        ctrl.api = $ApiService;
         var currYear = new Date().getFullYear();
         ctrl.dateOptions = {
             formatYear: 'yyyy',
             startingDay: 1
         };
+
+        ctrl.onChangeApplication = function() {
+            ctrl.item.DueDate = new Date(ctrl.item.Application.TestDate);
+        }
 
         ctrl.close = function () {
             $location.path("/dashboard");
