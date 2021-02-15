@@ -49,7 +49,7 @@
             $ApiService.getExerciseTimelineItems($routeParams.id).then(function (res) {
                 setTimeout(function () {
                     $scope.$apply(function () {
-                        ctrl.exerciseTimelineItems = res.sort(function (a, b) {
+                        ctrl.exerciseTimelineItems = CONSTANT.EXERCISE_ITEMS.sort(function (a, b) {
                             return a.SortOrder - b.SordOrder;
                         });
                         setExercisesDueDate();
@@ -305,36 +305,6 @@
                                 $ApiService.getEmailTemplate(CONSTANT.DRAFT_REQUIREMENTS_DUE_NOT_COMPLETED)
                             ]).then(function (template) {
                                 let req = [];
-                                req.push($ApiService.createExerciseTimeline({
-                                    Title: "Application Failover Results and Timeline - DRAFT",
-                                    SortOrder: 6,
-                                    Owners: "Application Teams",
-                                    Description: "<p>Upload the first draft of the Failover Exercise Results via the " +
-                                        "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>" +
-                                        "<p>EDR Team will review and reject/provide feedback or Approve via the Portal</p>",
-                                    DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
-                                        new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 7)).toLocaleDateString('en-us'),
-                                    TestPlanItemId: ctrl.item.Id,
-                                }));
-                                req.push($ApiService.createExerciseTimeline({
-                                    Title: "Application Failover Results and Timeline – FINAL Approval Process",
-                                    SortOrder: 7,
-                                    Owners: "Application Managers/Tech Owners and Directors/Sub Portfolio Owners",
-                                    Description: "<p>Upon EDR Approval of the Failover Exercise Results, Approve the Final Application Failover Exercise Results via the " +
-                                        "<a href='" + window["APP_PAGE_LOCATION_URL"] + "'>Failover Portal</a>.</p>",
-                                    DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
-                                        new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us'),
-                                    TestPlanItemId: ctrl.item.Id,
-                                }));
-                                req.push($ApiService.createExerciseTimeline({
-                                    Title: "DR Plan Review in BCITC",
-                                    SortOrder: 8,
-                                    Owners: "Application Teams Infrastructure Teams",
-                                    Description: "<p>Review DR Plans in BC in the Cloud to ensure it is still current; if nothing has changed, no action is required in BCITC.</p>",
-                                    DueDate: new Date(ctrl.item.DueDate).toLocaleDateString('en-us') + " - " +
-                                        new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() + 14)).toLocaleDateString('en-us'),
-                                    TestPlanItemId: ctrl.item.Id,
-                                }));
                                 req.push($ApiService.sendEmail({
                                     ToId: { 'results': ctrl.item.Application.TestPlanOwnerId.results },
                                     CCId: { 'results': [ctrl.item.Application.ApprovingManagerId] },

@@ -86,25 +86,13 @@
             });
             setTimeout(function () {
                 $scope.$apply(function () {
-                    ctrl.items = groupItems(items);
+                    ctrl.items = items;
                     ctrl.filterData();
                 });
             }, 0);
 
         };
         getData();
-
-        function groupItems(items) {
-            let parentItems = items.filter(function(x) {
-                return !x.Application.ParentId;
-            });
-            parentItems.forEach(function(item) {
-                item.ChildrenItems = items.filter(function(x) {
-                    return x.Application.ParentId === item.Id;
-                });
-            });
-            return parentItems;
-        }
 
         ctrl.getDraftTestPlanReceivedIndicator = function (item) {
             let currDate = new Date().getTime();

@@ -162,11 +162,18 @@
                         Id: item.Id,
                         Status: "Completed"
                     }));
+                    req.push($ApiService.createApplicationTestPlan({
+                        ApplicationId: item.Id,
+                        DueDate: dayjs(item.TestDate).format('YYYY-MM-DDTHH:mm:ss'),
+                        Stage: 1,
+                    }));
                 });
+                
                 Promise.all(req).then(function (_) {
                     Promise.all([
-                        $ApiService.getEmailTemplate(CONSTANT.MARK_APPROVED_REMINDER),
-                        $ApiService.getEmailTemplate(CONSTANT.DELAY_MARK_APPROVED_REMINDER)
+                        $ApiService.getEmailTemplate(CONSTANT.PROCESS_INFO),
+                        $ApiService.getEmailTemplate(CONSTANT.PROCESS_INFO_DUE),
+                        $ApiService.getEmailTemplate(CONSTANT.PROCESS_INFO_PAST_DUE)
                         ]).then(function (template) {
                             req = [];
                             selectedApp.forEach(function (item) {
@@ -174,13 +181,20 @@
                                     ToId: { 'results': item.TestPlanOwnerId.results },
                                     CCId: { 'results': [item.ApprovingManagerId] },
                                     Subject: $ApiService.getHTMLTemplate(template[0].Subject, { Title: item.Title }),
-                                    Body: $ApiService.getHTMLTemplate(template[0].Body, { Title: item.Title, dashboardLink: ctrl.dashboardLink }),
-                                    // "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
-                                    //     "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
+                                    Body: $ApiService.getHTMLTemplate(template[0].Body, {
+                                        Title: item.Title,
+                                        DueDate: new Date(item.Test).toLocaleDateString(),
+                                        APP_PAGE_LOCATION_URL: window["APP_PAGE_LOCATION_URL"]
+                                    }),
+                                    // Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise",
+                                    // Body: "Hello, <p>Just a reminder that the " + ctrl.item.Application.Title + " Failover Exercise is scheduled for " + new Date(ctrl.item.DueDate).toLocaleDateString() +
+                                    //     " and it is time to begin completing " +
+                                    //     "the required documentation.  Please complete the Application Failover Test Plan and Timeline and upload it into the " +
+                                    //     "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> within the next two weeks.</p>" +
                                     //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                     //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                     //     "Thank you,<br>EDR Team",
-                                    // DelayDate: new Date(new Date(item.TestDate).setDate(new Date(item.TestDate).getDate() + 9)),
+                                    // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 28)),
                                     DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
                                     ApplicationId: item.Id,
                                 }));
@@ -188,15 +202,45 @@
                                     ToId: { 'results': item.TestPlanOwnerId.results },
                                     CCId: { 'results': [item.ApprovingManagerId] },
                                     Subject: $ApiService.getHTMLTemplate(template[1].Subject, { Title: item.Title }),
-                                    Body: $ApiService.getHTMLTemplate(template[1].Body, { Title: item.Title, dashboardLink: ctrl.dashboardLink }), 
-                                        // "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
-                                        // "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
-                                        // "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                                        // "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
-                                        // "Thank you,<br>EDR Team",
-                                    // DelayDate: new Date(new Date(item.TestDate).setDate(new Date(item.TestDate).getDate() + 13)),
+                                    Body: $ApiService.getHTMLTemplate(template[1].Body, {
+                                        Title: item.Title,
+                                        DueDate: new Date(item.TestDate).toLocaleDateString(),
+                                        APP_PAGE_LOCATION_URL: window["APP_PAGE_LOCATION_URL"]
+                                    }),
+                                    // Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise Requirement Due",
+                                    // Body: "Hello, <p>Just a reminder that the " + ctrl.item.Application.Title + " Failover Exercise is scheduled for " + new Date(ctrl.item.DueDate).toLocaleDateString() +
+                                    //     " and the Failover Exercise Requirements have not been completed. " +
+                                    //     "Please complete the Application Failover Test Plan and Timeline and upload into the <a href='"
+                                    //     + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
+                                    //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                    //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
+                                    //     "Thank you,<br>EDR Team",
+                                    // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 14)),
                                     DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
                                     ApplicationId: item.Id,
+                                    RepeatDay: "3"
+                                }));
+                                req.push($ApiService.sendEmail({
+                                    ToId: { 'results': item.TestPlanOwnerId.results },
+                                    CCId: { 'results': [item.ApprovingManagerId] },
+                                    Subject: $ApiService.getHTMLTemplate(template[0].Subject, { Title: item.Title }),
+                                    Body: $ApiService.getHTMLTemplate(template[0].Body, {
+                                        Title: item.Title,
+                                        DueDate: new Date(item.TestDate).toLocaleDateString(),
+                                        APP_PAGE_LOCATION_URL: window["APP_PAGE_LOCATION_URL"]
+                                    }),
+                                    // Subject: "Reminder: " + ctrl.item.Application.Title + " Failover Exercise Requirement Past Due",
+                                    // Body: "Hello, <p>Just a reminder that the " + ctrl.item.Application.Title + " Failover Exercise is scheduled for " + new Date(ctrl.item.DueDate).toLocaleDateString() +
+                                    //     " and the Failover Exercise Requirements have not been completed. " +
+                                    //     "Please complete the Application Failover Test Plan and Timeline and upload into the <a href='"
+                                    //     + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
+                                    //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                    //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
+                                    //     "Thank you,<br>EDR Team",
+                                    // DelayDate: new Date(new Date(ctrl.item.DueDate).setDate(new Date(ctrl.item.DueDate).getDate() - 17)),
+                                    DelayDate: new Date(new Date().getTime() + 10 * 60000).toISOString(),
+                                    ApplicationId: item.Id,
+                                    RepeatDay: "3"
                                 }));
                             });
                             Promise.all(req).then(function (_) {
