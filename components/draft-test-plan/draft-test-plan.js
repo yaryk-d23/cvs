@@ -46,17 +46,15 @@
         },];
 
         if ($routeParams.id) {
-            $ApiService.getExerciseTimelineItems($routeParams.id).then(function (res) {
-                setTimeout(function () {
-                    $scope.$apply(function () {
-                        ctrl.exerciseTimelineItems = CONSTANT.EXERCISE_ITEMS.sort(function (a, b) {
-                            return a.SortOrder - b.SordOrder;
-                        });
-                        setExercisesDueDate();
-                        setCurrentApprover();
+            setTimeout(function () {
+                $scope.$apply(function () {
+                    ctrl.exerciseTimelineItems = CONSTANT.EXERCISE_ITEMS.sort(function (a, b) {
+                        return a.SortOrder - b.SordOrder;
                     });
-                }, 0);
-            });
+                    setExercisesDueDate();
+                    setCurrentApprover();
+                });
+            }, 0);
         }
 
         ctrl.close = function () {
