@@ -45,6 +45,7 @@
                         EmailSent: false,
                         TestMonth: item['Test Month'],
                         Category: item['Category'],
+                        TestDate: item['Test Date'] ? dayjs(item['Test Date']).format('YYYY-MM-DDTHH:mm:ss') : null,
                     }));
                 }
                 else {
@@ -59,6 +60,7 @@
                         EmailSent: false,
                         TestMonth: item['Test Month'],
                         Category: item['Category'],
+                        TestDate: item['Test Date'] ? dayjs(item['Test Date']).format('YYYY-MM-DDTHH:mm:ss') : null,
                     }));
                 }
             });
@@ -115,7 +117,7 @@
                             req.push($ApiService.deleteEmailItems(item.Id));
                             req.push($ApiService.updateApplication({
                                 Id: item.Id,
-                                TestDate: dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss'),
+                                //TestDate: dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss'),
                                 Status: "In progress",
                                 EmailSent: true
                             }));
