@@ -24,8 +24,12 @@
             $location.path("/dashboard");
         }
 
-        ctrl.groupByParent = function(item) {
-            return item.Parent.Title;
+        ctrl.getChidrenItems = function(item) {
+            return ctrl.allApplications.filter(function(x){
+                return x.ParentId === item.Id;
+            }).map(function(i){
+                return i.Title;
+            }).join(", ");
         }
 
         ctrl.submit = function () {

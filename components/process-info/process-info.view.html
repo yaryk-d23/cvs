@@ -23,8 +23,13 @@
               <ui-select-match placeholder="Select...">
                 {{$select.selected.Title}}
               </ui-select-match>
-              <ui-select-choices group-by="ctrl.groupByParent" repeat="app as app in ctrl.allApplications">
+              <ui-select-choices repeat="app as app in ctrl.allApplications | filter: {ParentId: null}">
                 <div ng-bind-html="app.Title | highlight: $select.search"></div>
+                <div style="margin-left: 20px;white-space: normal;">
+                  <span>
+                    <small>{{ctrl.getChidrenItems(app)}}</small>
+                  </span>
+                </div>
               </ui-select-choices>
             </ui-select>
             <span
