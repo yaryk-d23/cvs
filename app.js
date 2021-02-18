@@ -8,6 +8,7 @@ var app = angular.module('App', [
     'preloader',
     'popUp',
     'constants',
+    'ui.tinymce',
 ]);
 app.run(function ($rootScope, $location, $Preload, $ApiService) {
     $Preload.show();
@@ -39,6 +40,9 @@ app.controller('AppCtrl', ['$location', function ($location) {
         }, {
             title: "Owner Dashboard",
             link: "/owners-dashboard",
+        },{
+            title: "Emails Template",
+            link: "/emails-template",
         },
     ];
     ctrl.isAdmin = function () {
@@ -125,6 +129,12 @@ app.config(function ($routeProvider, $locationProvider, $provide, $httpProvider)
         })
         .when('/owners-dashboard', {
             template: '<application-ownership-dashboard></application-ownership-dashboard>'
+        })
+        .when('/emails-template', {
+            template: '<email-templates></email-templates>',
+            resolve: {
+                loggedIn: isAdmins
+            }
         })
         .otherwise('/dashboard');
 });

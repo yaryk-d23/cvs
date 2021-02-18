@@ -42,43 +42,78 @@
       </tr>
       <tbody ng-repeat="parent in ctrl.filteredItems">
         <tr class="parent-row">
-          <td colspan="8">{{parent.Title}}</td>
-        </tr>
-        <tr ng-repeat="item in parent.ChildrenItems">
           <td>
-            <a href="#/process-form/{{item.Id}}"
+            <a href="#/process-form/{{parent.Id}}"
               ><i class="glyphicon glyphicon-edit editIcon"></i
             ></a>
           </td>
-          <td>{{item.Application.Title}}</td>
+          <td>{{parent.Application.Title}}</td>
           <td>
-            <div ng-repeat="i in item.Application.TestPlanOwner.results">
+            <div ng-repeat="i in parent.Application.TestPlanOwner.results">
               {{i.Title}}
             </div>
           </td>
-          <td>{{item.DueDate | date: 'MM/dd/yyyy'}}</td>
+          <td>{{parent.DueDate | date: 'MM/dd/yyyy'}}</td>
           <td>
             <div
               class="text-center"
-              ng-bind-html="ctrl.getDraftTestPlanReceivedIndicator(item)"
+              ng-bind-html="ctrl.getDraftTestPlanReceivedIndicator(parent)"
             ></div>
           </td>
           <td>
             <div
               class="text-center"
-              ng-bind-html="ctrl.getDraftTestPlanManagerApprovalIndicator(item)"
+              ng-bind-html="ctrl.getDraftTestPlanManagerApprovalIndicator(parent)"
             ></div>
           </td>
           <td>
             <div
               class="text-center"
-              ng-bind-html="ctrl.getTestsResultsReceivedIndicator(item)"
+              ng-bind-html="ctrl.getTestsResultsReceivedIndicator(parent)"
             ></div>
           </td>
           <td>
             <div
               class="text-center"
-              ng-bind-html="ctrl.getTestsResultsApprovedIndicator(item)"
+              ng-bind-html="ctrl.getTestsResultsApprovedIndicator(parent)"
+            ></div>
+          </td>
+        </tr>
+        <tr ng-repeat="item in parent.Application.ChildrenItems">
+          <td>
+            <!-- <a href="#/process-form/{{item.Id}}"
+              ><i class="glyphicon glyphicon-edit editIcon"></i
+            ></a> -->
+          </td>
+          <td>{{item.Title}}</td>
+          <td>
+            <div ng-repeat="i in item.TestPlanOwner.results">
+              {{i.Title}}
+            </div>
+          </td>
+          <td>{{parent.DueDate | date: 'MM/dd/yyyy'}}</td>
+          <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getDraftTestPlanReceivedIndicator(parent)"
+            ></div>
+          </td>
+          <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getDraftTestPlanManagerApprovalIndicator(parent)"
+            ></div>
+          </td>
+          <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getTestsResultsReceivedIndicator(parent)"
+            ></div>
+          </td>
+          <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getTestsResultsApprovedIndicator(parent)"
             ></div>
           </td>
         </tr>

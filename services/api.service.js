@@ -23,9 +23,27 @@
             deleteFile: deleteFile,
             utcToLocalTime: utcToLocalTime,
             getHTMLTemplate: getHTMLTemplate,
-            getEmailTemplate: getEmailTemplate
+            getEmailTemplate: getEmailTemplate,
+            getAllEmailTemplates: getAllEmailTemplates,
+            updateEmailTemplate: updateEmailTemplate
         };
+        function updateEmailTemplate(data) {
+            return $pnp.sp.web.lists
+                .getByTitle("EmailTemplates")
+                .items.getById(data.Id)
+                .update(data).then((response) => {
+                    return response;
+                }, onError);
+        }
 
+        function getAllEmailTemplates() {
+            return $pnp.sp.web.lists
+                .getByTitle("EmailTemplates")
+                .items
+                .get().then(function(data) {
+                    return data;
+                });
+        }
         function getEmailTemplate(title) {
             return $pnp.sp.web.lists
                 .getByTitle("EmailTemplates")

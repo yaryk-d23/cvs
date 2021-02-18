@@ -14,18 +14,25 @@
         var ctrl = this;
 
         ctrl.items = [];
+        ctrl.allDRApplicationItems = [];
         ctrl.parentDRApplicationItems = [];
         ctrl.filteredItems = [];
         ctrl.pageNumber = 1;
-        ctrl.itemsPerPage = 10;
+        ctrl.itemsPerPage = 5;
         ctrl.filterStartDate = getCurrentMonthFirstDate();
         ctrl.filterEndDate = getCurrentMonthLastDate();
 
         var getData = async () => {
             let items = await $ApiService.getApplicationTestPlanItems();
-            let drApplicationItems = await $ApiService.getDRApplicationItems();
-            ctrl.parentDRApplicationItems = drApplicationItems.filter(function(x) {
+            ctrl.allDRApplicationItems = await $ApiService.getDRApplicationItems();
+            ctrl.parentDRApplicationItems = ctrl.allDRApplicationItems.filter(function(x) {
                 return !x.ParentId;
+            });
+            ctrl.parentDRApplicationItems = ctrl.parentDRApplicationItems.map(function(i){
+                i.ChildrenItems = ctrl.allDRApplicationItems.filter(function(x) {
+                    return x.ParentId === i.Id;
+                });
+                return i;
             });
             let flag = false;
             angular.forEach(window.currentSPUser.Groups, function (group) {
@@ -52,12 +59,12 @@
                 req.push($ApiService.getDRApplicationItemById(i));
             });
             let response = await $q.all({
-                applicationItems: $q.all(req),
+                //applicationItems: $q.all(req),
                 attachments: $q.all(attachmentsReq)
             });
             for (let j = 0; j < items.length; j++) {
                 let item = angular.copy(items[j]);
-                item.Application = response.applicationItems.filter(
+                item.Application = ctrl.allDRApplicationItems.filter(
                     (x) => x.ID === item.ApplicationId
                 )[0];
 
@@ -215,17 +222,19 @@
             $Preload.show();
             let items = this.filterItemsByDateRange(ctrl.items);
             items = this.getItemRange(items);
-            let groupedItemsByParent = [];
-            ctrl.parentDRApplicationItems.forEach(function(item){
-                let newItem = angular.copy(item);
-                newItem.ChildrenItems = items.filter(function(x) {
-                    return x.Application.ParentId === item.Id;
-                });
-                if(newItem.ChildrenItems && newItem.ChildrenItems.length) {
-                    groupedItemsByParent.push(newItem);
-                }
-            });
-            ctrl.filteredItems = groupedItemsByParent;
+
+
+            // let groupedItemsByParent = [];
+            // ctrl.parentDRApplicationItems.forEach(function(item){
+            //     let newItem = angular.copy(item);
+            //     newItem.ChildrenItems = items.filter(function(x) {
+            //         return x.Application.ParentId === item.Id;
+            //     });
+            //     if(newItem.ChildrenItems && newItem.ChildrenItems.length) {
+            //         groupedItemsByParent.push(newItem);
+            //     }
+            // });
+            ctrl.filteredItems = items;
             $Preload.hide();
         };
 
