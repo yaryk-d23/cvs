@@ -19,6 +19,16 @@
   background: #fff;
   box-shadow: 0px 0px 3px 0px;
 }
+
+.app-container .editIcon {
+  color: green;
+  cursor: pointer;
+}
+.app-container .removeIcon {
+  color: red;
+  margin-left: 5px;
+  cursor: pointer;
+}
 .component-block {
   background-color: #fff;
   padding: 1em 2em;
@@ -73,6 +83,7 @@
 
 .app-container .table tr.parent-row > td {
   background: #f3f3f3;
+  cursor: pointer;
 }
 
 .app-container .table {
@@ -111,6 +122,22 @@
 .app-container .table.approva-table th:last-child {
   padding-right: 5em;
   text-align: center;
+}
+.app-container .children-table {
+  width: 100%;
+}
+.app-container .table .children-table tr>td {
+  font-size: 12px;
+  font-weight: normal;
+  border: none;
+}
+.app-container .table td.children-row-cell {
+  padding: 0;
+  border: 0;
+}
+.app-container .table td.children-row-cell > div{
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 /*  */
 @media (min-width: 1200px) {

@@ -39,9 +39,13 @@
         <th style="min-width: 140px">Test Plan Approved</th>
         <th style="min-width: 140px">Draft Results Received</th>
         <th style="min-width: 140px">Results Approved</th>
+        <th style="width: 20px"></th>
       </tr>
       <tbody ng-repeat="parent in ctrl.filteredItems">
-        <tr class="parent-row">
+        <tr
+          class="parent-row"
+          ng-click="parent.isCollapsed = !parent.isCollapsed"
+        >
           <td>
             <a href="#/process-form/{{parent.Id}}"
               ><i class="glyphicon glyphicon-edit editIcon"></i
@@ -78,43 +82,58 @@
               ng-bind-html="ctrl.getTestsResultsApprovedIndicator(parent)"
             ></div>
           </td>
-        </tr>
-        <tr ng-repeat="item in parent.Application.ChildrenItems">
           <td>
-            <!-- <a href="#/process-form/{{item.Id}}"
+            <i
+              class="glyphicon"
+              ng-class="parent.isCollapsed ? 'glyphicon-chevron-down' : 'glyphicon-chevron-up'"
+            ></i>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="9" class="children-row-cell">
+            <div uib-collapse="parent.isCollapsed">
+              <table class="children-table">
+                <tr ng-repeat="item in parent.Application.ChildrenItems">
+                  <td>
+                    <!-- <a href="#/process-form/{{item.Id}}"
               ><i class="glyphicon glyphicon-edit editIcon"></i
             ></a> -->
-          </td>
-          <td>{{item.Title}}</td>
-          <td>
-            <div ng-repeat="i in item.TestPlanOwner.results">
-              {{i.Title}}
+                  </td>
+                  <td>{{item.Title}}</td>
+                  <td>
+                    <div ng-repeat="i in item.TestPlanOwner.results">
+                      {{i.Title}}
+                    </div>
+                  </td>
+                  <td>{{parent.DueDate | date: 'MM/dd/yyyy'}}</td>
+                  <td>
+                    <div
+                      class="text-center"
+                      ng-bind-html="ctrl.getDraftTestPlanReceivedIndicator(parent)"
+                    ></div>
+                  </td>
+                  <td>
+                    <div
+                      class="text-center"
+                      ng-bind-html="ctrl.getDraftTestPlanManagerApprovalIndicator(parent)"
+                    ></div>
+                  </td>
+                  <td>
+                    <div
+                      class="text-center"
+                      ng-bind-html="ctrl.getTestsResultsReceivedIndicator(parent)"
+                    ></div>
+                  </td>
+                  <td>
+                    <div
+                      class="text-center"
+                      ng-bind-html="ctrl.getTestsResultsApprovedIndicator(parent)"
+                    ></div>
+                  </td>
+                  <td></td>
+                </tr>
+              </table>
             </div>
-          </td>
-          <td>{{parent.DueDate | date: 'MM/dd/yyyy'}}</td>
-          <td>
-            <div
-              class="text-center"
-              ng-bind-html="ctrl.getDraftTestPlanReceivedIndicator(parent)"
-            ></div>
-          </td>
-          <td>
-            <div
-              class="text-center"
-              ng-bind-html="ctrl.getDraftTestPlanManagerApprovalIndicator(parent)"
-            ></div>
-          </td>
-          <td>
-            <div
-              class="text-center"
-              ng-bind-html="ctrl.getTestsResultsReceivedIndicator(parent)"
-            ></div>
-          </td>
-          <td>
-            <div
-              class="text-center"
-              ng-bind-html="ctrl.getTestsResultsApprovedIndicator(parent)"
-            ></div>
           </td>
         </tr>
       </tbody>

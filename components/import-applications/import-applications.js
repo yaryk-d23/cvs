@@ -4,10 +4,10 @@
             templateUrl: window["APP_FOLDER"] + 'components/import-applications/import-applications.view.html?rnd' + Math.random(),
             bindings: {},
             controllerAs: 'ctrl',
-            controller: ['$scope', '$ApiService', '$Preload', '$q', ctrl]
+            controller: ['$scope', '$ApiService', '$Preload', '$q', '$uibModal', ctrl]
         });
 
-    function ctrl($scope, $ApiService, $Preload, $q) {
+    function ctrl($scope, $ApiService, $Preload, $q, $uibModal) {
         var ctrl = this;
         $Preload.hide();
         ctrl.importFile = null;
@@ -97,101 +97,114 @@
         }
 
         ctrl.sendInitialEmails = function () {
-            $Preload.show();
-            let activeApps = [];
-            $ApiService.getDRApplicationItems().then(function (applications) {
-                Promise.all([
-                    $ApiService.getEmailTemplate(CONSTANT.REMINDER_START_PROCESS),
-                    $ApiService.getEmailTemplate(CONSTANT.DELAY_REMINDER_START_PROCESS),
-                    $ApiService.getEmailTemplate(CONSTANT.KICK_OFF_EMAIL)
-                ]).then(function (template) {
-                    activeApps = applications.filter(function (x) {
-                        return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.ApprovingManagerId && x.ApprovingDirectorId && !x.EmailSent;
-                    });
-                    let req = [];
-                    let toIds = [];
-                    let ccIds = [];
-                    activeApps.forEach(function (item) {
-                        toIds = toIds.concat(item.TestPlanOwnerId.results);
-                        toIds.push(item.ApprovingManagerId);
-                        ccIds.push(item.ApprovingDirectorId);
-                        req.push($ApiService.deleteEmailItems(item.Id));
-                        req.push($ApiService.updateApplication({
-                            Id: item.Id,
-                            TestDate: dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss'),
-                            Status: "In progress",
-                            EmailSent: true
-                        }));
-                        req.push($ApiService.sendEmail({
-                            ToId: { 'results': item.TestPlanOwnerId.results },
-                            CCId: { 'results': [item.ApprovingManagerId] },
-                            Subject: $ApiService.getHTMLTemplate(template[0].Subject, { Title: item.Title }),
-                            Body: $ApiService.getHTMLTemplate(template[0].Body, { Title: item.Title, dashboardLink: ctrl.dashboardLink }),
-                            // "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
-                            //     "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
-                            //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                            //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
-                            //     "Thank you,<br>EDR Team",
-                            // DelayDate: new Date(new Date().setDate(new Date().getDate() + 5)),
-                            DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
-                            ApplicationId: item.Id,
-                        }));
-                        req.push($ApiService.sendEmail({
-                            ToId: { 'results': item.TestPlanOwnerId.results },
-                            CCId: { 'results': [item.ApprovingManagerId] },
-                            Subject: $ApiService.getHTMLTemplate(template[1].Subject, { Title: item.Title }),
-                            Body: $ApiService.getHTMLTemplate(template[1].Body, { Title: item.Title, dashboardLink: ctrl.dashboardLink }),
-                            // "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
-                            //     "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
-                            //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
-                            //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
-                            //     "Thank you,<br>EDR Team",
-                            // DelayDate: getNextMonday(new Date(new Date().setDate(new Date().getDate() + 6))),
-                            DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
-                            ApplicationId: item.Id,
-                            RepeatDay: "3"
-                        }));
-                    });
-                    if (activeApps && activeApps.length) {
-                        req.push($ApiService.sendEmail({
-                            ToId: { 'results': toIds.unique() },
-                            CCId: { 'results': ccIds.unique() },
-                            Subject: $ApiService.getHTMLTemplate(template[2].Subject, { currYear: ctrl.currYear }),
-                            Body: $ApiService.getHTMLTemplate(template[2].Body, {
-                                currYear: ctrl.currYear,
-                                dashboardLink: ctrl.dashboardLink
-                            }),
-                            // Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + ctrl.currYear,
-                            // Body: $("#initial-email-template").html()
-                        }));
-                        Promise.all(req).then(function (res) {
-                            setTimeout(function () {
-                                $scope.$apply(function () {
-                                    $Preload.hide();
-                                    alert("Process started!");
-                                });
-                            }, 0);
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: window["APP_FOLDER"] + 'common/select-kickoff-email-modal/select-kickoff-email-modal.view.html?rnd' + Math.random(),
+                controller: 'selectKickoffEmailModalCtrl',
+                controllerAs: 'ctrl',
+                resolve: {}
+            });
 
-                        }, function (error) {
-                            setTimeout(function () {
-                                $scope.$apply(function () {
-                                    console.log(error);
-                                    $Preload.hide();
-                                });
-                            }, 0);
+            modalInstance.result.then(function (selectedTemplate) {
+                $Preload.show();
+                let activeApps = [];
+                $ApiService.getDRApplicationItems().then(function (applications) {
+                    Promise.all([
+                        $ApiService.getEmailTemplate(CONSTANT.REMINDER_START_PROCESS),
+                        $ApiService.getEmailTemplate(CONSTANT.DELAY_REMINDER_START_PROCESS),
+                        $ApiService.getEmailTemplate(selectedTemplate.Title)
+                    ]).then(function (template) {
+                        activeApps = applications.filter(function (x) {
+                            return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.ApprovingManagerId && x.ApprovingDirectorId && !x.EmailSent && !x.ParentId;
                         });
-                    }
+                        let req = [];
+                        let toIds = [];
+                        let ccIds = [];
+                        activeApps.forEach(function (item) {
+                            toIds = toIds.concat(item.TestPlanOwnerId.results);
+                            toIds.push(item.ApprovingManagerId);
+                            ccIds.push(item.ApprovingDirectorId);
+                            req.push($ApiService.deleteEmailItems(item.Id));
+                            req.push($ApiService.updateApplication({
+                                Id: item.Id,
+                                TestDate: dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss'),
+                                Status: "In progress",
+                                EmailSent: true
+                            }));
+                            req.push($ApiService.sendEmail({
+                                ToId: { 'results': item.TestPlanOwnerId.results },
+                                CCId: { 'results': [item.ApprovingManagerId] },
+                                Subject: $ApiService.getHTMLTemplate(template[0].Subject, { Title: item.Title }),
+                                Body: $ApiService.getHTMLTemplate(template[0].Body, { Title: item.Title, dashboardLink: ctrl.dashboardLink }),
+                                // "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
+                                //     "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
+                                //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
+                                //     "Thank you,<br>EDR Team",
+                                // DelayDate: new Date(new Date().setDate(new Date().getDate() + 5)),
+                                DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
+                                ApplicationId: item.Id,
+                            }));
+                            req.push($ApiService.sendEmail({
+                                ToId: { 'results': item.TestPlanOwnerId.results },
+                                CCId: { 'results': [item.ApprovingManagerId] },
+                                Subject: $ApiService.getHTMLTemplate(template[1].Subject, { Title: item.Title }),
+                                Body: $ApiService.getHTMLTemplate(template[1].Body, { Title: item.Title, dashboardLink: ctrl.dashboardLink }),
+                                // "Hello, <p>You are receiving this email because you have an outstanding deliverable for your upcoming " + item.Title + " Failover Exercise. " +
+                                //     "Please go to the <a href='" + ctrl.dashboardLink + "'>Failover Portal<i style='color:red'>*</i></a> and complete the Failover Exercise requirements as soon as possible.</p>" +
+                                //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
+                                //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
+                                //     "Thank you,<br>EDR Team",
+                                // DelayDate: getNextMonday(new Date(new Date().setDate(new Date().getDate() + 6))),
+                                DelayDate: new Date(new Date().getTime() + 5 * 60000).toISOString(),
+                                ApplicationId: item.Id,
+                                RepeatDay: "3"
+                            }));
+                        });
+                        if (activeApps && activeApps.length) {
+                            req.push($ApiService.sendEmail({
+                                ToId: { 'results': toIds.unique() },
+                                CCId: { 'results': ccIds.unique() },
+                                Subject: $ApiService.getHTMLTemplate(template[2].Subject, { currYear: ctrl.currYear }),
+                                Body: $ApiService.getHTMLTemplate(template[2].Body, {
+                                    currYear: ctrl.currYear,
+                                    dashboardLink: ctrl.dashboardLink
+                                }),
+                                // Subject: "ACTION REQUIRED: Live Failover Testing Requirements " + ctrl.currYear,
+                                // Body: $("#initial-email-template").html()
+                            }));
+                            Promise.all(req).then(function (res) {
+                                setTimeout(function () {
+                                    $scope.$apply(function () {
+                                        $Preload.hide();
+                                        alert("Process started!");
+                                    });
+                                }, 0);
 
-                    else {
-                        setTimeout(function () {
-                            $scope.$apply(function () {
-                                $Preload.hide();
-                                alert("No Active Item(s)!");
+                            }, function (error) {
+                                setTimeout(function () {
+                                    $scope.$apply(function () {
+                                        console.log(error);
+                                        $Preload.hide();
+                                    });
+                                }, 0);
                             });
-                        }, 0);
-                    }
+                        }
 
+                        else {
+                            setTimeout(function () {
+                                $scope.$apply(function () {
+                                    $Preload.hide();
+                                    alert("No Active Item(s)!");
+                                });
+                            }, 0);
+                        }
+
+                    });
                 });
+            }, function () {
             });
         }
 

@@ -218,6 +218,18 @@
             return new Date(y, m + 1, 0);
         };
 
+        function setChildrenColumnWidth() {
+            let childrenRows = $(".app-container .table .children-table tr");
+            let childrenColumns;
+            childrenRows.each(function(row) {
+                childrenColumns = $(childrenRows[row]).find("td");
+                childrenColumns.each(function(col) {
+                    let width = $(".table th:eq(" + col + ")").outerWidth();
+                    $(childrenColumns[col]).css({width: width, 'max-width': width});
+                });
+            });
+        }
+
         ctrl.filterData = () => {
             $Preload.show();
             let items = this.filterItemsByDateRange(ctrl.items);
@@ -234,7 +246,15 @@
             //         groupedItemsByParent.push(newItem);
             //     }
             // });
-            ctrl.filteredItems = items;
+            
+            ctrl.filteredItems = items.map(function(item){
+                item.isCollapsed = true;
+                return item;
+            });
+            
+            setTimeout(function(){
+                setChildrenColumnWidth();
+            },500);
             $Preload.hide();
         };
 

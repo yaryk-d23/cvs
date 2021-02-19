@@ -46,6 +46,7 @@
 
         };
         getData();
+
         ctrl.getStatusIndicator = (status) => {
             switch (status) {
                 case "In progress":
@@ -89,7 +90,10 @@
             //     }
             // });
 
-            ctrl.filteredItems = items;
+            ctrl.filteredItems = items.map(function(item){
+                item.isCollapsed = true;
+                return item;
+            });
             $Preload.hide();
         };
 

@@ -25,8 +25,38 @@
             getHTMLTemplate: getHTMLTemplate,
             getEmailTemplate: getEmailTemplate,
             getAllEmailTemplates: getAllEmailTemplates,
-            updateEmailTemplate: updateEmailTemplate
+            updateEmailTemplate: updateEmailTemplate,
+            createEmailTemplate: createEmailTemplate,
+            deleteEmailTemplate: deleteEmailTemplate,
+            getListColumn: getListColumn,
         };
+
+        function getListColumn(listTitle, columnName) {
+            return $pnp.sp.web.lists
+              .getByTitle(listTitle)
+              .fields.getByInternalNameOrTitle(columnName)
+              .get()
+              .then((data) => {
+                return data;
+              }, onError);
+          }
+
+        function deleteEmailTemplate(data) {
+            return $pnp.sp.web.lists
+                .getByTitle("EmailTemplates")
+                .items.getById(data.Id)
+                .delete().then((response) => {
+                    return response;
+                }, onError);
+        }
+        function createEmailTemplate(data) {
+            return $pnp.sp.web.lists
+                .getByTitle("EmailTemplates")
+                .items
+                .add(data).then((response) => {
+                    return response;
+                }, onError);
+        }
         function updateEmailTemplate(data) {
             return $pnp.sp.web.lists
                 .getByTitle("EmailTemplates")

@@ -1,6 +1,13 @@
 <div class="email-templates">
   <div class="header">
     <h3 class="sectionHeader">Emails Template</h3>
+    <button ng-if="!ctrl.selectedTemplate"
+      type="button"
+      class="btn btn-success"
+      ng-click="ctrl.addNewTemplate()"
+    >
+      Add New
+    </button>
   </div>
   <div ng-if="!ctrl.selectedTemplate">
     <table class="table email-templates-table">
@@ -16,6 +23,10 @@
           <i
             class="glyphicon glyphicon-edit editIcon"
             ng-click="ctrl.editTemplate(item)"
+          ></i>
+          <i
+            class="glyphicon glyphicon-trash removeIcon"
+            ng-click="ctrl.deleteEmailTemplate(item)"
           ></i>
         </td>
         <td>{{item.Name}}</td>
@@ -51,11 +62,17 @@
       <div class="form-group">
         <label for="Category" class="control-label">Category</label>
         <select
-          name="Template"
+          name="Category"
           class="form-control"
           ng-model="ctrl.selectedTemplate.Category"
           ng-options="i as i for i in ctrl.categoryOptions track by i"
+          required
         ></select>
+        <span
+          class="error-msg"
+          ng-show="ctrl.form.Category.$touched && ctrl.form.Category.$invalid"
+          >Category is required.</span
+        >
       </div>
       <div class="form-group">
         <label for="Subject" class="control-label required">Subject</label>
@@ -75,17 +92,31 @@
       </div>
       <div class="form-group">
         <label for="Body" class="control-label required">Body</label>
-        <textarea ui-tinymce="ctrl.options" ng-model="ctrl.selectedTemplate.Body"></textarea>
-        <span class="error-msg" ng-show="!ctrl.selectedTemplate.Body"
+        <textarea
+          name="Body"
+          ui-tinymce="ctrl.options"
+          ng-model="ctrl.selectedTemplate.Body"
+          ng-class="{'ng-untouched': (!ctrl.form.Body.$touched)}"
+          required
+        ></textarea>
+        <span class="error-msg" ng-show="ctrl.form.Body.$touched && ctrl.form.Body.$invalid"
           >Body is required.</span
         >
       </div>
     </ng-form>
     <div class="modal-footer">
-      <button class="btn btn-warning" type="button" ng-click="ctrl.cancelEdit()">
+      <button
+        class="btn btn-warning"
+        type="button"
+        ng-click="ctrl.cancelEdit()"
+      >
         Cancel
       </button>
-      <button class="btn btn-success" type="button" ng-click="ctrl.saveTemplate()">
+      <button
+        class="btn btn-success"
+        type="button"
+        ng-click="ctrl.saveTemplate()"
+      >
         Save
       </button>
     </div>
