@@ -17,7 +17,7 @@
         ctrl.currYear = new Date().getFullYear();
         ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
         ctrl.emailTemplateUrl = window["APP_FOLDER"] + "components/import-applications/email-template.html"
-        
+
         $ApiService.getDRApplicationItems().then(function (res) {
             allApplications = res;
             allApplicatinsTitle = res.map(function (item) {
@@ -65,14 +65,33 @@
                 }
             });
             Promise.all(req).then(function (res) {
-                setTimeout(function () {
-                    $scope.$apply(function () {
-                        $Preload.hide();
-                        alert("Import completed!");
-                        ctrl.resetFileInput();
-                        ctrl.importData = [];
+                req = [];
+                $ApiService.getDRApplicationItems().then(function (applications) {
+                    applications.forEach(function (app) {
+                        ctrl.importData.forEach(function (importApp) {
+                            if (app.Title === importApp.Application && !!importApp.Parent) {
+                                applications.forEach(function (parentApp) {
+                                    if (importApp.Parent === parentApp.Title) {
+                                        req.push($ApiService.updateApplication({
+                                            Id: app.Id,
+                                            ParentId: parentApp.Id
+                                        }));
+                                    }
+                                });
+                            }
+                        });
                     });
-                }, 0);
+                    Promise.all(req).then(function (res) {
+                        setTimeout(function () {
+                            $scope.$apply(function () {
+                                $Preload.hide();
+                                alert("Import completed!");
+                                ctrl.resetFileInput();
+                                ctrl.importData = [];
+                            });
+                        }, 0);
+                    });
+                });
 
             }, function (error) {
                 setTimeout(function () {
@@ -95,17 +114,17 @@
                 resolve: {}
             });
 
-            modalInstance.result.then(function (templateName) {
+            modalInstance.result.then(function (selectedData) {
                 $Preload.show();
                 let activeApps = [];
                 $ApiService.getDRApplicationItems().then(function (applications) {
                     Promise.all([
                         $ApiService.getEmailTemplate(CONSTANT.REMINDER_START_PROCESS),
                         $ApiService.getEmailTemplate(CONSTANT.DELAY_REMINDER_START_PROCESS),
-                        $ApiService.getEmailTemplate(CONSTANT[templateName])
+                        $ApiService.getEmailTemplate(selectedData.selectedTemplate.Title)
                     ]).then(function (template) {
                         activeApps = applications.filter(function (x) {
-                            return x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.ApprovingManagerId && x.ApprovingDirectorId && !x.EmailSent;
+                            return x.Category === selectedData.selectedCategory && x.ApplicationStatus === "Active" && x.TestPlanOwnerId && x.ApprovingManagerId && x.ApprovingDirectorId && !x.EmailSent && !x.ParentId;
                         });
                         let req = [];
                         let toIds = [];
@@ -117,7 +136,7 @@
                             req.push($ApiService.deleteEmailItems(item.Id));
                             req.push($ApiService.updateApplication({
                                 Id: item.Id,
-                                //TestDate: dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss'),
+                                TestDate: dayjs(new Date()).format('YYYY-MM-DDTHH:mm:ss'),
                                 Status: "In progress",
                                 EmailSent: true
                             }));

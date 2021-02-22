@@ -60,10 +60,6 @@
 .applicationTestPlanDashboard .statusIndicator.notStartedStatus {
   background-color: #de0000;
 }
-.applicationTestPlanDashboard .editIcon {
-  color: green;
-  cursor: pointer;
-}
 .applicationTestPlanDashboard .startNewProcessBtn {
   color: #fff;
   font-weight: 500;

@@ -12,17 +12,28 @@
     function ctrl($scope, $ApiService, $Preload, $q, $location) {
         $Preload.show();
         var ctrl = this;
-        ctrl.api = $ApiService;
 
         ctrl.items = [];
+        ctrl.allDRApplicationItems = [];
+        ctrl.parentDRApplicationItems = [];
         ctrl.filteredItems = [];
         ctrl.pageNumber = 1;
-        ctrl.itemsPerPage = 10;
+        ctrl.itemsPerPage = 5;
         ctrl.filterStartDate = getCurrentMonthFirstDate();
         ctrl.filterEndDate = getCurrentMonthLastDate();
 
         var getData = async () => {
-            let items = await ctrl.api.getApplicationTestPlanItems();
+            let items = await $ApiService.getApplicationTestPlanItems();
+            ctrl.allDRApplicationItems = await $ApiService.getDRApplicationItems();
+            ctrl.parentDRApplicationItems = ctrl.allDRApplicationItems.filter(function(x) {
+                return !x.ParentId;
+            });
+            ctrl.parentDRApplicationItems = ctrl.parentDRApplicationItems.map(function(i){
+                i.ChildrenItems = ctrl.allDRApplicationItems.filter(function(x) {
+                    return x.ParentId === i.Id;
+                });
+                return i;
+            });
             let flag = false;
             angular.forEach(window.currentSPUser.Groups, function (group) {
                 if (group.Title == 'EDR Team') {
@@ -45,15 +56,15 @@
             });
             let req = [];
             applicationIds.forEach((i) => {
-                req.push(ctrl.api.getDRApplicationItemById(i));
+                req.push($ApiService.getDRApplicationItemById(i));
             });
             let response = await $q.all({
-                applicationItems: $q.all(req),
+                //applicationItems: $q.all(req),
                 attachments: $q.all(attachmentsReq)
             });
             for (let j = 0; j < items.length; j++) {
                 let item = angular.copy(items[j]);
-                item.Application = response.applicationItems.filter(
+                item.Application = ctrl.allDRApplicationItems.filter(
                     (x) => x.ID === item.ApplicationId
                 )[0];
 
@@ -76,7 +87,7 @@
 
             if (!flag) {
                 items = items.filter(function (item) {
-                    return (item.Application.TestPlanOwnerId && item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) ||
+                    return item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
                         item.Application.ApprovingManagerId === window.currentSPUser.Id ||
                         item.Application.ApprovingDirectorId === window.currentSPUser.Id;
                 });
@@ -207,11 +218,43 @@
             return new Date(y, m + 1, 0);
         };
 
+        function setChildrenColumnWidth() {
+            let childrenRows = $(".app-container .table .children-table tr");
+            let childrenColumns;
+            childrenRows.each(function(row) {
+                childrenColumns = $(childrenRows[row]).find("td");
+                childrenColumns.each(function(col) {
+                    let width = $(".table th:eq(" + col + ")").outerWidth();
+                    $(childrenColumns[col]).css({width: width, 'max-width': width});
+                });
+            });
+        }
+
         ctrl.filterData = () => {
             $Preload.show();
             let items = this.filterItemsByDateRange(ctrl.items);
             items = this.getItemRange(items);
-            ctrl.filteredItems = items;
+
+
+            // let groupedItemsByParent = [];
+            // ctrl.parentDRApplicationItems.forEach(function(item){
+            //     let newItem = angular.copy(item);
+            //     newItem.ChildrenItems = items.filter(function(x) {
+            //         return x.Application.ParentId === item.Id;
+            //     });
+            //     if(newItem.ChildrenItems && newItem.ChildrenItems.length) {
+            //         groupedItemsByParent.push(newItem);
+            //     }
+            // });
+            
+            ctrl.filteredItems = items.map(function(item){
+                item.isCollapsed = true;
+                return item;
+            });
+            
+            setTimeout(function(){
+                setChildrenColumnWidth();
+            },500);
             $Preload.hide();
         };
 

@@ -1,6 +1,6 @@
-.fr-wrapper>div:not(.fr-element),
-.fr-wrapper>.fr-placeholder {
-  display: none!important;
+.fr-wrapper > div:not(.fr-element),
+.fr-wrapper > .fr-placeholder {
+  display: none !important;
 }
 #s4-workspace {
   background-color: #f5f5f5;
@@ -18,6 +18,16 @@
 .app-container .navbar {
   background: #fff;
   box-shadow: 0px 0px 3px 0px;
+}
+
+.app-container .editIcon {
+  color: green;
+  cursor: pointer;
+}
+.app-container .removeIcon {
+  color: red;
+  margin-left: 5px;
+  cursor: pointer;
 }
 .component-block {
   background-color: #fff;
@@ -64,31 +74,42 @@
   color: #818181;
   border: 2px solid #818181;
 }
+.ui-select-choices .ui-select-choices-group .ui-select-choices-group-label {
+  font-weight: bold;
+  color: #000;
+}
 
 /* table styles */
 
-.app-container :not(.email-templates-table) .table {
+.app-container .table tr.parent-row > td {
+  background: #f3f3f3;
+}
+.app-container .table tr.parent-row:not(.alone) > td {
+  cursor: pointer;
+}
+
+.app-container .table {
   border-collapse: separate;
   border-spacing: 0 15px;
 }
-.app-container :not(.email-templates-table) .table th {
+.app-container .table th {
   vertical-align: middle;
   border-top: none;
 }
-.app-container :not(.email-templates-table) .table td {
+.app-container .table td {
   vertical-align: middle;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
   color: #818181;
 }
-.app-container :not(.email-templates-table) .table td:first-child {
+.app-container .table td:first-child {
   border-left: 1px solid #ddd;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
   color: inherit;
   font-weight: 600;
 }
-.app-container :not(.email-templates-table) .table td:last-child {
+.app-container .table td:last-child {
   border-right: 1px solid #ddd;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
@@ -103,6 +124,22 @@
 .app-container .table.approva-table th:last-child {
   padding-right: 5em;
   text-align: center;
+}
+.app-container .children-table {
+  width: 100%;
+}
+.app-container .table .children-table tr>td {
+  font-size: 12px;
+  font-weight: normal;
+  border: none;
+}
+.app-container .table td.children-row-cell {
+  padding: 0;
+  border: 0;
+}
+.app-container .table td.children-row-cell > div{
+  border: 1px solid #ddd;
+  border-radius: 5px;
 }
 /*  */
 @media (min-width: 1200px) {

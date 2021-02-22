@@ -15,13 +15,28 @@
   <div class="modal-body" id="modal-body">
     <ng-form name="ctrl.form">
       <div class="form-group">
-        <label for="Template" class="control-label">Template {{ctrl.selectedTemplate}}</label>
+        <!-- <label for="Template" class="control-label">Template {{ctrl.selectedTemplate.Name}}</label> -->
         <select
           name="Template"
           class="form-control"
           ng-model="ctrl.selectedTemplate"
-          ng-options="i as i for i in ctrl.temeplates track by i"
+          ng-options="i as i.Name for i in ctrl.temeplates track by i.Id"
         ></select>
+      </div>
+      <div class="form-group">
+        <label for="Category" class="control-label">Category</label>
+        <select
+          name="Category"
+          class="form-control"
+          ng-model="ctrl.selectedCategory"
+          ng-options="i for i in ctrl.categoryOptions track by i"
+          required
+        ></select>
+        <span
+          class="error-msg"
+          ng-show="ctrl.form.Category.$touched && ctrl.form.Category.$invalid"
+          >Category is required.</span
+        >
       </div>
     </ng-form>
   </div>

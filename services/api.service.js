@@ -25,9 +25,38 @@
             getHTMLTemplate: getHTMLTemplate,
             getEmailTemplate: getEmailTemplate,
             getAllEmailTemplates: getAllEmailTemplates,
-            updateEmailTemplate: updateEmailTemplate
+            updateEmailTemplate: updateEmailTemplate,
+            createEmailTemplate: createEmailTemplate,
+            deleteEmailTemplate: deleteEmailTemplate,
+            getListColumn: getListColumn,
         };
 
+        function getListColumn(listTitle, columnName) {
+            return $pnp.sp.web.lists
+              .getByTitle(listTitle)
+              .fields.getByInternalNameOrTitle(columnName)
+              .get()
+              .then((data) => {
+                return data;
+              }, onError);
+          }
+
+        function deleteEmailTemplate(data) {
+            return $pnp.sp.web.lists
+                .getByTitle("EmailTemplates")
+                .items.getById(data.Id)
+                .delete().then((response) => {
+                    return response;
+                }, onError);
+        }
+        function createEmailTemplate(data) {
+            return $pnp.sp.web.lists
+                .getByTitle("EmailTemplates")
+                .items
+                .add(data).then((response) => {
+                    return response;
+                }, onError);
+        }
         function updateEmailTemplate(data) {
             return $pnp.sp.web.lists
                 .getByTitle("EmailTemplates")
@@ -45,8 +74,6 @@
                     return data;
                 });
         }
-
-
         function getEmailTemplate(title) {
             return $pnp.sp.web.lists
                 .getByTitle("EmailTemplates")
@@ -87,9 +114,10 @@
                     "*," +
                     "TestPlanOwner/Id,TestPlanOwner/Title," +
                     "ApprovingManager/Id,ApprovingManager/Title," +
-                    "ApprovingDirector/Id,ApprovingDirector/Title"
+                    "ApprovingDirector/Id,ApprovingDirector/Title",
+                    "Parent/Title"
                 )
-                .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
+                .expand("TestPlanOwner,ApprovingManager,ApprovingDirector,Parent")
                 .filter("Status ne 'Out of Scope'")
                 .top(50000)
                 .get()
@@ -187,7 +215,6 @@
                 .expand(
                     "TestEDRReviewUser,TestITManagerUser,TestITDirectorUser,PostTestEDRReviewUser,PostTestITManagerUser,PostTestITDirectorUser"
                 )
-                .filter("DueDate ne null")
                 .top(50000)
                 .get()
                 .then((response) => {

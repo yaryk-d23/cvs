@@ -21,10 +21,23 @@
         ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
 
         function getData() {
-            $ApiService.getMyApplicationItems().then(function (res) {
+            let req = {
+                drApplicationItems: $ApiService.getDRApplicationItems(),
+                items: $ApiService.getMyApplicationItems()
+            };
+            $q.all(req).then(function (res) {
                 setTimeout(function () {
                     $scope.$apply(function () {
-                        ctrl.items = res || [];
+                        ctrl.parentDRApplicationItems = res.items.filter(function(x) {
+                            return !x.ParentId;
+                        });
+                        ctrl.parentDRApplicationItems = ctrl.parentDRApplicationItems.map(function(i){
+                            i.ChildrenItems = res.drApplicationItems.filter(function(x) {
+                                return x.ParentId === i.Id;
+                            });
+                            return i;
+                        });
+                        ctrl.items = ctrl.parentDRApplicationItems || [];
                         ctrl.filterData();
                     });
                 }, 0);
@@ -58,12 +71,30 @@
                 m = 11;
             return new Date(y, m + 1, 0);
         };
+        function setChildrenColumnWidth() {
+            let childrenRows = $(".app-container .table .children-table tr");
+            let childrenColumns;
+            childrenRows.each(function(row) {
+                childrenColumns = $(childrenRows[row]).find("td");
+                childrenColumns.each(function(col) {
+                    let width = $(".table th:eq(" + col + ")").outerWidth();
+                    $(childrenColumns[col]).css({width: width, 'max-width': width});
+                });
+            });
+        }
 
         ctrl.filterData = () => {
             $Preload.show();
             let items = this.filterItemsByDateRange(ctrl.items);
             items = this.getItemRange(items);
-            ctrl.filteredItems = items;
+            ctrl.filteredItems = items.map(function(item){
+                item.isCollapsed = true;
+                return item;
+            });
+
+            setTimeout(function(){
+                setChildrenColumnWidth();
+            },500);
             $Preload.hide();
         };
 
