@@ -44,6 +44,7 @@
       <tbody ng-repeat="parent in ctrl.filteredItems">
         <tr
           class="parent-row"
+          ng-class="{'alone': !parent.Application.ChildrenItems || !parent.Application.ChildrenItems.length}"
           ng-click="parent.isCollapsed = !parent.isCollapsed"
         >
           <td>
@@ -84,12 +85,15 @@
           </td>
           <td>
             <i
+              ng-if="parent.Application.ChildrenItems && parent.Application.ChildrenItems.length"
               class="glyphicon"
               ng-class="parent.isCollapsed ? 'glyphicon-chevron-down' : 'glyphicon-chevron-up'"
             ></i>
           </td>
         </tr>
-        <tr>
+        <tr
+          ng-if="parent.Application.ChildrenItems && parent.Application.ChildrenItems.length"
+        >
           <td colspan="9" class="children-row-cell">
             <div uib-collapse="parent.isCollapsed">
               <table class="children-table">

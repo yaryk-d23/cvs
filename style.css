@@ -83,6 +83,8 @@
 
 .app-container .table tr.parent-row > td {
   background: #f3f3f3;
+}
+.app-container .table tr.parent-row:not(.alone) > td {
   cursor: pointer;
 }
 
