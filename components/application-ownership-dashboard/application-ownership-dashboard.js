@@ -20,6 +20,58 @@
         ctrl.filterStartDate = getCurrentMonthFirstDate();
         ctrl.filterEndDate = getCurrentMonthLastDate();
         ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
+        ctrl.sortColumn = "Title";
+        ctrl.sortAscending = true;
+        ctrl.filterValue = "";
+
+        ctrl.onChangeFilter = function() {
+            ctrl.filterData();
+        }
+
+        ctrl.sortData = function (fieldName) {
+            ctrl.sortAscending = ctrl.sortColumn === fieldName ? !ctrl.sortAscending : true;
+            ctrl.sortColumn = fieldName;
+            let data = angular.copy(ctrl.filteredItems);
+            data.sort(function (a, b) {
+                let val = 0, val1, val2;
+                switch (fieldName) {
+                    case "TestPlanOwner":
+                        val1 = a[fieldName].results.map(function (i) { return i.Title; }).join("; ");
+                        val2 = b[fieldName].results.map(function (i) { return i.Title; }).join("; ");
+                        break;
+                    case "Title":
+                        val1 = a.Title;
+                        val2 = b.Title;
+                        break;
+                    case "ApprovingManager":
+                        val1 = a.ApprovingManager.Title;
+                        val2 = b.ApprovingManager.Title;
+                        break;
+                    case "ApprovingDirector":
+                        val1 = a.ApprovingDirector.Title;
+                        val2 = b.ApprovingDirector.Title;
+                        break;
+                    default:
+                        val1 = a[fieldName] || typeof a[fieldName] === "number" ? a[fieldName] : "";
+                        val2 = b[fieldName] || typeof b[fieldName] === "number" ? b[fieldName] : "";
+                        break;
+                }
+                if (val1 < val2) {
+                    val = ctrl.sortAscending ? -1 : 1;
+                }
+                if (val1 > val2) {
+                    val = ctrl.sortAscending ? 1 : -1;
+                }
+                return val;
+            });
+
+            setTimeout(function () {
+                $scope.$apply(function () {
+                    ctrl.filteredItems = data;
+                });
+            }, 0);
+
+        };
 
         function getData() {
             let req = {
@@ -37,6 +89,18 @@
                                 return x.ParentId === i.Id;
                             });
                             return i;
+                        });
+                        ctrl.parentDRApplicationItems = ctrl.parentDRApplicationItems.sort(function (a, b) {
+                            let val = 0,
+                            val1 = a.Title,
+                            val2 = b.Title;
+                            if (val1 < val2) {
+                                val = ctrl.sortAscending ? -1 : 1;
+                            }
+                            if (val1 > val2) {
+                                val = ctrl.sortAscending ? 1 : -1;
+                            }
+                            return val;
                         });
                         ctrl.items = ctrl.parentDRApplicationItems || [];
                         ctrl.filterData();
@@ -101,6 +165,13 @@
             //         groupedItemsByParent.push(newItem);
             //     }
             // });
+            items = items.filter(function(x){
+                return x.Title.toLowerCase().indexOf(ctrl.filterValue) != -1 || 
+                    x.TestPlanOwner.results.map(function (i) { return i.Title; }).join("; ").toLowerCase().indexOf(ctrl.filterValue) != -1 ||
+                    (x.ApprovingManager && x.ApprovingManager.Title.toLowerCase().indexOf(ctrl.filterValue) != -1) ||
+                    (x.ApprovingDirector && x.ApprovingDirector.Title.toLowerCase().indexOf(ctrl.filterValue) != -1) ||
+                    x.BusinessUnit.toLowerCase().indexOf(ctrl.filterValue) != -1;
+            });
 
             ctrl.filteredItems = items.map(function(item){
                 item.isCollapsed = true;

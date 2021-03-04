@@ -13,17 +13,22 @@
         $Preload.show();
         var ctrl = this;
         ctrl.allApplications = [];
+        ctrl.allTestPlanItems = [];
         ctrl.item = {};
         ctrl.currentUserPermissions = "";
 
         ctrl.loadData = function () {
-            $ApiService.getDRApplicationItems().then(function (res) {
+            $q.all({
+                applications: $ApiService.getDRApplicationItems(),
+                testPlanItems: $ApiService.getApplicationTestPlanItems()
+            }).then(function (res) {
+                ctrl.allTestPlanItems = res.testPlanItems;
                 if ($routeParams.id) {
                     $ApiService.getApplicationTestPlanItemById($routeParams.id).then(function (item) {
                         $ApiService.getFormAttachments($routeParams.id).then(function (attachments) {
                             setTimeout(function () {
                                 $scope.$apply(function () {
-                                    ctrl.allApplications = res.filter(function (x) {
+                                    ctrl.allApplications = res.applications.filter(function (x) {
                                         return x.ApplicationStatus === "Active" && x.Status === "Completed" && x.TestPlanOwnerId &&
                                             (x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
                                                 x.ApprovingManagerId === window.currentSPUser.Id ||
@@ -32,7 +37,7 @@
                                     });
                                     ctrl.item = item;
                                     ctrl.item.DueDate = new Date(ctrl.item.DueDate);
-                                    ctrl.item.Application = res.filter(function (x) {
+                                    ctrl.item.Application = res.applications.filter(function (x) {
                                         return x.Id === item.ApplicationId;
                                     })[0];
                                     let TestPlanAttachment = ctrl.item.TestPlanAttachment = attachments.filter(function (x) {
@@ -70,7 +75,7 @@
                 else {
                     setTimeout(function () {
                         $scope.$apply(function () {
-                            ctrl.allApplications = res.filter(function (x) {
+                            ctrl.allApplications = res.applications.filter(function (x) {
                                 return x.ApplicationStatus === "Active" && x.Status === "Completed" && x.TestPlanOwnerId &&
                                     (x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
                                         x.ApprovingManagerId === window.currentSPUser.Id ||

@@ -5,6 +5,7 @@
             bindings: {
                 allApplications: '<',
                 item: "=",
+                allTestPlans: "<"
             },
             controllerAs: 'ctrl',
             controller: ['$scope', '$ApiService', '$Preload', '$q', '$location', '$routeParams', ctrl]
@@ -41,9 +42,21 @@
                 });
                 return;
             }
+            let ivalidForm = false;
+            let existApplication = ctrl.allTestPlans.filter(function(x){ return x.ApplicationId === ctrl.item.Application.Id;});
+            if(existApplication && existApplication.length){
+                ctrl.form.Application.$setValidity('isExist',false);
+                ctrl.form.Application.$setTouched();
+                ivalidForm = true;
+            }
+            else {
+                ctrl.form.Application.$setValidity('isExist',true);
+            }
+            if(ivalidForm) return;
             $Preload.show();
             $ApiService.createApplicationTestPlan({
                 ApplicationId: ctrl.item.Application.Id,
+                Title: ctrl.item.Application.Title,
                 DueDate: dayjs(ctrl.item.DueDate).format('YYYY-MM-DDTHH:mm:ss'),
                 Stage: 1,
             }).then(function (res) {

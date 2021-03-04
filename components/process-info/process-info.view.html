@@ -32,9 +32,12 @@
                 </div>
               </ui-select-choices>
             </ui-select>
+            <span class="error-msg" ng-show="ctrl.form.Application.$error.isExist && ctrl.form.Application.$invalid">
+              Test Plan already submitted for this Application.<br/>
+            </span>
             <span
               class="error-msg"
-              ng-show="ctrl.form.Application.$touched && ctrl.form.Application.$invalid"
+              ng-show="ctrl.form.Application.$touched && ctrl.form.Application.$error.required"
               >Application is required.</span
             >
           </div>

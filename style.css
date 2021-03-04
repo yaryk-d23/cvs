@@ -128,7 +128,7 @@
 .app-container .children-table {
   width: 100%;
 }
-.app-container .table .children-table tr>td {
+.app-container .table .children-table tr > td {
   font-size: 12px;
   font-weight: normal;
   border: none;
@@ -137,9 +137,26 @@
   padding: 0;
   border: 0;
 }
-.app-container .table td.children-row-cell > div{
+.app-container .table td.children-row-cell > div {
   border: 1px solid #ddd;
   border-radius: 5px;
+}
+
+.app-container .table .sorted-column {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+.app-container .table .sorted-column i {
+  font-size: 10px;
+}
+.app-container .filter-container {
+  padding: 1em 0 1em 10px;
+  border-bottom: 1px solid #f3f3f3;
 }
 /*  */
 @media (min-width: 1200px) {

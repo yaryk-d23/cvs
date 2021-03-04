@@ -28,13 +28,40 @@
       />
     </div>
   </div>
+  <div class="form-inline filter-container">
+    <div class="form-group">
+      <label for="Filter" style="margin-bottom: 0;">Filter:</label>
+      <input type="text" class="form-control" ng-model="ctrl.filterValue" ng-change="ctrl.onChangeFilter()" placeholder="type..."/>
+    </div>
+  </div>
   <div>
     <table class="table">
       <tr>
         <th></th>
-        <th>Application</th>
-        <th>Test Plan Owner/POC</th>
-        <th>Test Date</th>
+        <th ng-click="ctrl.sortData('Application')" class="sorted-column">
+          Application
+          <i
+            ng-if="ctrl.sortColumn === 'Application'"
+            class="glyphicon"
+            ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
+          ></i>
+        </th>
+        <th ng-click="ctrl.sortData('TestPlanOwner')" class="sorted-column">
+          Test Plan Owner/POC
+          <i
+            ng-if="ctrl.sortColumn === 'TestPlanOwner'"
+            class="glyphicon"
+            ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
+          ></i>
+        </th>
+        <th ng-click="ctrl.sortData('DueDate')" class="sorted-column">
+          Test Date
+          <i
+            ng-if="ctrl.sortColumn === 'DueDate'"
+            class="glyphicon"
+            ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
+          ></i>
+        </th>
         <th style="min-width: 140px">Draft Plan Received</th>
         <th style="min-width: 140px">Test Plan Approved</th>
         <th style="min-width: 140px">Draft Results Received</th>
@@ -91,10 +118,12 @@
             ></i>
           </td>
         </tr>
-        <tr
-          ng-if="parent.Application.ChildrenItems && parent.Application.ChildrenItems.length"
-        >
-          <td colspan="9" class="children-row-cell">
+        <tr>
+          <td
+            ng-if="parent.Application.ChildrenItems && parent.Application.ChildrenItems.length"
+            colspan="9"
+            class="children-row-cell"
+          >
             <div uib-collapse="parent.isCollapsed">
               <table class="children-table">
                 <tr ng-repeat="item in parent.Application.ChildrenItems">
