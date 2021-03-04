@@ -25,7 +25,7 @@
   </div>
   <div class="form-inline filter-container">
     <div class="form-group">
-      <label for="Filter" style="margin-bottom: 0">Filter:</label>
+      <label for="Filter" style="margin-bottom: 0">Search:</label>
       <input
         type="text"
         class="form-control"
@@ -41,44 +41,54 @@
         <th>Approve</th>
         <th>Edit</th>
         <th ng-click="ctrl.sortData('BusinessUnit')" class="sorted-column">
-          Business Unit
-          <i
-            ng-if="ctrl.sortColumn === 'BusinessUnit'"
-            class="glyphicon"
-            ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
-          ></i>
+          <span>
+            Business Unit
+            <i
+              ng-if="ctrl.sortColumn === 'BusinessUnit'"
+              class="glyphicon"
+              ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
+            ></i>
+          </span>
         </th>
         <th ng-click="ctrl.sortData('Title')" class="sorted-column">
-          Application
-          <i
-            ng-if="ctrl.sortColumn === 'Title'"
-            class="glyphicon"
-            ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
-          ></i>
+          <span>
+            Application
+            <i
+              ng-if="ctrl.sortColumn === 'Title'"
+              class="glyphicon"
+              ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
+            ></i>
+          </span>
         </th>
         <th ng-click="ctrl.sortData('ApprovingManager')" class="sorted-column">
-          Manager/Tech Owner
-          <i
-            ng-if="ctrl.sortColumn === 'ApprovingManager'"
-            class="glyphicon"
-            ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
-          ></i>
+          <span>
+            Manager/Tech Owner
+            <i
+              ng-if="ctrl.sortColumn === 'ApprovingManager'"
+              class="glyphicon"
+              ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
+            ></i>
+          </span>
         </th>
         <th ng-click="ctrl.sortData('ApprovingDirector')" class="sorted-column">
-          Director/Sub Portfolio Owner
-          <i
-            ng-if="ctrl.sortColumn === 'ApprovingDirector'"
-            class="glyphicon"
-            ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
-          ></i>
+          <span>
+            Director/Sub Portfolio Owner
+            <i
+              ng-if="ctrl.sortColumn === 'ApprovingDirector'"
+              class="glyphicon"
+              ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
+            ></i>
+          </span>
         </th>
         <th ng-click="ctrl.sortData('TestPlanOwner')" class="sorted-column">
-          Test Plan Owner/POC
-          <i
-            ng-if="ctrl.sortColumn === 'TestPlanOwner'"
-            class="glyphicon"
-            ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
-          ></i>
+          <span>
+            Test Plan Owner/POC
+            <i
+              ng-if="ctrl.sortColumn === 'TestPlanOwner'"
+              class="glyphicon"
+              ng-class="ctrl.sortAscending ? 'glyphicon-arrow-down' : 'glyphicon-arrow-up'"
+            ></i>
+          </span>
         </th>
         <th>Status</th>
         <th style="width: 20px"></th>
@@ -129,7 +139,11 @@
           </td>
         </tr>
         <tr>
-          <td ng-if="parent.ChildrenItems && parent.ChildrenItems.length" colspan="9" class="children-row-cell">
+          <td
+            ng-if="parent.ChildrenItems && parent.ChildrenItems.length"
+            colspan="9"
+            class="children-row-cell"
+          >
             <div uib-collapse="parent.isCollapsed">
               <table class="children-table">
                 <tr ng-repeat="item in parent.ChildrenItems">
