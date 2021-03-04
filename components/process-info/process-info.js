@@ -36,6 +36,7 @@
             $Preload.show();
             $ApiService.createApplicationTestPlan({
                 ApplicationId: ctrl.item.Application.Id,
+                Title: ctrl.item.Application.Title,
                 DueDate: dayjs(ctrl.item.DueDate).format('YYYY-MM-DDTHH:mm:ss'),
                 Stage: 1,
             }).then(function (res) {
