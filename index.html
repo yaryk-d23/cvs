@@ -11,7 +11,7 @@
         <li 
           ng-repeat="item in ctrl.navLinks" 
           ng-class="{'active': ctrl.isActivePath(item.link)}"
-          ng-if="item.title !== 'Import Applications' || ctrl.isAdmin()">
+          ng-if="(item.title !== 'Import Applications' && item.title !== 'Dashboard' && item.title !== 'Emails Template') || ctrl.isAdmin()">
             <a ng-href="#{{item.link}}">
               {{item.title}} 
               <span class="sr-only" ng-if="ctrl.isActivePath(item.link)">
@@ -34,7 +34,7 @@
 
   var modules = [
       //modules
-      "modules/angular/angular.min.js?t=123",
+      "modules/angular/angular.min.js",
       "modules/angular/angular-route.min.js",
       "modules/angular/angular-animate.min.js",
       "modules/angular/angular-sanitize.min.js",
@@ -44,10 +44,16 @@
       "modules/bootstrap/js/bootstrap.min.js",
       "modules/bootstrap/js/ui-bootstrap-tpls-2.5.0.min.js",
       "modules/ui-select/select.js",
-      "modules/xlsx.full.min.js",
+      // "modules/xlsx.full.min.js",
+      "modules/FileSaver.min.js",
+      "modules/XLSX/xlsx.extendscript.js",
+      "modules/XLSX/xlsx-style/xlsx.full.min.js",
+      "modules/XLSX/export.js",
       "modules/dayjs.min.js",
       "modules/tinymce/tinymce.min.js",
       "modules/tinymce/angular-ui-tinymce.js",
+      "modules/lodash.min.js",
+      "modules/angular/angularjs-dropdown-multiselect.js",
       
     ];
 var scripts = [
@@ -69,6 +75,8 @@ var scripts = [
       "components/import-applications/import-applications.js",
       "components/application-ownership-dashboard/application-ownership-dashboard.js",
       "components/email-templates/email-templates.js",
+      "components/owner-dashboard-container/owner-dashboard-container.js",
+      "components/admin-dashboard/admin-dashboard.js",
 
       "common/date-range/date-range.js",
       "common/reject-modal/reject-modal.js",
@@ -89,6 +97,7 @@ var scripts = [
       "components/import-applications/import-applications.style.css",
       "components/application-ownership-dashboard/application-ownership-dashboard.style.css",
       "components/email-templates/email-templates.style.css",
+      "components/admin-dashboard/admin-dashboard.style.css",
     ];
 
   for (var i = 0; i < styles.length; i++) {

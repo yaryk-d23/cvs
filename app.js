@@ -9,6 +9,7 @@ var app = angular.module('App', [
     'popUp',
     'constants',
     'ui.tinymce',
+    'angularjs-dropdown-multiselect',
 ]);
 app.run(function ($rootScope, $location, $Preload, $ApiService) {
     $Preload.show();
@@ -113,7 +114,10 @@ app.config(function ($routeProvider, $locationProvider, $provide, $httpProvider)
     }
     $routeProvider
         .when('/dashboard', {
-            template: '<application-test-plan-dashboard></application-test-plan-dashboard>'
+            template: '<admin-dashboard></admin-dashboard>',
+            resolve: {
+                loggedIn: isAdmins
+            }
         })
         .when('/process-form', {
             template: '<test-application-process></test-application-process>'
@@ -128,7 +132,7 @@ app.config(function ($routeProvider, $locationProvider, $provide, $httpProvider)
             }
         })
         .when('/owners-dashboard', {
-            template: '<application-ownership-dashboard></application-ownership-dashboard>'
+            template: '<owner-dashboard-container></owner-dashboard-container>'
         })
         .when('/emails-template', {
             template: '<email-templates></email-templates>',

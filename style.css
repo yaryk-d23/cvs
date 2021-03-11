@@ -78,6 +78,9 @@
   font-weight: bold;
   color: #000;
 }
+.app-container .checkboxInput {
+  margin-top: 0;
+}
 
 /* table styles */
 
@@ -153,6 +156,7 @@
 }
 .app-container .table .sorted-column span {
   position: relative;
+  display: inline-block;
 }
 .app-container .table .sorted-column i {
   font-size: 10px;
@@ -163,6 +167,9 @@
 .app-container .filter-container {
   padding: 1em 0 1em 10px;
   border-bottom: 1px solid #f3f3f3;
+}
+.app-container .filter-container > .form-group {
+  margin-right: 2em;
 }
 /*  */
 @media (min-width: 1200px) {
