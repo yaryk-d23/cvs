@@ -66,4 +66,7 @@
     background-color: #ff9d00;
     margin-left: 2em;
   }
+  .admin-dashboard .table  tr.archived-record.parent-row td, .admin-dashboard .table  tr.archived-record .children-table td{
+    background-color: rgba(230, 192, 154, 0.3);
+  }
   

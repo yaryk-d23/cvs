@@ -103,16 +103,16 @@
             }
 
             if (ctrl.item.Stage === 2) {
-                        if(!ctrl.item.TestEDRReview && checkCurrentUserInGroup("EDR Team")){
-                            ctrl.currentUserPermissions = "Edit";
-                        }
-                        else if(ctrl.item.TestEDRReview && !ctrl.item.TestITManager && window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId){
-                            ctrl.currentUserPermissions = "Edit";
-                        }
-                        else if(ctrl.item.TestEDRReview && !ctrl.item.TestITDirector && window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId){
-                            ctrl.currentUserPermissions = "Edit";
-                        }
-                
+                if (!ctrl.item.TestEDRReview && checkCurrentUserInGroup("EDR Team")) {
+                    ctrl.currentUserPermissions = "Edit";
+                }
+                else if (ctrl.item.TestEDRReview && !ctrl.item.TestITManager && window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId) {
+                    ctrl.currentUserPermissions = "Edit";
+                }
+                else if (ctrl.item.TestEDRReview && !ctrl.item.TestITDirector && window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId) {
+                    ctrl.currentUserPermissions = "Edit";
+                }
+
             }
 
             if (ctrl.item.Stage === 3 && ctrl.item.Application.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1) {
@@ -120,15 +120,15 @@
             }
 
             if (ctrl.item.Stage === 4) {
-                    if(!ctrl.item.PostTestEDRReview && checkCurrentUserInGroup("EDR Team")){
-                        ctrl.currentUserPermissions = "Edit";
-                    }
-                    else if(ctrl.item.PostTestEDRReview && !ctrl.item.PostTestITManager && window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId){
-                        ctrl.currentUserPermissions = "Edit";
-                    }
-                    else if(ctrl.item.PostTestEDRReview && !ctrl.item.PostTestITDirector && window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId){
-                        ctrl.currentUserPermissions = "Edit";
-                    }
+                if (!ctrl.item.PostTestEDRReview && checkCurrentUserInGroup("EDR Team")) {
+                    ctrl.currentUserPermissions = "Edit";
+                }
+                else if (ctrl.item.PostTestEDRReview && !ctrl.item.PostTestITManager && window.currentSPUser.Id === ctrl.item.Application.ApprovingManagerId) {
+                    ctrl.currentUserPermissions = "Edit";
+                }
+                else if (ctrl.item.PostTestEDRReview && !ctrl.item.PostTestITDirector && window.currentSPUser.Id === ctrl.item.Application.ApprovingDirectorId) {
+                    ctrl.currentUserPermissions = "Edit";
+                }
             }
 
             if (!ctrl.currentUserPermissions) {
@@ -144,6 +144,57 @@
                 }
             });
             return isMember;
+        }
+
+        ctrl.checkShowRejectMsg = function () {
+            return ctrl.item.TestEDRReview === "Rejected" || 
+            ctrl.item.TestITDirector === "Rejected" || 
+            ctrl.item.TestITManager === "Rejected" || 
+            ctrl.item.PostTestEDRReview === "Rejected" || 
+            ctrl.item.PostTestITDirector === "Rejected" || 
+            ctrl.item.PostTestITManager === "Rejected";
+        }
+
+        ctrl.getRejectUser = function() {
+            if(ctrl.item.TestEDRReview === "Rejected") {
+                return ctrl.item.TestEDRReviewUser.Title;
+            }
+            if(ctrl.item.TestITDirector === "Rejected") {
+                return ctrl.item.TestITDirectorUser.Title;
+            }
+            if(ctrl.item.TestITManager === "Rejected") {
+                return ctrl.item.TestITManagerUser.Title;
+            }
+            if(ctrl.item.PostTestEDRReview === "Rejected") {
+                return ctrl.item.PostTestEDRReviewUser.Title;
+            }
+            if(ctrl.item.PostTestITDirector === "Rejected") {
+                return ctrl.item.PostTestITDirectorUser.Title;
+            }
+            if(ctrl.item.PostTestITManager === "Rejected") {
+                return ctrl.item.PostTestITManagerUser.Title;
+            }
+        }
+
+        ctrl.getRejectComments = function() {
+            if(ctrl.item.TestEDRReview === "Rejected") {
+                return ctrl.item.TestEDRReviewComment ? ctrl.item.TestEDRReviewComment.replace(/\n/g, '<br/>') : "";
+            }
+            if(ctrl.item.TestITDirector === "Rejected") {
+                return ctrl.item.TestITDirectoComment ? ctrl.item.TestITDirectoComment.replace(/\n/g, '<br/>') : "";
+            }
+            if(ctrl.item.TestITManager === "Rejected") {
+                return ctrl.item.TestITManagerComment ? ctrl.item.TestITManagerComment.replace(/\n/g, '<br/>') : "";
+            }
+            if(ctrl.item.PostTestEDRReview === "Rejected") {
+                return ctrl.item.PostTestEDRReviewComment ? ctrl.item.PostTestEDRReviewComment.replace(/\n/g, '<br/>') : "";
+            }
+            if(ctrl.item.PostTestITDirector === "Rejected") {
+                return ctrl.item.PostTestITDirectoComment ? ctrl.item.PostTestITDirectoComment.replace(/\n/g, '<br/>') : "";
+            }
+            if(ctrl.item.PostTestITManager === "Rejected") {
+                return ctrl.item.PostTestITManagerComment ? ctrl.item.PostTestITManagerComment.replace(/\n/g, '<br/>') : "";
+            }
         }
     }
 })();

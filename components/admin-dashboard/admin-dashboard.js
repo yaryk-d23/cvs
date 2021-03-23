@@ -26,6 +26,7 @@
         ctrl.sortColumn = "Application";
         ctrl.sortAscending = true;
         ctrl.filterValue = "";
+        ctrl.showArchivedItems = false;
         ctrl.columns = [{
             label: "Application",
             id: "Application",
@@ -96,6 +97,11 @@
         function getColumnsFromStorage() {
             let columns = JSON.parse(localStorage.getItem("adminDashboardColumns"));
             return columns && columns.length ? columns : [];
+        }
+
+        ctrl.onShowArchivedItems = function(value) {
+            ctrl.showArchivedItems = value;
+            ctrl.filterData();
         }
 
         ctrl.isSelected = function (colName) {
@@ -380,13 +386,13 @@
                         return x.AttachmentType === "Test Plan";
                     })[0];
                     if (TestPlanAttachment) {
-                        item.TestPlanAttachment = TestPlanAttachment.File;
+                        item.TestPlan.TestPlanAttachment = TestPlanAttachment.File;
                     }
                     let TestResultsAttachment = attachments.filter(function (x) {
                         return x.AttachmentType === "Tests Results";
                     })[0];
                     if (TestResultsAttachment) {
-                        item.TestResultsAttachment = TestResultsAttachment.File;
+                        item.TestPlan.TestResultsAttachment = TestResultsAttachment.File;
                     }
                 }
                 ctrl.parentDRApplicationItems[j] = item;
@@ -612,6 +618,12 @@
                     x.TestPlanOwner.results.map(function (i) { return i.Title; }).join("; ").toLowerCase().indexOf(ctrl.filterValue) != -1 ||
                     (x.TestPlan && x.TestPlan.DueDate && $filter('date')(new Date(x.TestPlan.DueDate), 'MM/dd/yyyy').indexOf(ctrl.filterValue) != -1);
             });
+
+            if(!ctrl.showArchivedItems) {
+                items = items.filter(function(x) {
+                    return x.ApplicationStatus !== 'Archive';
+                });
+            }
 
             ctrl.filteredItems = items.map(function (item) {
                 item.isCollapsed = true;

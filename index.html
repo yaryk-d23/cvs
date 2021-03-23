@@ -24,13 +24,13 @@
   <div ng-view></div>
  </div>
 <script>
-  // window["SITE_LOCATION_URL"] = "https://chironitcom.sharepoint.com/sites/Demo/cvs/"; 
-  // window["APP_FOLDER"] = "https://chironitcom.sharepoint.com/sites/Demo/cvs/SiteAssets/DRProcessAutomationSolution/";   
-  // window["APP_PAGE_LOCATION_URL"] = "https://chironitcom.sharepoint.com/sites/Demo/cvs/SitePages/Test.aspx"; 
+  window["SITE_LOCATION_URL"] = "https://chironitcom.sharepoint.com/sites/Demo/cvs/"; 
+  window["APP_FOLDER"] = "https://chironitcom.sharepoint.com/sites/Demo/cvs/SiteAssets/DRProcessAutomationSolution/";   
+  window["APP_PAGE_LOCATION_URL"] = "https://chironitcom.sharepoint.com/sites/Demo/cvs/SitePages/Test.aspx"; 
 
-  window["SITE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/dev/"; 
-  window["APP_FOLDER"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/dev/SiteAssets/DRProcessAutomationSolution/";   
-  window["APP_PAGE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/dev/SitePages/Failover%20Exercise%20Portal.aspx"; 
+  // window["SITE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/dev/"; 
+  // window["APP_FOLDER"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/dev/SiteAssets/DRProcessAutomationSolution/";   
+  // window["APP_PAGE_LOCATION_URL"] = "https://collab-sm.corp.cvscaremark.com/sites/DisasterRecovery/Exercises/dev/SitePages/Failover%20Exercise%20Portal.aspx"; 
 
   var modules = [
       //modules
@@ -82,6 +82,7 @@ var scripts = [
       "common/reject-modal/reject-modal.js",
       "common/comments-modal/comments-modal.js",
       "common/select-kickoff-email-modal/select-kickoff-email-modal.js",
+      "common/switch-button/switch-button.js",
     ];
   var styles = [
       "modules/bootstrap/css/bootstrap.min.css",
@@ -98,6 +99,8 @@ var scripts = [
       "components/application-ownership-dashboard/application-ownership-dashboard.style.css",
       "components/email-templates/email-templates.style.css",
       "components/admin-dashboard/admin-dashboard.style.css",
+      
+      "common/switch-button/switch-button.style.css",
     ];
 
   for (var i = 0; i < styles.length; i++) {

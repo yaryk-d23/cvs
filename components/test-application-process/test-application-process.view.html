@@ -1,18 +1,36 @@
+<div>
+  <p ng-if="ctrl.checkShowRejectMsg()" class="bg-danger" style="padding: 1em">
+    <b
+      >Form has been rejected by: {{ctrl.getRejectUser()}}<br />
+      Comments: <span ng-bind-html="ctrl.getRejectComments()"></span
+    ></b>
+  </p>
+</div>
 <div class="component-block">
   <div class="section">
-    <process-info all-applications="ctrl.allApplications" item="ctrl.item" all-test-plans="ctrl.allTestPlanItems"/>
+    <process-info
+      all-applications="ctrl.allApplications"
+      item="ctrl.item"
+      all-test-plans="ctrl.allTestPlanItems"
+    />
   </div>
   <div
     class="section"
     ng-if="ctrl.item.Stage >= 1 && ctrl.currentUserPermissions !== 'Access Denied'"
   >
-    <draft-test-plan item="ctrl.item" current-user-permissions="ctrl.currentUserPermissions"/>
+    <draft-test-plan
+      item="ctrl.item"
+      current-user-permissions="ctrl.currentUserPermissions"
+    />
   </div>
   <div
     class="section"
     ng-if="(ctrl.item.TestITManager ==='Approved' && ctrl.item.TestITDirector ==='Approved') && ctrl.currentUserPermissions !== 'Access Denied'"
   >
-    <post-test-results item="ctrl.item" current-user-permissions="ctrl.currentUserPermissions"></post-test-results>
+    <post-test-results
+      item="ctrl.item"
+      current-user-permissions="ctrl.currentUserPermissions"
+    ></post-test-results>
   </div>
   <div
     class="section text-center"

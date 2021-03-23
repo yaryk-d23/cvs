@@ -77,7 +77,7 @@
             ctrl.allDRApplicationItems = await $ApiService.getDRApplicationItems();
             ctrl.parentDRApplicationItems = ctrl.allDRApplicationItems.filter(
                 function (x) {
-                    return !x.ParentId;
+                    return !x.ParentId && x.ApplicationStatus !== 'Archive';
                 }
             );
             ctrl.parentDRApplicationItems = ctrl.parentDRApplicationItems.map(
@@ -151,7 +151,7 @@
                 });
             }
             items = items.filter(function (x) {
-                return x.Application && x.Application.Status !== "Out of Scope";
+                return x.Application && x.Application.Status !== "Out of Scope" && x.Application.ApplicationStatus !== 'Archive';
             });
             items = items.sort(function (a, b) {
                 let val = 0,

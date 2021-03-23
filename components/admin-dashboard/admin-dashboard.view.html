@@ -48,12 +48,26 @@
       ></ng-dropdown-multiselect>
     </div>
     <div class="form-group">
-      <button type="button" class="btn btn-success" ng-click="ctrl.exportToExcel()">Export to Excel<i></i></button>
+      <button
+        type="button"
+        class="btn btn-success"
+        ng-click="ctrl.exportToExcel()"
+      >
+        Export to Excel<i></i>
+      </button>
+    </div>
+    <div class="form-group">
+      <label>Show Archived?</label>
+      <switch-button
+        devaultValue="ctrl.showArchivedItems"
+        on-change="ctrl.onShowArchivedItems(value)"
+      ></switch-button>
     </div>
   </div>
   <div>
     <table class="table">
       <tr>
+        <th></th>
         <th
           ng-click="ctrl.sortData('Application')"
           class="sorted-column"
@@ -137,9 +151,14 @@
       <tbody ng-repeat="parent in ctrl.filteredItems">
         <tr
           class="parent-row"
-          ng-class="{'alone': !parent.ChildrenItems || !parent.ChildrenItems.length}"
+          ng-class="{'alone': !parent.ChildrenItems || !parent.ChildrenItems.length, 'archived-record': parent.ApplicationStatus === 'Archive'}"
           ng-click="parent.isCollapsed = !parent.isCollapsed"
         >
+          <td>
+            <a ng-if="parent.TestPlan && parent.TestPlan.Id" href="#/process-form/{{parent.TestPlan.Id}}"
+              ><i class="glyphicon glyphicon-edit editIcon"></i
+            ></a>
+          </td>
           <td ng-if="ctrl.isSelected('Application')">{{parent.Title}}</td>
           <td ng-if="ctrl.isSelected('TestPlanOwner')">
             <div ng-repeat="i in parent.TestPlanOwner.results">{{i.Title}}</div>
@@ -191,22 +210,27 @@
             ></i>
           </td>
         </tr>
-        <tr>
+        <tr
+          ng-class="{'archived-record': parent.ApplicationStatus === 'Archive'}"
+        >
           <td
             ng-if="parent.ChildrenItems && parent.ChildrenItems.length"
-            colspan="10"
+            colspan="11"
             class="children-row-cell"
           >
             <div uib-collapse="parent.isCollapsed">
               <table class="children-table">
                 <tr ng-repeat="item in parent.ChildrenItems">
+                  <td></td>
                   <td ng-if="ctrl.isSelected('Application')">{{item.Title}}</td>
-                  <td ng-if="ctrl.isSelected('TestPlanOwner')"> 
+                  <td ng-if="ctrl.isSelected('TestPlanOwner')">
                     <div ng-repeat="i in item.TestPlanOwner.results">
                       {{i.Title}}
                     </div>
                   </td>
-                  <td ng-if="ctrl.isSelected('DueDate')">{{parent.TestPlan.DueDate | date: 'MM/dd/yyyy'}}</td>
+                  <td ng-if="ctrl.isSelected('DueDate')">
+                    {{parent.TestPlan.DueDate | date: 'MM/dd/yyyy'}}
+                  </td>
                   <td ng-if="ctrl.isSelected('DraftPlanReceived')">
                     <div
                       class="text-center"

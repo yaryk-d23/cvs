@@ -82,7 +82,7 @@
                 setTimeout(function () {
                     $scope.$apply(function () {
                         ctrl.parentDRApplicationItems = res.items.filter(function(x) {
-                            return !x.ParentId;
+                            return !x.ParentId && x.ApplicationStatus !== 'Archive';
                         });
                         ctrl.parentDRApplicationItems = ctrl.parentDRApplicationItems.map(function(i){
                             i.ChildrenItems = res.drApplicationItems.filter(function(x) {
