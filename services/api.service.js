@@ -2,22 +2,31 @@
     angular.module("App").factory("$ApiService", ['$http', '$q', '$injector', '$rootScope', '$compile', '$timeout', function ($http, $q, $injector, $rootScope, $compile, $timeout) {
         return {
             getDRApplicationItems: getDRApplicationItems,
+            getArchiveDRApplicationItems: getArchiveDRApplicationItems,
             getDRApplicationItemById: getDRApplicationItemById,
             getMyApplicationItems: getMyApplicationItems,
             getApplicationTestPlanItems: getApplicationTestPlanItems,
             getApplicationTestPlanItemById: getApplicationTestPlanItemById,
             getCurrentUser: getCurrentUser,
             createApplication: createApplication,
+            createArchiveApplication: createArchiveApplication,
             searchUserByName: searchUserByName,
             updateApplication: updateApplication,
+            updateArchiveApplication: updateArchiveApplication,
             createApplicationTestPlan: createApplicationTestPlan,
+            createArchiveApplicationTestPlan: createArchiveApplicationTestPlan,
             updateApplicationTestPlan: updateApplicationTestPlan,
+            updateArchiveApplicationTestPlan: updateArchiveApplicationTestPlan,
             getExerciseTimelineItems: getExerciseTimelineItems,
             createExerciseTimeline: createExerciseTimeline,
             updateExerciseTimeline: updateExerciseTimeline,
             uploadFile: uploadFile,
             getFormDigestValue: getFormDigestValue,
             getFormAttachments: getFormAttachments,
+            getAllFormAttachments: getAllFormAttachments,
+            getAllArchiveFormAttachments: getAllArchiveFormAttachments,
+            copyFile: copyFile,
+            updateArchiveFileProps: updateArchiveFileProps,
             sendEmail: sendEmail,
             deleteEmailItems: deleteEmailItems,
             deleteFile: deleteFile,
@@ -29,17 +38,18 @@
             createEmailTemplate: createEmailTemplate,
             deleteEmailTemplate: deleteEmailTemplate,
             getListColumn: getListColumn,
+            moveItemToTrash: moveItemToTrash,
         };
 
         function getListColumn(listTitle, columnName) {
             return $pnp.sp.web.lists
-              .getByTitle(listTitle)
-              .fields.getByInternalNameOrTitle(columnName)
-              .get()
-              .then((data) => {
-                return data;
-              }, onError);
-          }
+                .getByTitle(listTitle)
+                .fields.getByInternalNameOrTitle(columnName)
+                .get()
+                .then((data) => {
+                    return data;
+                }, onError);
+        }
 
         function deleteEmailTemplate(data) {
             return $pnp.sp.web.lists
@@ -70,7 +80,7 @@
             return $pnp.sp.web.lists
                 .getByTitle("EmailTemplates")
                 .items
-                .get().then(function(data) {
+                .get().then(function (data) {
                     return data;
                 });
         }
@@ -79,7 +89,7 @@
                 .getByTitle("EmailTemplates")
                 .items
                 .filter("Title eq '" + title + "'")
-                .get().then(function(data) {
+                .get().then(function (data) {
                     return data[0];
                 });
         }
@@ -123,15 +133,49 @@
                 .get()
                 .then((response) => {
                     let req = {};
-                    for(let i=0;i<response.length;i++){
-                        if(response[i].TestDate) {
+                    for (let i = 0; i < response.length; i++) {
+                        if (response[i].TestDate) {
                             req[response[i].Id] = utcToLocalTime(response[i].TestDate);
                         }
                     }
-                    return $q.all(req).then(function(dates){
-                        Object.keys(dates).forEach(function(id) {
-                            for(let i=0;i<response.length;i++){
-                                if(response[i].Id == id) {
+                    return $q.all(req).then(function (dates) {
+                        Object.keys(dates).forEach(function (id) {
+                            for (let i = 0; i < response.length; i++) {
+                                if (response[i].Id == id) {
+                                    response[i].TestDate = dates[id];
+                                }
+                            }
+                        });
+                        return response;
+                    });
+                }, onError);
+        }
+
+        function getArchiveDRApplicationItems() {
+            return $pnp.sp.web.lists
+                .getByTitle("Archive DR Application")
+                .items.select(
+                    "*," +
+                    "TestPlanOwner/Id,TestPlanOwner/Title," +
+                    "ApprovingManager/Id,ApprovingManager/Title," +
+                    "ApprovingDirector/Id,ApprovingDirector/Title",
+                    "Parent/Title"
+                )
+                .expand("TestPlanOwner,ApprovingManager,ApprovingDirector,Parent")
+                .filter("Status ne 'Out of Scope'")
+                .top(50000)
+                .get()
+                .then((response) => {
+                    let req = {};
+                    for (let i = 0; i < response.length; i++) {
+                        if (response[i].TestDate) {
+                            req[response[i].Id] = utcToLocalTime(response[i].TestDate);
+                        }
+                    }
+                    return $q.all(req).then(function (dates) {
+                        Object.keys(dates).forEach(function (id) {
+                            for (let i = 0; i < response.length; i++) {
+                                if (response[i].Id == id) {
                                     response[i].TestDate = dates[id];
                                 }
                             }
@@ -154,8 +198,8 @@
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
                 .get()
                 .then((response) => {
-                    if(response.TestDate) {
-                        return utcToLocalTime(response.TestDate).then(function(date){
+                    if (response.TestDate) {
+                        return utcToLocalTime(response.TestDate).then(function (date) {
                             response.TestDate = date;
                             return response;
                         });
@@ -174,24 +218,24 @@
                     "ApprovingDirector/Id,ApprovingDirector/Title"
                 )
                 .expand("TestPlanOwner,ApprovingManager,ApprovingDirector")
-                .filter("Status ne 'Overdue' and Status ne 'Out of Scope' and ("+
-                "TestPlanOwnerId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+" or "+
-                "ApprovingManagerId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+" or "+
-                "ApprovingDirectorId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId)+
-                ")")
+                .filter("Status ne 'Overdue' and Status ne 'Out of Scope' and (" +
+                    "TestPlanOwnerId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId) + " or " +
+                    "ApprovingManagerId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId) + " or " +
+                    "ApprovingDirectorId eq " + (window.currentSPUser ? window.currentSPUser.Id : _spPageContextInfo.userId) +
+                    ")")
                 .top(50000)
                 .get()
                 .then((response) => {
                     let req = {};
-                    for(let i=0;i<response.length;i++){
-                        if(response[i].TestDate) {
+                    for (let i = 0; i < response.length; i++) {
+                        if (response[i].TestDate) {
                             req[response[i].Id] = utcToLocalTime(response[i].TestDate);
                         }
                     }
-                    return $q.all(req).then(function(dates){
-                        Object.keys(dates).forEach(function(id) {
-                            for(let i=0;i<response.length;i++){
-                                if(response[i].Id == id) {
+                    return $q.all(req).then(function (dates) {
+                        Object.keys(dates).forEach(function (id) {
+                            for (let i = 0; i < response.length; i++) {
+                                if (response[i].Id == id) {
                                     response[i].TestDate = dates[id];
                                 }
                             }
@@ -219,18 +263,18 @@
                 .get()
                 .then((response) => {
                     let req = {};
-                    for(let i=0;i<response.length;i++){
-                        if(response[i].DueDate) {
+                    for (let i = 0; i < response.length; i++) {
+                        if (response[i].DueDate) {
                             req[response[i].Id] = $q.all({
-                                Created: utcToLocalTime(response[i].Created), 
+                                Created: utcToLocalTime(response[i].Created),
                                 DueDate: utcToLocalTime(response[i].DueDate)
                             });
                         }
                     }
-                    return $q.all(req).then(function(dates){
-                        Object.keys(dates).forEach(function(id) {
-                            for(let i=0;i<response.length;i++){
-                                if(response[i].Id == id) {
+                    return $q.all(req).then(function (dates) {
+                        Object.keys(dates).forEach(function (id) {
+                            for (let i = 0; i < response.length; i++) {
+                                if (response[i].Id == id) {
                                     response[i].Created = dates[id].Created;
                                     response[i].DueDate = dates[id].DueDate;
                                 }
@@ -238,7 +282,7 @@
                         });
                         return response;
                     });
-                    
+
                 }, onError);
         }
 
@@ -260,9 +304,9 @@
                 .get()
                 .then((response) => {
                     return $q.all({
-                        Created: utcToLocalTime(response.Created), 
+                        Created: utcToLocalTime(response.Created),
                         DueDate: utcToLocalTime(response.DueDate)
-                    }).then(function(res){
+                    }).then(function (res) {
                         response.Created = res.Created;
                         response.DueDate = res.DueDate;
                         return response;
@@ -277,6 +321,15 @@
                     return response;
                 }, onError);
         }
+
+        function createArchiveApplicationTestPlan(data) {
+            return $pnp.sp.web.lists
+                .getByTitle("Archive Application Test Plan")
+                .items.add(data).then((response) => {
+                    return response.data;
+                }, onError);
+        }
+
         function updateApplicationTestPlan(data) {
             return $pnp.sp.web.lists
                 .getByTitle("Application Test Plan")
@@ -289,15 +342,42 @@
                 }, onError);
         }
 
+        function updateArchiveApplicationTestPlan(data) {
+            return $pnp.sp.web.lists
+                .getByTitle("Archive Application Test Plan")
+                .items.getById(data.Id)
+                .update(data).then(function (item) {
+                    return $pnp.sp.web.lists
+                        .getByTitle("Archive Application Test Plan")
+                        .items.getById(data.Id)
+                        .get();
+                }, onError);
+        }
+
         function createApplication(data) {
             return $pnp.sp.web.lists.getByTitle("DR Application").items.add(data).then((response) => {
                 return response;
             }, onError);
         }
 
+        function createArchiveApplication(data) {
+            return $pnp.sp.web.lists.getByTitle("Archive DR Application").items.add(data).then((response) => {
+                return response.data;
+            }, onError);
+        }
+
         function updateApplication(data) {
             return $pnp.sp.web.lists
                 .getByTitle("DR Application")
+                .items.getById(data.Id)
+                .update(data).then((response) => {
+                    return response;
+                }, onError);
+        }
+
+        function updateArchiveApplication(data) {
+            return $pnp.sp.web.lists
+                .getByTitle("Archive DR Application")
                 .items.getById(data.Id)
                 .update(data).then((response) => {
                     return response;
@@ -467,6 +547,43 @@
                 }, onError);
         }
 
+        function getAllFormAttachments() {
+            return $pnp.sp.web.lists
+                .getByTitle("ApplicationAttachments")
+                .items.select("*,ApplicationTestPlan/Title").expand("File, ApplicationTestPlan")
+                .get().then((response) => {
+                    return response;
+                }, onError);
+        }
+
+        function getAllArchiveFormAttachments(names) {
+            return $pnp.sp.web.lists
+                .getByTitle("Archive Application Attachments")
+                .items.select("*,ApplicationTestPlan/Title").expand("File, ApplicationTestPlan")
+                .filter(names.join(' or '))
+                .get().then((response) => {
+                    return response;
+                }, onError);
+        }
+
+        function copyFile(oldUrl, newUrl) {
+            return $pnp.sp.web
+                .getFileByServerRelativeUrl(oldUrl)
+                .copyTo(newUrl, true).then((_) => {
+                    return _;
+                }, onError);
+        }
+
+        function updateArchiveFileProps(data) {
+            return $pnp.sp.web.lists
+                .getByTitle("Archive Application Attachments")
+                .items.getById(data.Id)
+                .update(data)
+                .then(function (res) {
+                    return res;
+                }, onError);
+        }
+
         function sendEmail(data) {
             return Promise.resolve();
             return $pnp.sp.web.lists.getByTitle("EmailLog").items.add(data).then((response) => {
@@ -490,6 +607,10 @@
                     return response;
                 }, onError);
             }, onError);
+        }
+
+        function moveItemToTrash(listName, id) {
+            return $pnp.sp.web.lists.getByTitle(listName).items.getById(id).recycle().then(function () { }, onError);
         }
 
         function capitalizeFirstLetter(string) {

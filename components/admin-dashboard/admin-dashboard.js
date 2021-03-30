@@ -419,6 +419,10 @@
         };
         getData();
 
+        ctrl.onArchiveData = function(){
+            getData();
+        };
+
         ctrl.getOwnershipAcceptedIndicator = function (item) {
             if (item.Status === "In Progress") {
                 return '<span class="statusIndicator inProgressStatus" ></span>';

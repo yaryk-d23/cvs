@@ -57,6 +57,9 @@
       </button>
     </div>
     <div class="form-group">
+      <archive-application on-change="ctrl.onArchiveData()"></archive-application>
+    </div>
+    <div class="form-group">
       <label>Show Archived?</label>
       <switch-button
         devaultValue="ctrl.showArchivedItems"
@@ -155,7 +158,7 @@
           ng-click="parent.isCollapsed = !parent.isCollapsed"
         >
           <td>
-            <a ng-if="parent.TestPlan && parent.TestPlan.Id" href="#/process-form/{{parent.TestPlan.Id}}"
+            <a ng-if="parent.TestPlan && parent.TestPlan.Id && parent.ApplicationStatus !== 'Archive'" href="#/process-form/{{parent.TestPlan.Id}}"
               ><i class="glyphicon glyphicon-edit editIcon"></i
             ></a>
           </td>
