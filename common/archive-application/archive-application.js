@@ -1,17 +1,19 @@
 (function () {
     angular.module('App')
         .component('archiveApplication', {
-            template: '<button type="button" class="btn btn-success" ng-click="ctrl.onArchive()">Archiving Applications</button>',
+            template: '<button type="button" class="btn btn-success" ng-click="ctrl.onArchive()">Archive applications</button>',
             bindings: {
                 onChange: '&',
             },
             controllerAs: 'ctrl',
-            controller: ['$ApiService', '$q', '$Preload', '$scope', ctrl]
+            controller: ['$ApiService', '$q', '$Preload', '$scope', '$http', ctrl]
         });
 
-    function ctrl($ApiService, $q, $Preload, $scope) {
+    function ctrl($ApiService, $q, $Preload, $scope, $http) {
         var ctrl = this;
+        
         ctrl.onArchive = async () => {
+            if(!confirm("Are you sure?")) return;
             $Preload.show();
             let allData = await $q.all({
                 apps: $ApiService.getDRApplicationItems(),
@@ -99,24 +101,31 @@
             attachments.forEach(item => {
                 let oldUrl = item.File.ServerRelativeUrl;
                 let newUrl = item.File.ServerRelativeUrl.replace('ApplicationAttachments','ArchiveApplicationAttachments');
-                req[item.Id] = $ApiService.copyFile(oldUrl, newUrl);
+                // req[item.Id] = $ApiService.copyFile(oldUrl, newUrl);
+                req[item.Id] = $ApiService.copyFile("Archive Application Attachments", {
+                    name: item.File.Name,
+                    fileBinary: item.fileBinary,
+                }, {
+                    ApplicationTestPlanId: item.ApplicationTestPlan && item.ApplicationTestPlan.Title ? testPlansRes[item.ApplicationTestPlanId].Id : null,
+                    AttachmentType: item.AttachmentType,
+                })
             });
             await $q.all(req);
-            req = {};
-            let names = attachments.map(function(x){ return "Title eq '" + x.File.Name + "'";});
-            let archiveFiles = await $ApiService.getAllArchiveFormAttachments(names);
-            archiveFiles.forEach(function(item){
-                let oldFile = attachments.filter(function(x){
-                    return x.File.Name === item.File.Name;
-                })[0];
-                if(oldFile.ApplicationTestPlan && oldFile.ApplicationTestPlan.Title) {
-                    req[item.Id] = $ApiService.updateArchiveFileProps({
-                        Id: item.Id,
-                        ApplicationTestPlanId: testPlansRes[oldFile.ApplicationTestPlanId].Id,
-                    });
-                }
-            });
-            await $q.all(req);
+            // req = {};
+            // let names = attachments.map(function(x){ return "Title eq '" + x.File.Name + "'";});
+            // let archiveFiles = await $ApiService.getAllArchiveFormAttachments(names);
+            // archiveFiles.forEach(function(item){
+            //     let oldFile = attachments.filter(function(x){
+            //         return x.File.Name === item.File.Name;
+            //     })[0];
+            //     if(oldFile.ApplicationTestPlan && oldFile.ApplicationTestPlan.Title) {
+            //         req[item.Id] = $ApiService.updateArchiveFileProps({
+            //             Id: item.Id,
+            //             ApplicationTestPlanId: testPlansRes[oldFile.ApplicationTestPlanId].Id,
+            //         });
+            //     }
+            // });
+            // await $q.all(req);
 
             // move all data to trash
             req = [];

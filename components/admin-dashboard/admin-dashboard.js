@@ -646,7 +646,7 @@
                 return (
                     new Date(x.TestDate).getTime() >= ctrl.filterStartDate.getTime() &&
                     new Date(x.TestDate).getTime() <= ctrl.filterEndDate.getTime()
-                );
+                ) || !x.TestDate;
             });
         };
 

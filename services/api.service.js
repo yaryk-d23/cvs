@@ -552,7 +552,19 @@
                 .getByTitle("ApplicationAttachments")
                 .items.select("*,ApplicationTestPlan/Title").expand("File, ApplicationTestPlan")
                 .get().then((response) => {
-                    return response;
+                    let req = {};
+                    response.forEach(file => {
+                        req[file.Title] = $http({
+                            method: "GET",
+                            url: window["SITE_LOCATION_URL"] + "_api/web/GetFileByServerRelativeUrl('"+file.File.ServerRelativeUrl+"')/$value",
+                        })
+                    })
+                    return $q.all(req).then(res => {
+                        return response.map((file, key) => {
+                            file.fileBinary = res[file.Title].data;
+                            return file;
+                        });
+                    });
                 }, onError);
         }
 
@@ -566,12 +578,49 @@
                 }, onError);
         }
 
-        function copyFile(oldUrl, newUrl) {
-            return $pnp.sp.web
-                .getFileByServerRelativeUrl(oldUrl)
-                .copyTo(newUrl, true).then((_) => {
-                    return _;
-                }, onError);
+        function copyFile(libraryTitle, data, spdata) {
+            return new Promise(function (resolve, reject) {
+                getFormDigestValue().then(function (formDigestValue) {
+                    var config = {
+                        headers: {
+                            Accept: "application/json; odata=verbose",
+                            "X-RequestDigest": formDigestValue,
+                            "Content-Type": undefined,
+                        },
+                        responseType: "arraybuffer",
+                    };
+                    var url =
+                        window["SITE_LOCATION_URL"] +
+                        "/_api/web/lists/GetByTitle('" +
+                        libraryTitle +
+                        "')/RootFolder/Files/add(overwrite=true, url='" +
+                        data.name +
+                        "')?$select=*,ListItemAllFields/Id&$expand=ListItemAllFields";
+                    $http({
+                        method: "POST",
+                        url: url,
+                        processData: false,
+                        data: data.fileBinary,
+                        headers: config.headers,
+                    }).then(function (res) {
+
+                        var id = res.data.d.ListItemAllFields.Id;
+                        $pnp.sp.web.lists
+                            .getByTitle(libraryTitle)
+                            .items.getById(id)
+                            .update(spdata)
+                            .then(function () {
+                                resolve();
+                            }, onError);
+                    });
+                });
+            });
+            
+            // return $pnp.sp.web
+            // .getFileByServerRelativeUrl(oldUrl)
+            // .copyTo(newUrl, true).then((_) => {
+            //     return _;
+            // }, onError);
         }
 
         function updateArchiveFileProps(data) {
