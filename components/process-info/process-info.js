@@ -136,7 +136,7 @@
                         Promise.all(req).then(function () {
                             setTimeout(function () {
                                 $scope.$apply(function () {
-                                    $location.path("/dashboard");
+                                    $location.path("/owners-dashboard");
                                     $Preload.hide();
                                 });
                             }, 0);

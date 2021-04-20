@@ -14,7 +14,7 @@
         var ctrl = this;
         ctrl.errors = {};
         ctrl.curentApproval = null;
-        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/dashboard";
+        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
         ctrl.approvalStatusItems = [{
             Role: "EDR Review",
             FieldName: "PostTestEDRReview",
@@ -49,7 +49,7 @@
         }, 1000);
 
         ctrl.close = function () {
-            $location.path("/dashboard");
+            $location.path("/owners-dashboard");
         }
 
         ctrl.submit = function () {
@@ -80,7 +80,7 @@
                         // }).then(function () {
                         setTimeout(function () {
                             $scope.$apply(function () {
-                                $location.path("/dashboard");
+                                $location.path("/owners-dashboard");
                                 $Preload.hide();
                             });
                         }, 0);
@@ -134,7 +134,7 @@
                             }).then(function () {
                                 setTimeout(function () {
                                     $scope.$apply(function () {
-                                        $location.path("/dashboard");
+                                        $location.path("/owners-dashboard");
                                         $Preload.hide();
                                     });
                                 }, 0);
@@ -157,7 +157,7 @@
             $ApiService.updateApplicationTestPlan(item).then(function () {
                 setTimeout(function () {
                     $scope.$apply(function () {
-                        $location.path("/dashboard");
+                        $location.path("/owners-dashboard");
                         $Preload.hide();
                     });
                 }, 0);
@@ -247,7 +247,7 @@
                             Promise.all(req).then(function () {
                                 setTimeout(function () {
                                     $scope.$apply(function () {
-                                        $location.path("/dashboard");
+                                        $location.path("/owners-dashboard");
                                         $Preload.hide();
                                     });
                                 }, 0);
@@ -282,7 +282,7 @@
                                 Promise.all(req).then(function () {
                                     setTimeout(function () {
                                         $scope.$apply(function () {
-                                            $location.path("/dashboard");
+                                            $location.path("/owners-dashboard");
                                             $Preload.hide();
                                         });
                                     }, 0);
@@ -294,7 +294,7 @@
                 else {
                     setTimeout(function () {
                         $scope.$apply(function () {
-                            $location.path("/dashboard");
+                            $location.path("/owners-dashboard");
                             $Preload.hide();
                         });
                     }, 0);

@@ -27,14 +27,14 @@ var CONSTANT = {
         SortOrder: 1,
         Owners: "Application Teams",
         Description: "Application Ownership / POC changes must be acknowledged and updated via the " +
-            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>.",
+            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard'>Failover Exercise Portal</a>.",
 
     },{
         Title: "Identify and submit " + new Date().getFullYear() + " Failover Exercise date",
         SortOrder: 2,
         Owners: "Application Teams",
         Description: "Test dates must be identified and submitted via the " +
-            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal</a>.",
+            "<a href='" + window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard'>Failover Exercise Portal</a>.",
 
     },{
         Title: "Application Failover Test Plan and Timeline - DRAFT",

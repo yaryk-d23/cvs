@@ -15,7 +15,7 @@
         ctrl.errors = {};
         ctrl.exerciseTimelineItems = [];
         ctrl.curentApproval = null;
-        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/dashboard";
+        ctrl.dashboardLink = window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard";
         ctrl.approvalStatusItems = [{
             Role: "EDR Review",
             FieldName: "TestEDRReview",
@@ -58,7 +58,7 @@
         }
 
         ctrl.close = function () {
-            $location.path("/dashboard");
+            $location.path("/owners-dashboard");
         }
 
         ctrl.submit = function () {
@@ -88,7 +88,7 @@
                         // }).then(function () {
                         setTimeout(function () {
                             $scope.$apply(function () {
-                                $location.path("/dashboard");
+                                $location.path("/owners-dashboard");
                                 $Preload.hide();
                             });
                         }, 0);
@@ -138,7 +138,7 @@
                                 // Body: "Hello, <p>The Test Plan you submitted for the " + ctrl.item.Application.Title + " Failover Exercise has been REJECTED for the following reasons:</p>" +
                                 //     "<p>" + comment.replace(/\n/g, '<br>') + "</p>" +
                                 //     "<p>Please make these updates to the Application Failover Test Plan and re-upload into the <a href='"
-                                //     + window["APP_PAGE_LOCATION_URL"] + "#/dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
+                                //     + window["APP_PAGE_LOCATION_URL"] + "#/owners-dashboard'>Failover Exercise Portal<i style='color:red'>*</i></a> as soon as possible.</p>" +
                                 //     "<p>Please feel free to contact the EDR Team at <a href='mailto:Disasterrecoverytestteam@cvshealth.com'>Disasterrecoverytestteam@cvshealth.com</a> if you have any questions.</p>" +
                                 //     "<p><span style=' font-size: 12px;color: red;'>* Supported Browsers:  Google Chrome and Edge</span></p>" +
                                 //     "Thank you,<br>EDR Team",
@@ -146,7 +146,7 @@
                             }).then(function () {
                                 setTimeout(function () {
                                     $scope.$apply(function () {
-                                        $location.path("/dashboard");
+                                        $location.path("/owners-dashboard");
                                         $Preload.hide();
                                     });
                                 }, 0);
@@ -169,7 +169,7 @@
             $ApiService.updateApplicationTestPlan(item).then(function () {
                 setTimeout(function () {
                     $scope.$apply(function () {
-                        $location.path("/dashboard");
+                        $location.path("/owners-dashboard");
                         $Preload.hide();
                     });
                 }, 0);
@@ -259,7 +259,7 @@
                             Promise.all(req).then(function () {
                                 setTimeout(function () {
                                     $scope.$apply(function () {
-                                        $location.path("/dashboard");
+                                        $location.path("/owners-dashboard");
                                         $Preload.hide();
                                     });
                                 }, 0);
@@ -352,7 +352,7 @@
                                 Promise.all(req).then(function () {
                                     setTimeout(function () {
                                         $scope.$apply(function () {
-                                            $location.path("/dashboard");
+                                            $location.path("/owners-dashboard");
                                             $Preload.hide();
                                         });
                                     }, 0);
@@ -364,7 +364,7 @@
                 else {
                     setTimeout(function () {
                         $scope.$apply(function () {
-                            $location.path("/dashboard");
+                            $location.path("/owners-dashboard");
                             $Preload.hide();
                         });
                     }, 0);
