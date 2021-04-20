@@ -107,7 +107,7 @@ app.config(function ($routeProvider, $locationProvider, $provide, $httpProvider)
         });
         if (!flag) {
             deferred.reject();
-            $location.url('/dashboard');
+            $location.url('/owners-dashboard');
         }
 
         return deferred.promise;
@@ -140,7 +140,7 @@ app.config(function ($routeProvider, $locationProvider, $provide, $httpProvider)
                 loggedIn: isAdmins
             }
         })
-        .otherwise('/dashboard');
+        .otherwise('/owners-dashboard');
 });
 app.directive('fixFocusOnTouch', function () {
     return {
