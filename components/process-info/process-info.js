@@ -22,7 +22,7 @@
         };
 
         ctrl.close = function () {
-            $location.path("/dashboard");
+            $location.path("/owners-dashboard");
         }
 
         ctrl.getChidrenItems = function (item) {

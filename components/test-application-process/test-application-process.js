@@ -33,7 +33,8 @@
                                             (x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
                                                 x.ApprovingManagerId === window.currentSPUser.Id ||
                                                 x.ApprovingDirectorId === window.currentSPUser.Id)
-                                            && x.TestDate;
+                                            && x.TestDate
+                                            && ctrl.allTestPlanItems.filter(function(testPlan){ return testPlan.ApplicationId === x.Id;}).length === 0;
                                     });
                                     ctrl.item = item;
                                     ctrl.item.DueDate = new Date(ctrl.item.DueDate);
@@ -80,7 +81,8 @@
                                     (x.TestPlanOwnerId.results.indexOf(window.currentSPUser.Id) !== -1 ||
                                         x.ApprovingManagerId === window.currentSPUser.Id ||
                                         x.ApprovingDirectorId === window.currentSPUser.Id)
-                                    && x.TestDate;
+                                    && x.TestDate
+                                    && ctrl.allTestPlanItems.filter(function(testPlan){ return testPlan.ApplicationId === x.Id;}).length === 0;
                             });
                             $Preload.hide();
                         });

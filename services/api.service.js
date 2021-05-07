@@ -634,7 +634,7 @@
         }
 
         function sendEmail(data) {
-            // return Promise.resolve();
+            return Promise.resolve();
             return $pnp.sp.web.lists.getByTitle("EmailLog").items.add(data).then((response) => {
                 return response;
             }, onError);
