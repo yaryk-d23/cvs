@@ -35,7 +35,7 @@
                 if (applicationTestPlanIds.indexOf(item.Id) === -1) {
                     applicationTestPlanIds.push(item.Id);
                 }
-                if (applicationIds.indexOf(item.ApplicationId) === -1) {
+                if (item.ApplicationId && applicationIds.indexOf(item.ApplicationId) === -1) {
                     applicationIds.push(item.ApplicationId);
                 }
             });
