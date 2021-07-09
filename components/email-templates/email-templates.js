@@ -16,13 +16,24 @@
         ctrl.options = {
             height: 400,
             menubar: "edit format table",
-            plugins: "link table textcolor",
-            toolbar:
-                "undo redo | bold italic | fontselect fontsizeselect formatselect | alignleft aligncenter alignright | forecolor backcolor",
-            color_picker_callback: function (callback, value) {
-                console.log(value);
-                callback('#FF00FF');
-            }
+            plugins: "link table textcolor code",
+            toolbar: "undo redo | bold italic | fontselect fontsizeselect formatselect | alignleft aligncenter alignright | forecolor backcolor | code",
+                // plugins: [
+                //     "advlist autolink autosave link lists charmap preview hr anchor pagebreak",
+                //     "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                //     "table contextmenu directionality emoticons template textcolor paste fullpage textcolor colorpicker textpattern",
+                //   ],
+  
+                //   toolbar1:
+                //     "formatselect | bold italic underline strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat",
+                //   toolbar2:
+                //     "table | hr removeformat | subscript superscript | charmap | fullscreen | code",
+            toolbar_items_size: "small",
+            extended_valid_elements: 'p[ng-bind-html]',
+            // color_picker_callback: function (callback, value) {
+            //     console.log(value);
+            //     callback('#FF00FF');
+            // }
         };
 
         function loadData() {

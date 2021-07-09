@@ -10,8 +10,6 @@
           type="file"
           name="attachment"
           id="attachment-file"
-          ng-change="ctrl.onFileChange()"
-          ng-model="ctrl.item.TestPlanAttachment"
         />
         <div class="fileNameContainer">
           <i
@@ -19,39 +17,36 @@
             style="font-size: 22px; margin-left: 2px"
           ></i>
           <div class="fileName">
-            {{ctrl.item.TestPlanAttachment ? (ctrl.item.TestPlanAttachment.name
-            || ctrl.item.TestPlanAttachment.Name) : ''}}
+            {{ctrl.item.TestPlanAttachment && ctrl.item.TestPlanAttachment.length ? (ctrl.item.TestPlanAttachment[ctrl.item.TestPlanAttachment.length-1].name
+            || ctrl.item.TestPlanAttachment[ctrl.item.TestPlanAttachment.length-1].Name) : ''}}
           </div>
         </div>
         <button
           type="button"
           class="uploadBtn"
           ng-click="ctrl.onClickUploadButton()"
-          ng-disabled="ctrl.item.TestPlanAttachment.Name"
+          ng-disabled="ctrl.item.TestPlanAttachment && ctrl.item.TestPlanAttachment.length && ctrl.item.TestPlanAttachment[0].Name"
         >
           Upload
         </button>
       </div>
-      <div class="filesContainer">
+      <div ng-repeat="file in ctrl.item.TestPlanAttachment track by $index" class="filesContainer">
         <div
           class="file"
-          ng-if="ctrl.item.TestPlanAttachment && (ctrl.item.TestPlanAttachment.name || ctrl.item.TestPlanAttachment.Name)"
         >
           <a
             target="_blank"
-            ng-href="{{ctrl.item.TestPlanAttachment.Name ? (ctrl.item.TestPlanAttachment.LinkingUrl || ctrl.item.TestPlanAttachment.ServerRelativeUrl) : ''}}"
-            >{{(ctrl.item.TestPlanAttachment.name ||
-            ctrl.item.TestPlanAttachment.Name)}}</a
+            ng-href="{{file.Name ? (file.LinkingUrl || file.ServerRelativeUrl) : ''}}"
+            >{{(file.name || file.Name)}}</a
           >
           <div>
             <span
-              >{{this.formatBytes(ctrl.item.TestPlanAttachment.size ||
-              ctrl.item.TestPlanAttachment.Length)}}</span
+              >{{this.formatBytes(file.size || file.Length)}}</span
             >
             <i
-              ng-if="(ctrl.item.TestPlanAttachment.name || ctrl.item.TestPlanAttachment.Name) && ctrl.item.Stage === 1"
+              ng-if="(file.name || file.Name) && ctrl.item.Stage === 1"
               class="glyphicon glyphicon-remove"
-              ng-click="ctrl.resetFileInput()"
+              ng-click="ctrl.resetFileInput(file)"
               style="font-size: 10px; cursor: pointer; margin-left: 10px"
             ></i>
           </div>

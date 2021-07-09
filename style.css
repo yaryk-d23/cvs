@@ -177,6 +177,11 @@
     width: 1200px;
   }
 }
+@media (min-width: 1600px) {
+  .app-container.container {
+    width: 1400px;
+  }
+}
 /* pagination */
 .pagination li a {
   color: #444;

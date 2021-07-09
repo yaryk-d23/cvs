@@ -34,25 +34,29 @@
                                                 x.ApprovingManagerId === window.currentSPUser.Id ||
                                                 x.ApprovingDirectorId === window.currentSPUser.Id)
                                             && x.TestDate
-                                            && ctrl.allTestPlanItems.filter(function(testPlan){ return testPlan.ApplicationId === x.Id;}).length === 0;
+                                            && ctrl.allTestPlanItems.filter(function (testPlan) { return testPlan.ApplicationId === x.Id; }).length === 0;
                                     });
                                     ctrl.item = item;
                                     ctrl.item.DueDate = new Date(ctrl.item.DueDate);
                                     ctrl.item.Application = res.applications.filter(function (x) {
                                         return x.Id === item.ApplicationId;
                                     })[0];
-                                    let TestPlanAttachment = ctrl.item.TestPlanAttachment = attachments.filter(function (x) {
+                                    // let TestPlanAttachment = ctrl.item.TestPlanAttachment = attachments.filter(function (x) {
+                                    //     return x.AttachmentType === "Test Plan";
+                                    // });
+                                    // if (TestPlanAttachment && TestPlanAttachment.length) {
+                                    ctrl.item.TestPlanAttachment = attachments.filter(function (x) {
                                         return x.AttachmentType === "Test Plan";
-                                    })[0];
-                                    if (TestPlanAttachment) {
-                                        ctrl.item.TestPlanAttachment = TestPlanAttachment.File;
-                                    }
-                                    let TestResultsAttachment = ctrl.item.TestResultsAttachment = attachments.filter(function (x) {
+                                    }).map(function (file) { return file.File; });
+                                    // }
+                                    // let TestResultsAttachment = ctrl.item.TestResultsAttachment = attachments.filter(function (x) {
+                                    //     return x.AttachmentType === "Tests Results";
+                                    // })[0];
+                                    // if (TestResultsAttachment && TestResultsAttachment.length) {
+                                    ctrl.item.TestResultsAttachment = attachments.filter(function (x) {
                                         return x.AttachmentType === "Tests Results";
-                                    })[0];
-                                    if (TestResultsAttachment) {
-                                        ctrl.item.TestResultsAttachment = TestResultsAttachment.File;
-                                    }
+                                    }).map(function (file) { return file.File; });
+                                    // }
 
                                     let ExerciseAttachment = ctrl.item.ExerciseAttachment = attachments.filter(function (x) {
                                         return x.AttachmentType === "Exercise";
@@ -82,7 +86,7 @@
                                         x.ApprovingManagerId === window.currentSPUser.Id ||
                                         x.ApprovingDirectorId === window.currentSPUser.Id)
                                     && x.TestDate
-                                    && ctrl.allTestPlanItems.filter(function(testPlan){ return testPlan.ApplicationId === x.Id;}).length === 0;
+                                    && ctrl.allTestPlanItems.filter(function (testPlan) { return testPlan.ApplicationId === x.Id; }).length === 0;
                             });
                             $Preload.hide();
                         });
@@ -149,52 +153,52 @@
         }
 
         ctrl.checkShowRejectMsg = function () {
-            return ctrl.item.TestEDRReview === "Rejected" || 
-            ctrl.item.TestITDirector === "Rejected" || 
-            ctrl.item.TestITManager === "Rejected" || 
-            ctrl.item.PostTestEDRReview === "Rejected" || 
-            ctrl.item.PostTestITDirector === "Rejected" || 
-            ctrl.item.PostTestITManager === "Rejected";
+            return ctrl.item.TestEDRReview === "Rejected" ||
+                ctrl.item.TestITDirector === "Rejected" ||
+                ctrl.item.TestITManager === "Rejected" ||
+                ctrl.item.PostTestEDRReview === "Rejected" ||
+                ctrl.item.PostTestITDirector === "Rejected" ||
+                ctrl.item.PostTestITManager === "Rejected";
         }
 
-        ctrl.getRejectUser = function() {
-            if(ctrl.item.TestEDRReview === "Rejected") {
+        ctrl.getRejectUser = function () {
+            if (ctrl.item.TestEDRReview === "Rejected") {
                 return ctrl.item.TestEDRReviewUser.Title;
             }
-            if(ctrl.item.TestITDirector === "Rejected") {
+            if (ctrl.item.TestITDirector === "Rejected") {
                 return ctrl.item.TestITDirectorUser.Title;
             }
-            if(ctrl.item.TestITManager === "Rejected") {
+            if (ctrl.item.TestITManager === "Rejected") {
                 return ctrl.item.TestITManagerUser.Title;
             }
-            if(ctrl.item.PostTestEDRReview === "Rejected") {
+            if (ctrl.item.PostTestEDRReview === "Rejected") {
                 return ctrl.item.PostTestEDRReviewUser.Title;
             }
-            if(ctrl.item.PostTestITDirector === "Rejected") {
+            if (ctrl.item.PostTestITDirector === "Rejected") {
                 return ctrl.item.PostTestITDirectorUser.Title;
             }
-            if(ctrl.item.PostTestITManager === "Rejected") {
+            if (ctrl.item.PostTestITManager === "Rejected") {
                 return ctrl.item.PostTestITManagerUser.Title;
             }
         }
 
-        ctrl.getRejectComments = function() {
-            if(ctrl.item.TestEDRReview === "Rejected") {
+        ctrl.getRejectComments = function () {
+            if (ctrl.item.TestEDRReview === "Rejected") {
                 return ctrl.item.TestEDRReviewComment ? ctrl.item.TestEDRReviewComment.replace(/\n/g, '<br/>') : "";
             }
-            if(ctrl.item.TestITDirector === "Rejected") {
+            if (ctrl.item.TestITDirector === "Rejected") {
                 return ctrl.item.TestITDirectoComment ? ctrl.item.TestITDirectoComment.replace(/\n/g, '<br/>') : "";
             }
-            if(ctrl.item.TestITManager === "Rejected") {
+            if (ctrl.item.TestITManager === "Rejected") {
                 return ctrl.item.TestITManagerComment ? ctrl.item.TestITManagerComment.replace(/\n/g, '<br/>') : "";
             }
-            if(ctrl.item.PostTestEDRReview === "Rejected") {
+            if (ctrl.item.PostTestEDRReview === "Rejected") {
                 return ctrl.item.PostTestEDRReviewComment ? ctrl.item.PostTestEDRReviewComment.replace(/\n/g, '<br/>') : "";
             }
-            if(ctrl.item.PostTestITDirector === "Rejected") {
+            if (ctrl.item.PostTestITDirector === "Rejected") {
                 return ctrl.item.PostTestITDirectoComment ? ctrl.item.PostTestITDirectoComment.replace(/\n/g, '<br/>') : "";
             }
-            if(ctrl.item.PostTestITManager === "Rejected") {
+            if (ctrl.item.PostTestITManager === "Rejected") {
                 return ctrl.item.PostTestITManagerComment ? ctrl.item.PostTestITManagerComment.replace(/\n/g, '<br/>') : "";
             }
         }

@@ -54,7 +54,7 @@
 
         ctrl.submit = function () {
             ctrl.errors = {};
-            if (!ctrl.item.TestResultsAttachment || !ctrl.item.TestResultsAttachment.name) {
+            if (!ctrl.item.TestResultsAttachment || !ctrl.item.TestResultsAttachment.length) {
                 ctrl.errors["postFile"] = "Upload Post Result file";
             }
             if (Object.keys(ctrl.errors).length) return;
@@ -68,10 +68,14 @@
                     PostTestITManager: "",
                     PostTestITDirector: ""
                 }).then(function () {
-                    $ApiService.uploadFile("ApplicationAttachments", ctrl.item.TestResultsAttachment, {
-                        ApplicationTestPlanId: ctrl.item.Id,
-                        AttachmentType: "Tests Results"
-                    }).then(function () {
+                    let filesReq = [];
+                    ctrl.item.TestResultsAttachment.forEach(function(file){
+                        filesReq.push($ApiService.uploadFile("ApplicationAttachments", file, {
+                            ApplicationTestPlanId: ctrl.item.Id,
+                            AttachmentType: "Tests Results"
+                        }));
+                    });
+                    $q.all(filesReq).then(function () {
                         // $ApiService.sendEmail({
                         //     ToId: { 'results': [ctrl.item.Application.TestPlanOwnerId] }, //Disasterrecoverytestteam@cvshealth.com
                         //     Subject: "Attached DR Test Results for: " + ctrl.item.Application.Title + " Failover Exercise ",
@@ -110,6 +114,7 @@
                 item[ctrl.curentApproval.FieldName] = "Rejected";
                 item[ctrl.curentApproval.UserFieldName + "Id"] = window.currentSPUser.Id;
                 item[ctrl.curentApproval.DateFieldName] = new Date().toISOString();
+                item[ctrl.curentApproval.CommentFieldName] = comment;
                 $ApiService.updateApplicationTestPlan(item).then(function () {
                     $ApiService.deleteEmailItems(ctrl.item.Application.Id).then(function () {
                         $ApiService.getEmailTemplate(CONSTANT.TEST_REJECT).then(function (template) {
@@ -119,7 +124,8 @@
                                 Subject: $ApiService.getHTMLTemplate(template.Subject, { Title: ctrl.item.Application.Title }),
                                 Body: $ApiService.getHTMLTemplate(template.Body, {
                                     Title: ctrl.item.Application.Title,
-                                    comment: comment.replace(/\n/g, '<br>'),
+                                    RejectUser: window.currentSPUser.Title,
+                                    Comments: comment.replace(/\n/g, '<br>'),
                                     APP_PAGE_LOCATION_URL: window["APP_PAGE_LOCATION_URL"]
                                 }),
                                 // Subject: ctrl.item.Application.Title + " Failover Exercise Requirements Rejected",
@@ -334,7 +340,8 @@
         }
 
         ctrl.formatBytes = (a, b = 2) => {
-            if (0 === a) return "0 bytes";
+            return "";
+            if (0 == a) return "0 bytes";
             const c = 0 > b ? 0 : b,
                 d = Math.floor(Math.log(a) / Math.log(1024));
             return (
@@ -355,20 +362,20 @@
 
             setTimeout(function () {
                 $scope.$apply(function () {
-                    ctrl.item.TestResultsAttachment = files[0];
+                    ctrl.item.TestResultsAttachment.push(files[0]);
                 });
             }, 0);
 
         };
 
-        ctrl.resetFileInput = () => {
-            if (ctrl.item.TestResultsAttachment.ServerRelativeUrl) {
-                $ApiService.deleteFile(ctrl.item.TestResultsAttachment.ServerRelativeUrl).then(function () {
+        ctrl.resetFileInput = (file) => {
+            if (file.ServerRelativeUrl) {
+                $ApiService.deleteFile(file.ServerRelativeUrl).then(function () {
                     setTimeout(function () {
                         $scope.$apply(function () {
                             let element = document.getElementById("post-attachment-file");
                             element["value"] = "";
-                            ctrl.item.TestResultsAttachment = null;
+                            ctrl.item.TestResultsAttachment = ctrl.item.TestResultsAttachment.filter(function(x){return x.ServerRelativeUrl !== file.ServerRelativeUrl});
                         });
                     }, 0);
 
@@ -377,7 +384,7 @@
             else {
                 let element = document.getElementById("post-attachment-file");
                 element["value"] = "";
-                ctrl.item.TestResultsAttachment = null;
+                ctrl.item.TestResultsAttachment = ctrl.item.TestResultsAttachment.filter(function(x){return x.name !== file.name});
             }
         };
 

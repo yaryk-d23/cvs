@@ -382,18 +382,13 @@
                 if (item.TestPlan) {
                     let attachments = response.attachments[item.TestPlan.Id];
                     //  await $ApiService.getFormAttachments(item.Id);
-                    let TestPlanAttachment = attachments.filter(function (x) {
+                    
+                    item.TestPlan.TestPlanAttachment = attachments.filter(function (x) {
                         return x.AttachmentType === "Test Plan";
-                    })[0];
-                    if (TestPlanAttachment) {
-                        item.TestPlan.TestPlanAttachment = TestPlanAttachment.File;
-                    }
-                    let TestResultsAttachment = attachments.filter(function (x) {
+                    }).map(function (file) { return file.File; });;
+                    item.TestPlan.TestResultsAttachment = attachments.filter(function (x) {
                         return x.AttachmentType === "Tests Results";
-                    })[0];
-                    if (TestResultsAttachment) {
-                        item.TestPlan.TestResultsAttachment = TestResultsAttachment.File;
-                    }
+                    }).map(function (file) { return file.File; });
                 }
                 ctrl.parentDRApplicationItems[j] = item;
             }
@@ -448,11 +443,11 @@
             let dueDate = new Date(
                 new Date(item.TestPlan.DueDate).setDate(new Date(item.TestPlan.DueDate).getDate() - 14)
             ).getTime();
-            if (!item.TestPlan.TestPlanAttachment && currDate < dueDate) {
+            if ((!item.TestPlan.TestPlanAttachment || !item.TestPlan.TestPlanAttachment.length) && currDate < dueDate) {
                 return '<span class="statusIndicator inProgressStatus" ></span>';
-            } else if (!item.TestPlan.TestPlanAttachment && currDate > dueDate) {
+            } else if ((!item.TestPlan.TestPlanAttachment || !item.TestPlan.TestPlanAttachment.length) && currDate > dueDate) {
                 return '<span class="statusIndicator notStartedStatus" ></span>';
-            } else if (item.TestPlan.TestPlanAttachment) {
+            } else if (item.TestPlan.TestPlanAttachment && item.TestPlan.TestPlanAttachment.length) {
                 return '<span class="statusIndicator approvedStatus" ></span>';
             } else {
                 return "";
@@ -508,17 +503,17 @@
             ).getTime();
             if (
                 item.TestPlan.Stage === 3 &&
-                !item.TestPlan.TestResultsAttachment &&
+                (!item.TestPlan.TestResultsAttachment || !item.TestPlan.TestResultsAttachment.length) &&
                 currDate < dueDate
             ) {
                 return '<span class="statusIndicator inProgressStatus" ></span>';
             } else if (
                 item.TestPlan.Stage === 3 &&
-                !item.TestPlan.TestResultsAttachment &&
+                (!item.TestPlan.TestResultsAttachment || !item.TestPlan.TestResultsAttachment.length) &&
                 currDate > dueDate
             ) {
                 return '<span class="statusIndicator notStartedStatus" ></span>';
-            } else if (item.TestPlan.TestResultsAttachment) {
+            } else if (item.TestPlan.TestResultsAttachment && item.TestPlan.TestResultsAttachment.length) {
                 return '<span class="statusIndicator approvedStatus" ></span>';
             } else {
                 return "";

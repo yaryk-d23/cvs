@@ -240,7 +240,7 @@
                     $ApiService.getEmailTemplate(CONSTANT.INCORRECT_APP).then(function (template) {
                         $ApiService.sendEmail({
                             // ToEmails: "disasterrecoverytestteam@cvshealth.com",
-                            ToEmails: "y.masyuk@chironit.com",
+                            ToEmails: "oleksii.pashkevych@cvshealth.com",
                             Subject: $ApiService.getHTMLTemplate(template.Subject, {}),
                             Body: $ApiService.getHTMLTemplate(template.Body, { Title: item.Title, comment: comment.replace(/\n/g, '<br>'), currentSPUser: window.currentSPUser })
                             // "<p>Hello EDR Team,</p>" +

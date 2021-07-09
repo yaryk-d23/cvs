@@ -66,3 +66,21 @@
   background-color: #ff9d00;
   margin-left: 2em;
 }
+
+.applicationTestPlanDashboard .mark-approved-btn {
+  width: 160px;
+}
+.applicationTestPlanDashboard .mark-approved-btn:hover {
+  background-color: #cdcdcd;
+  border-color: #cdcdcd;
+}
+.applicationTestPlanDashboard .mark-approved-btn:focus {
+  outline: none;
+}
+.applicationTestPlanDashboard .mark-approved-btn:disabled {
+  background-color: #cdcdcd;
+  cursor: not-allowed;
+}
+.applicationTestPlanDashboard .pagination {
+  margin: 0;
+}

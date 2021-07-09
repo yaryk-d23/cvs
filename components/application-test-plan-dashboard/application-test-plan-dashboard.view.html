@@ -43,6 +43,8 @@
   <div>
     <table class="table">
       <tr>
+        <th>Approve</th>
+        <th>Edit</th>
         <th></th>
         <th ng-click="ctrl.sortData('Application')" class="sorted-column">
           <span>
@@ -74,30 +76,52 @@
             ></i>
           </span>
         </th>
-        <th style="min-width: 140px">Draft Plan Received</th>
-        <th style="min-width: 140px">Test Plan Approved</th>
-        <th style="min-width: 140px">Draft Results Received</th>
-        <th style="min-width: 140px">Results Approved</th>
+        <th style="min-width: 110px">Draft Plan Received</th>
+        <th style="min-width: 110px">Test Plan Approved</th>
+        <th style="min-width: 110px">Draft Results Received</th>
+        <th style="min-width: 110px">Results Approved</th>
+        <th style="min-width: 110px">Application Status</th>
         <th style="width: 20px"></th>
       </tr>
       <tbody ng-repeat="parent in ctrl.filteredItems">
         <tr
           class="parent-row"
-          ng-class="{'alone': !parent.Application.ChildrenItems || !parent.Application.ChildrenItems.length}"
+          ng-class="{'alone': !parent.ChildrenItems || !parent.ChildrenItems.length}"
           ng-click="parent.isCollapsed = !parent.isCollapsed"
         >
           <td>
-            <a href="#/process-form/{{parent.Id}}"
+            <div
+              class="checkbox text-center"
+              ng-if="parent.Status !== 'Completed'"
+            >
+              <label>
+                <input
+                  type="checkbox"
+                  ng-model="parent.selected"
+                  ng-click="ctrl.selectItem($event, parent)"
+                />
+              </label>
+            </div>
+          </td>
+          <td>
+            <i
+              ng-if="parent.Status !== 'Completed'"
+              class="glyphicon glyphicon-pencil editIcon"
+              ng-click="ctrl.setIncorrectData($event, parent)"
+            ></i>
+          </td>
+          <td>
+            <a
+              ng-if="parent.TestPlan && parent.TestPlan.Id"
+              href="#/process-form/{{parent.TestPlan.Id}}"
               ><i class="glyphicon glyphicon-edit editIcon"></i
             ></a>
           </td>
-          <td>{{parent.Application.Title}}</td>
+          <td>{{parent.Title}}</td>
           <td>
-            <div ng-repeat="i in parent.Application.TestPlanOwner.results">
-              {{i.Title}}
-            </div>
+            <div ng-repeat="i in parent.TestPlanOwner.results">{{i.Title}}</div>
           </td>
-          <td>{{parent.DueDate | date: 'MM/dd/yyyy'}}</td>
+          <td>{{parent.TestPlan.DueDate | date: 'MM/dd/yyyy'}}</td>
           <td>
             <div
               class="text-center"
@@ -123,8 +147,14 @@
             ></div>
           </td>
           <td>
+            <div
+              class="text-center"
+              ng-bind-html="ctrl.getStatusIndicator(parent.Status)"
+            ></div>
+          </td>
+          <td>
             <i
-              ng-if="parent.Application.ChildrenItems && parent.Application.ChildrenItems.length"
+              ng-if="parent.ChildrenItems && parent.ChildrenItems.length"
               class="glyphicon"
               ng-class="parent.isCollapsed ? 'glyphicon-chevron-down' : 'glyphicon-chevron-up'"
             ></i>
@@ -132,25 +162,23 @@
         </tr>
         <tr>
           <td
-            ng-if="parent.Application.ChildrenItems && parent.Application.ChildrenItems.length"
-            colspan="9"
+            ng-if="parent.ChildrenItems && parent.ChildrenItems.length"
+            colspan="12"
             class="children-row-cell"
           >
             <div uib-collapse="parent.isCollapsed">
               <table class="children-table">
-                <tr ng-repeat="item in parent.Application.ChildrenItems">
-                  <td>
-                    <!-- <a href="#/process-form/{{item.Id}}"
-              ><i class="glyphicon glyphicon-edit editIcon"></i
-            ></a> -->
-                  </td>
+                <tr ng-repeat="item in parent.ChildrenItems">
+                  <td></td>
+                  <td></td>
+                  <td></td>
                   <td>{{item.Title}}</td>
                   <td>
                     <div ng-repeat="i in item.TestPlanOwner.results">
                       {{i.Title}}
                     </div>
                   </td>
-                  <td>{{parent.DueDate | date: 'MM/dd/yyyy'}}</td>
+                  <td>{{parent.TestPlan.DueDate | date: 'MM/dd/yyyy'}}</td>
                   <td>
                     <div
                       class="text-center"
@@ -175,6 +203,12 @@
                       ng-bind-html="ctrl.getTestsResultsApprovedIndicator(parent)"
                     ></div>
                   </td>
+                  <td>
+                    <div
+                      class="text-center"
+                      ng-bind-html="ctrl.getStatusIndicator(parent.Status)"
+                    ></div>
+                  </td>
                   <td></td>
                 </tr>
               </table>
@@ -185,7 +219,17 @@
     </table>
   </div>
   <div class="footer">
-    <div></div>
+    <div>
+      <button
+        type="button"
+        class="mark-approved-btn"
+        ng-click="ctrl.markApproved()"
+        ng-disabled="!ctrl.checkSelectedItemsLength()"
+      >
+        <i class="glyphicon glyphicon-ok"></i>
+        Mark Approved
+      </button>
+    </div>
     <div>
       <ul
         uib-pagination
