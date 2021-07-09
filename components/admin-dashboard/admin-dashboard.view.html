@@ -71,6 +71,7 @@
     <table class="table">
       <tr>
         <th></th>
+        <th></th>
         <th
           ng-click="ctrl.sortData('Application')"
           class="sorted-column"
@@ -162,6 +163,9 @@
               ><i class="glyphicon glyphicon-edit editIcon"></i
             ></a>
           </td>
+          <td>
+            <i class="glyphicon glyphicon-comment commentIcon" ng-click="ctrl.onComment($event, parent)"></i>
+          </td>
           <td ng-if="ctrl.isSelected('Application')">{{parent.Title}}</td>
           <td ng-if="ctrl.isSelected('TestPlanOwner')">
             <div ng-repeat="i in parent.TestPlanOwner.results">{{i.Title}}</div>
@@ -224,6 +228,7 @@
             <div uib-collapse="parent.isCollapsed">
               <table class="children-table">
                 <tr ng-repeat="item in parent.ChildrenItems">
+                  <td></td>
                   <td></td>
                   <td ng-if="ctrl.isSelected('Application')">{{item.Title}}</td>
                   <td ng-if="ctrl.isSelected('TestPlanOwner')">

@@ -8,10 +8,10 @@
             //user: '<'
         },
         controllerAs: "ctrl",
-        controller: ["$scope", "$ApiService", "$Preload", "$q", "$location", "$filter", ctrl],
+        controller: ["$scope", "$ApiService", "$Preload", "$q", "$location", "$filter", "$uibModal", ctrl],
     });
 
-    function ctrl($scope, $ApiService, $Preload, $q, $location, $filter) {
+    function ctrl($scope, $ApiService, $Preload, $q, $location, $filter, $uibModal) {
         $Preload.show();
         var ctrl = this;
 
@@ -112,14 +112,54 @@
             ctrl.filterData();
         }
 
+        ctrl.onComment = function(event, item) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: window["APP_FOLDER"] + 'common/appliaction-comments-modal/appliaction-comments-modal.view.html?rnd' + Math.random(),
+                controller: 'appliactionCommentsModalCtrl',
+                controllerAs: 'ctrl',
+                resolve: {
+                    item: function() {
+                        return item;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (comments) {
+                $Preload.show();
+                console.log(comments);
+                $ApiService.updateApplication({
+                    Id: item.Id,
+                    Comments: comments
+                }).then(function() {
+                    ctrl.filteredItems = ctrl.filteredItems.map(function(i) {
+                        i.Comments = comments;
+                        return i;
+                    });
+                    setTimeout(function () {
+                        $scope.$apply(function () {
+                            $Preload.hide();
+                        });
+                    }, 0);
+                });
+            }, function () {
+            });
+        }
+
         ctrl.exportToExcel = function () {
             let props = ctrl.selectedColumns.map(function (i) {
                 return i.id;
             });
+            props.push("Comments");
             let colNames = {};
             ctrl.selectedColumns.forEach(function (i) {
                 colNames[i.id] = ctrl.columns.filter(function(x){return x.id === i.id;})[0].label;
             });
+            colNames.Comments = "Comments";
             let data = [];
             ctrl.filteredItems.forEach(function (item) {
                 let colorIndicator = "";
@@ -166,7 +206,7 @@
                 });
                 data.push(exportItem);
             });
-            let ws = XLSX2.utils.json_to_sheet([colNames], { skipHeader: true });
+            let ws = XLSX2.utils.json_to_sheet([colNames], { skipHeader: true, });
             XLSX2.utils.sheet_add_json(ws, data, { header: props, skipHeader: true, origin: 'A2' })
 
 
@@ -187,6 +227,14 @@
                             },
                         };
                     }
+                    // else if(key !== "J1" && key !== "B1" && (key.replace(/[0-9]/g, "") === "B" || key.replace(/[0-9]/g, "") === "J")) {
+                    //     ws[key].s.font = {
+                    //         name: 'Calibri'
+                    //     };
+                    //     ws[key].s.alignment = {
+                    //         wrapText: true
+                    //     };
+                    // }
                     else {
                         ws[key].s.font = {
                             name: 'Calibri'
@@ -205,6 +253,11 @@
                             style: 'thin',
                             color: 'FF000000'
                         }
+                    };
+                    
+                    ws[key].s.alignment = {
+                        vertical: "top",
+                        wrapText: true
                     };
                     if(ws[key].v === 'Completed' || ws[key].v === 'In Progress' || ws[key].v === 'Overdue') {
                         ws[key].s.fill = {
@@ -236,15 +289,19 @@
                 if (col.id === "DueDate") {
                     ws["!cols"].push({
                         wpx: 100,
-                        alignment: { wrapText: true }
+                        alignment: { vertical: "top", wrapText: true }
                     });
                 }
                 else {
                     ws["!cols"].push({
                         wpx: 150,
-                        alignment: { wrapText: true }
+                        alignment: { vertical: "top", wrapText: true }
                     });
                 }
+            });
+            ws["!cols"].push({
+                wpx: 200,
+                alignment: { vertical: "top", wrapText: true }
             });
 
             let url = sheet2blob(ws);

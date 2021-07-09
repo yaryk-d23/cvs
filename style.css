@@ -29,6 +29,13 @@
   margin-left: 5px;
   cursor: pointer;
 }
+.app-container .commentIcon {
+  color: #16a3fc;
+  cursor: pointer;
+}
+.app-container input[type=button], input[type=reset], input[type=submit], button{
+  min-width: 0;
+}
 .component-block {
   background-color: #fff;
   padding: 1em 2em;
